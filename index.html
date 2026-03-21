@@ -22,53 +22,38 @@
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
   .container { max-width: 660px; margin: 0 auto; padding: 0 20px; }
-
-  /* Header */
   header { text-align: center; padding: 48px 0 12px; }
   .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .logo-icon { width: 38px; height: 38px; background: var(--saffron); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; transform: rotate(-6deg); box-shadow: 3px 3px 0 var(--ink); }
   .logo-text { font-family: 'Playfair Display', serif; font-size: 30px; letter-spacing: -1px; }
   .tagline { font-size: 14px; color: var(--muted); font-style: italic; }
   .divider { width: 44px; height: 2px; background: var(--saffron); margin: 22px auto; border-radius: 2px; }
-
-  /* Why strip */
   .why-strip { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
   .why-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
   .why-text { font-size: 13px; line-height: 1.65; color: var(--ink); }
   .why-text strong { font-weight: 500; }
-
-  /* Card */
   .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 30px 28px; margin-bottom: 20px; box-shadow: 5px 5px 0 rgba(26,18,8,0.05); }
   .card-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; }
   .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
   .field { margin-bottom: 18px; }
   label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 7px; }
-
-  /* Inputs */
   select, input, textarea { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; background: white; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
   select:focus, input:focus, textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,98,26,0.1); }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; padding-right: 38px; cursor: pointer; }
   textarea { resize: none; height: 90px; line-height: 1.5; }
   .budget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* Toggle */
   .toggle-row { display: flex; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
   .toggle-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; text-align: center; }
   .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--border); }
   .toggle-btn.active { background: var(--saffron); color: white; }
-
   .unknown-hint { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; margin-bottom: 18px; }
   .unknown-hint.show { display: block; }
   #aboutField.hidden { display: none; }
-
-  /* Buttons */
   .btn { width: 100%; padding: 16px; background: var(--saffron); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 8px; box-shadow: 3px 3px 0 rgba(26,18,8,0.15); transition: background 0.15s, transform 0.1s; }
   .btn:hover { background: #D4561A; transform: translateY(-1px); }
   .btn:active { transform: translateY(1px); }
   .btn:disabled { background: #C4A98A; cursor: not-allowed; transform: none; box-shadow: none; }
   .error { background: #FFF3F0; border: 1.5px solid #F4C4B4; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #C0402A; margin-top: 14px; display: none; word-break: break-word; }
-
-  /* Loading */
   #loading { display: none; text-align: center; padding: 48px 0; }
   .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
   .dot { width: 10px; height: 10px; background: var(--saffron); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
@@ -76,8 +61,6 @@
   .dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-10px); opacity: 1; } }
   .loading-text { font-size: 14px; color: var(--muted); font-style: italic; }
-
-  /* Results */
   #results { display: none; }
   .results-header { text-align: center; margin-bottom: 24px; }
   .results-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 6px; }
@@ -88,42 +71,59 @@
   .gift-card.buy { background: var(--card); border: 1.5px solid var(--border); box-shadow: 4px 4px 0 rgba(26,18,8,0.04); }
   .gift-card.make { background: #F4FBF8; border: 1.5px solid var(--teal-border); box-shadow: 4px 4px 0 rgba(13,138,106,0.06); }
   @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
-
-  .gift-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-
-  /* Type badge */
-  .gift-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; margin-bottom: 10px; }
+  .gift-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .gift-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
   .gift-badge.buy { background: var(--saffron-light); color: var(--saffron); border: 1px solid var(--saffron-border); }
   .gift-badge.make { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
-
+  .make-meta { display: flex; gap: 8px; }
+  .make-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; background: white; border: 1px solid var(--teal-border); color: var(--teal); }
+  .gift-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
   .gift-num { width: 28px; height: 28px; color: white; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .gift-num.buy { background: var(--saffron); }
   .gift-num.make { background: var(--teal); }
-
   .gift-name { font-family: 'Playfair Display', serif; font-size: 18px; flex: 1; line-height: 1.3; }
   .gift-price { font-size: 13px; font-weight: 500; white-space: nowrap; margin-top: 4px; }
   .gift-price.buy { color: var(--saffron); }
   .gift-price.make { color: var(--teal); }
-
   .gift-why { font-size: 14px; color: #4A3C2A; line-height: 1.65; margin-bottom: 14px; padding-left: 40px; }
-  .gift-links { display: flex; gap: 8px; flex-wrap: wrap; padding-left: 40px; }
-
+  .gift-footer { display: flex; align-items: center; justify-content: space-between; padding-left: 40px; flex-wrap: wrap; gap: 10px; }
+  .gift-links { display: flex; gap: 8px; flex-wrap: wrap; }
   .gift-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.15s; }
   .gift-link.buy { border: 1.5px solid var(--border); color: var(--ink); background: white; }
   .gift-link.buy:hover { border-color: var(--saffron); color: var(--saffron); }
   .gift-link.make { border: 1.5px solid var(--teal-border); color: var(--teal); background: white; }
   .gift-link.make:hover { background: var(--teal-light); }
+  .copy-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1.5px solid var(--border); background: white; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
+  .copy-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+  .copy-btn.copied { border-color: var(--teal); color: var(--teal); }
 
-  /* Results actions */
-  .results-actions { display: flex; gap: 10px; margin-top: 24px; }
+  /* Etiquette note */
+  .etiquette-note { background: rgba(138,117,96,0.07); border: 1.5px solid rgba(138,117,96,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+  .etiquette-note span { font-size: 16px; flex-shrink: 0; }
+
+  /* Also gifted */
+  .also-gifted { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
+  .also-gifted-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
+  .also-gifted-items { display: flex; gap: 8px; flex-wrap: wrap; }
+  .also-gifted-item { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--ink); background: white; }
+
+  /* Save button */
+  .save-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; margin: 0 auto 20px; }
+  .save-btn:hover { border-color: var(--saffron); color: var(--saffron); }
+  .save-btn.saved { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+
+  /* Saved banner on form */
+  .saved-banner { background: var(--teal-light); border: 1.5px solid var(--teal-border); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--teal); margin-bottom: 16px; display: none; cursor: pointer; text-align: center; }
+  .saved-banner.show { display: block; }
+
+  .results-actions { display: flex; gap: 10px; margin-top: 8px; }
   .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
   .action-btn-primary { background: var(--saffron); color: white; border: none; box-shadow: 3px 3px 0 rgba(26,18,8,0.12); }
   .action-btn-primary:hover { background: #D4561A; transform: translateY(-1px); }
   .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
   .action-btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
-
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
-  @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why, .gift-links { padding-left: 0; } .results-actions { flex-direction: column; } }
+  @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why { padding-left: 0; } .gift-footer { padding-left: 0; } .results-actions { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -140,8 +140,12 @@
   <div class="why-strip">
     <div class="why-icon">&#9889;</div>
     <div class="why-text">
-      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it's for, and your budget. We'll give you specific gifts to buy online, plus creative ideas you can make yourself. Takes 30 seconds.
+      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it is for, and your budget. We give you gifts to buy online plus creative ideas to make yourself. Takes 30 seconds.
     </div>
+  </div>
+
+  <div id="savedBanner" class="saved-banner" onclick="loadSaved()">
+    &#127915; You have a saved gift list — tap to view it
   </div>
 
   <div id="formCard" class="card">
@@ -236,7 +240,13 @@
       <h2 class="results-title">Here's what to get</h2>
       <p class="results-sub" id="resultsSub"></p>
     </div>
+
+    <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127915; Save this list</button>
+
+    <div id="etiquetteNote"></div>
     <div id="giftList"></div>
+    <div id="alsoGifted"></div>
+
     <div class="results-actions">
       <button class="action-btn action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
       <button class="action-btn action-btn-secondary" onclick="reset()">&#8592; Start over</button>
@@ -250,6 +260,62 @@
 var knowThemWell = true;
 var lastParams = null;
 var lastGiftNames = [];
+var currentGifts = [];
+var currentContext = {};
+
+var ETIQUETTE = {
+  "Wedding": "&#128161; Note: Cash or a gift envelope (shagun) is completely acceptable — and often preferred — for weddings in India.",
+  "Engagement": "&#128161; Note: Cash or a gift envelope is a perfectly thoughtful choice for engagements in India.",
+  "Baby Shower": "&#128161; Note: Practical gifts like diapers, baby clothes, or feeding essentials are always appreciated at baby showers.",
+  "Diwali": "&#128161; Note: Sweets, dry fruits, or diyas are classic Diwali gifts — never go wrong with these.",
+  "Rakhi": "&#128161; Note: For Rakhi, cash gifts from brother to sister are traditional and always welcome."
+};
+
+var ALSO_GIFTED = {
+  "Birthday": ["Personalised mug", "Scented candle", "Book by their favourite author", "Plant with a nice pot"],
+  "Wedding": ["Copper vessel set", "Premium dry fruit box", "Customised photo frame", "Dinner voucher"],
+  "Engagement": ["Couple photo frame", "Champagne glasses set", "Customised cushion", "Spa voucher"],
+  "Diwali": ["Dry fruit box", "Diyas set", "Scented candles", "Premium mithai box"],
+  "Housewarming": ["Indoor plant", "Copper bottle", "Scented diffuser", "Customised doormat"],
+  "Baby Shower": ["Baby clothes set", "Soft toy", "Feeding kit", "Baby photo album"],
+  "Rakhi": ["Wallet", "Watch", "Perfume", "Chocolates box"],
+  "Anniversary": ["Couple photo book", "Personalised jewellery", "Weekend getaway voucher", "Wine glasses set"],
+  "Job Promotion": ["Premium pen", "Desk plant", "Leather notebook", "Coffee hamper"],
+  "Graduation": ["Backpack", "Journal", "Portable speaker", "Book set"],
+  "Just Because": ["Scented candle", "Chocolates", "Personalised keychain", "Succulent plant"]
+};
+
+window.onload = function() {
+  var saved = localStorage.getItem("giftho_saved");
+  if (saved) {
+    document.getElementById("savedBanner").className = "saved-banner show";
+  }
+};
+
+function loadSaved() {
+  var saved = localStorage.getItem("giftho_saved");
+  if (!saved) return;
+  var data = JSON.parse(saved);
+  currentGifts = data.gifts;
+  currentContext = data.context;
+  lastParams = data.params;
+  lastGiftNames = data.gifts.map(function(g) { return g.name; });
+  showResults(data.gifts, data.context.occasion, data.context.relationship, true);
+}
+
+function saveResults() {
+  var data = {
+    gifts: currentGifts,
+    context: currentContext,
+    params: lastParams,
+    savedAt: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+  };
+  localStorage.setItem("giftho_saved", JSON.stringify(data));
+  var btn = document.getElementById("saveBtn");
+  btn.innerHTML = "&#10003; Saved";
+  btn.className = "save-btn saved";
+  document.getElementById("savedBanner").className = "saved-banner show";
+}
 
 function setKnowMode(know) {
   knowThemWell = know;
@@ -265,7 +331,7 @@ function getCurrentMonthYear() {
   return months[now.getMonth()] + " " + now.getFullYear();
 }
 
-function platformURL(platform, giftName, type) {
+function platformURL(platform, giftName) {
   var q = encodeURIComponent(giftName);
   var p = platform.toLowerCase();
   if (p.indexOf("youtube") >= 0) return "https://www.youtube.com/results?search_query=" + encodeURIComponent(giftName + " diy tutorial");
@@ -276,7 +342,6 @@ function platformURL(platform, giftName, type) {
   if (p.indexOf("fabindia") >= 0) return "https://www.fabindia.com/search?q=" + q;
   if (p.indexOf("pepperfry") >= 0) return "https://www.pepperfry.com/search?q=" + q;
   if (p.indexOf("jaypore") >= 0) return "https://www.jaypore.com/search?q=" + q;
-  if (p.indexOf("bewakoof") >= 0) return "https://www.bewakoof.com/search?q=" + q;
   return "https://www.google.com/search?q=" + encodeURIComponent(giftName + " buy india");
 }
 
@@ -286,16 +351,28 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
   var avoidStr = (avoidNames && avoidNames.length > 0)
     ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give 5 completely different alternatives."
     : "";
-
-  var baseContext = knowThemWell && about && about.trim().length > 10
-    ? "About the person: " + about + "\n"
-    : "";
-
+  var baseContext = knowThemWell && about && about.trim().length > 10 ? "About the person: " + about + "\n" : "";
   var modeInstruction = knowThemWell && about && about.trim().length > 10
     ? "Give exactly 5 gift recommendations personalised for this person. Each should feel chosen just for them."
-    : "Give exactly 5 gift recommendations that are universally well-received in India for this occasion and relationship. They should be culturally appropriate, popular in this price range, and relevant to what people are buying right now. Do NOT suggest anything tied to festivals or occasions that have already passed this year.";
+    : "Give exactly 5 gift recommendations that are universally well-received in India for this occasion. Do NOT suggest anything tied to festivals that have already passed this year.";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- " + baseContext + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nMix between 'buy' and 'make' type gifts:\n- 'buy' = a product they can purchase online. Only suggest platforms that actually sell this type of product (e.g. do NOT suggest Amazon for subscriptions, experiences or services). Suggest 2-3 appropriate Indian platforms.\n- 'make' = a creative DIY idea they can make themselves (e.g. handmade card, paper bouquet, photo album, painted pot, baked goods). For make gifts, suggest 'YouTube Tutorial' as the where. Keep make gifts achievable in 1-2 hours.\n\nAim for 3 buy and 2 make gifts, but adjust based on what feels right.\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works for them.\",\"where\":[\"Amazon India\",\"Flipkart\"]},{\"name\":\"Paper Flower Bouquet\",\"type\":\"make\",\"price\":\"Rs.50 materials\",\"why\":\"Thoughtful and personal.\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- " + baseContext + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nMix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Only suggest platforms that genuinely sell this type of product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences.\n- make = a creative DIY idea achievable in 1-2 hours (paper crafts, baked goods, photo prints, handmade cards etc). For make gifts include difficulty (Easy/Medium/Hard) and time estimate.\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50 materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+}
+
+function copyGift(gift) {
+  var type = gift.type === "make" ? "Make it yourself" : "Buy online";
+  var links = (gift.where || []).map(function(p) {
+    return platformURL(p, gift.name);
+  }).join(", ");
+  var text = "🎁 Gift idea: " + gift.name + " (" + gift.price + ")\n" + type + "\n" + gift.why + "\n" + links;
+  navigator.clipboard.writeText(text).catch(function() {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  });
 }
 
 async function getGifts() {
@@ -312,6 +389,7 @@ async function getGifts() {
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about };
   lastGiftNames = [];
+  currentContext = { occasion: occasion, relationship: relationship };
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
@@ -321,8 +399,7 @@ async function getGifts() {
     : "Finding what is popular and well-received in India right now...";
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
-  var prompt = buildPrompt(occasion, relationship, ageRange, budgetStr, about, []);
-  await callAPI(prompt, occasion, relationship);
+  await callAPI(buildPrompt(occasion, relationship, ageRange, budgetStr, about, []), occasion, relationship);
 }
 
 async function regenerate() {
@@ -330,11 +407,9 @@ async function regenerate() {
   document.getElementById("results").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("loadingText").textContent = "Finding fresh ideas...";
-
   var p = lastParams;
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
-  var prompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, lastGiftNames);
-  await callAPI(prompt, p.occasion, p.relationship);
+  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, lastGiftNames), p.occasion, p.relationship);
 }
 
 async function callAPI(prompt, occasion, relationship) {
@@ -344,22 +419,19 @@ async function callAPI(prompt, occasion, relationship) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 1200,
+        max_tokens: 1400,
         messages: [{ role: "user", content: prompt }]
       })
     });
-
     var data = await response.json();
     if (!response.ok) throw new Error(data.error ? data.error.message : "API error " + response.status);
-
     var text = data.content.filter(function(b) { return b.type === "text"; }).map(function(b) { return b.text; }).join("");
     var match = text.match(/\[[\s\S]*\]/);
     if (!match) throw new Error("No gift data returned. Please try again.");
-
     var gifts = JSON.parse(match[0]);
     lastGiftNames = gifts.map(function(g) { return g.name; });
-    showResults(gifts, occasion, relationship);
-
+    currentGifts = gifts;
+    showResults(gifts, occasion, relationship, false);
   } catch(err) {
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "none";
@@ -368,14 +440,33 @@ async function callAPI(prompt, occasion, relationship) {
   }
 }
 
-function showResults(gifts, occasion, relationship) {
+function showResults(gifts, occasion, relationship, fromSave) {
   document.getElementById("loading").style.display = "none";
 
   var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
   var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
-  var subText = occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make";
-  document.getElementById("resultsSub").textContent = subText;
+  document.getElementById("resultsSub").textContent = occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make";
 
+  // Save button state
+  var saveBtn = document.getElementById("saveBtn");
+  var saved = localStorage.getItem("giftho_saved");
+  if (fromSave) {
+    saveBtn.innerHTML = "&#10003; Saved";
+    saveBtn.className = "save-btn saved";
+  } else {
+    saveBtn.innerHTML = "&#127915; Save this list";
+    saveBtn.className = "save-btn";
+  }
+
+  // Etiquette note
+  var etiquetteEl = document.getElementById("etiquetteNote");
+  if (ETIQUETTE[occasion]) {
+    etiquetteEl.innerHTML = '<div class="etiquette-note"><span>&#128161;</span><span>' + ETIQUETTE[occasion].replace("&#128161; Note: ", "") + '</span></div>';
+  } else {
+    etiquetteEl.innerHTML = "";
+  }
+
+  // Gift cards
   var list = document.getElementById("giftList");
   list.innerHTML = "";
 
@@ -384,29 +475,66 @@ function showResults(gifts, occasion, relationship) {
     var badgeIcon = type === "buy" ? "&#128722;" : "&#127912;";
     var badgeLabel = type === "buy" ? "Buy it" : "Make it";
 
+    var metaHTML = "";
+    if (type === "make") {
+      var diff = gift.difficulty || "Easy";
+      var time = gift.time || "~1 hr";
+      metaHTML = '<div class="make-meta"><span class="make-tag">&#9201; ' + time + '</span><span class="make-tag">' + diff + '</span></div>';
+    }
+
     var links = (gift.where || []).map(function(p) {
-      var url = platformURL(p, gift.name, type);
+      var url = platformURL(p, gift.name);
       var icon = p.toLowerCase().indexOf("youtube") >= 0 ? "&#9654;" : "&#8599;";
-      return '<a class="gift-link ' + type + '" href="' + url + '" target="_blank" rel="noopener">' + icon + ' ' + p + '</a>';
+      return '<a class="gift-link ' + type + '" href="' + url + '" target="_blank" rel="noopener">' + icon + " " + p + '</a>';
     }).join("");
 
+    var giftCopy = JSON.stringify(gift).replace(/'/g, "\\'");
     var card = document.createElement("div");
     card.className = "gift-card " + type;
     card.style.animationDelay = (i * 0.08) + "s";
     card.innerHTML =
-      '<div class="gift-badge ' + type + '">' + badgeIcon + ' ' + badgeLabel + '</div>' +
+      '<div class="gift-card-header">' +
+        '<div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + '</div>' +
+        metaHTML +
+      '</div>' +
       '<div class="gift-top">' +
         '<div class="gift-num ' + type + '">' + (i+1) + '</div>' +
         '<div class="gift-name">' + gift.name + '</div>' +
         '<div class="gift-price ' + type + '">' + gift.price + '</div>' +
       '</div>' +
       '<p class="gift-why">' + gift.why + '</p>' +
-      '<div class="gift-links">' + links + '</div>';
+      '<div class="gift-footer">' +
+        '<div class="gift-links">' + links + '</div>' +
+        '<button class="copy-btn" id="copy-' + i + '" onclick="handleCopy(' + i + ', this)">&#128203; Share idea</button>' +
+      '</div>';
     list.appendChild(card);
   });
 
+  // Also gifted
+  var alsoEl = document.getElementById("alsoGifted");
+  var alsoItems = ALSO_GIFTED[occasion];
+  if (alsoItems) {
+    alsoEl.innerHTML = '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' +
+      alsoItems.map(function(item) { return '<span class="also-gifted-item">' + item + '</span>'; }).join("") +
+      '</div></div>';
+  } else {
+    alsoEl.innerHTML = "";
+  }
+
   document.getElementById("results").style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function handleCopy(index, btn) {
+  var gift = currentGifts[index];
+  if (!gift) return;
+  copyGift(gift);
+  btn.innerHTML = "&#10003; Copied";
+  btn.className = "copy-btn copied";
+  setTimeout(function() {
+    btn.innerHTML = "&#128203; Share idea";
+    btn.className = "copy-btn";
+  }, 2000);
 }
 
 function reset() {
@@ -416,6 +544,7 @@ function reset() {
   document.getElementById("submitBtn").disabled = false;
   lastParams = null;
   lastGiftNames = [];
+  currentGifts = [];
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
