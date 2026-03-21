@@ -10,54 +10,38 @@
   :root { --saffron: #E8621A; --cream: #FDF6ED; --ink: #1A1208; --muted: #8A7560; --card: #FFFAF4; --border: #EAD9C4; }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
   .container { max-width: 660px; margin: 0 auto; padding: 0 20px; }
-
-  /* Header */
   header { text-align: center; padding: 48px 0 12px; }
   .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .logo-icon { width: 38px; height: 38px; background: var(--saffron); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; transform: rotate(-6deg); box-shadow: 3px 3px 0 var(--ink); }
   .logo-text { font-family: 'Playfair Display', serif; font-size: 30px; letter-spacing: -1px; }
   .tagline { font-size: 14px; color: var(--muted); font-style: italic; }
   .divider { width: 44px; height: 2px; background: var(--saffron); margin: 22px auto; border-radius: 2px; }
-
-  /* Why Giftho strip */
   .why-strip { background: rgba(232,98,26,0.07); border: 1.5px solid rgba(232,98,26,0.18); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
   .why-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
   .why-text { font-size: 13px; line-height: 1.65; color: var(--ink); }
   .why-text strong { font-weight: 500; }
-
-  /* Card */
   .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 30px 28px; margin-bottom: 20px; box-shadow: 5px 5px 0 rgba(26,18,8,0.05); }
   .card-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; }
   .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
   .field { margin-bottom: 18px; }
   label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 7px; }
-
-  /* Inputs */
   select, input, textarea { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; background: white; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
   select:focus, input:focus, textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,98,26,0.1); }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; padding-right: 38px; cursor: pointer; }
   textarea { resize: none; height: 90px; line-height: 1.5; }
   .budget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* Toggle buttons */
   .toggle-row { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
   .toggle-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; text-align: center; }
   .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--border); }
   .toggle-btn.active { background: var(--saffron); color: white; }
-
-  /* Unknown hint */
   .unknown-hint { background: rgba(232,98,26,0.06); border: 1.5px solid rgba(232,98,26,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; margin-bottom: 18px; }
   .unknown-hint.show { display: block; }
   #aboutField.hidden { display: none; }
-
-  /* Buttons */
   .btn { width: 100%; padding: 16px; background: var(--saffron); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 8px; box-shadow: 3px 3px 0 rgba(26,18,8,0.15); transition: background 0.15s, transform 0.1s; }
   .btn:hover { background: #D4561A; transform: translateY(-1px); }
   .btn:active { transform: translateY(1px); }
   .btn:disabled { background: #C4A98A; cursor: not-allowed; transform: none; box-shadow: none; }
   .error { background: #FFF3F0; border: 1.5px solid #F4C4B4; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #C0402A; margin-top: 14px; display: none; word-break: break-word; }
-
-  /* Loading */
   #loading { display: none; text-align: center; padding: 48px 0; }
   .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
   .dot { width: 10px; height: 10px; background: var(--saffron); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
@@ -65,8 +49,6 @@
   .dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-10px); opacity: 1; } }
   .loading-text { font-size: 14px; color: var(--muted); font-style: italic; }
-
-  /* Results */
   #results { display: none; }
   .results-header { text-align: center; margin-bottom: 24px; }
   .results-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 6px; }
@@ -81,22 +63,18 @@
   .gift-links { display: flex; gap: 8px; flex-wrap: wrap; padding-left: 40px; }
   .gift-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--ink); text-decoration: none; background: white; }
   .gift-link:hover { border-color: var(--saffron); color: var(--saffron); }
-
-  /* Results action buttons */
   .results-actions { display: flex; gap: 10px; margin-top: 24px; }
   .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
   .action-btn-primary { background: var(--saffron); color: white; border: none; box-shadow: 3px 3px 0 rgba(26,18,8,0.12); }
   .action-btn-primary:hover { background: #D4561A; transform: translateY(-1px); }
   .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
   .action-btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
-
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
   @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why, .gift-links { padding-left: 0; } .results-actions { flex-direction: column; } }
 </style>
 </head>
 <body>
 <div class="container">
-
   <header>
     <div class="logo">
       <div class="logo-icon">&#127873;</div>
@@ -106,7 +84,6 @@
   </header>
   <div class="divider"></div>
 
-  <!-- Why Giftho -->
   <div class="why-strip">
     <div class="why-icon">&#9889;</div>
     <div class="why-text">
@@ -114,7 +91,6 @@
     </div>
   </div>
 
-  <!-- Form -->
   <div id="formCard" class="card">
     <h2 class="card-title">What's the occasion?</h2>
     <p class="card-sub">Fill in what you know. We'll handle the rest.</p>
@@ -160,11 +136,11 @@
       <select id="ageRange">
         <option value="">Select age range</option>
         <option>Under 10</option>
-        <option>10 – 17</option>
-        <option>18 – 25</option>
-        <option>26 – 35</option>
-        <option>36 – 50</option>
-        <option>50+</option>
+        <option>10 to 17</option>
+        <option>18 to 25</option>
+        <option>26 to 35</option>
+        <option>36 to 50</option>
+        <option>50 plus</option>
       </select>
     </div>
 
@@ -185,7 +161,7 @@
     </div>
 
     <div class="unknown-hint" id="unknownHint">
-      No worries — Giftho will suggest what's popular, safe, and well-received for this occasion and budget in India right now.
+      No worries — Giftho will suggest what is popular, safe, and well-received for this occasion and budget in India right now.
     </div>
 
     <div class="field" id="aboutField">
@@ -197,13 +173,11 @@
     <div class="error" id="errorBox"></div>
   </div>
 
-  <!-- Loading -->
   <div id="loading">
     <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
   </div>
 
-  <!-- Results -->
   <div id="results">
     <div class="results-header">
       <h2 class="results-title">Here's what to get</h2>
@@ -221,7 +195,8 @@
 
 <script>
 var knowThemWell = true;
-var lastPrompt = "";
+var lastParams = null;
+var lastGiftNames = [];
 
 function setKnowMode(know) {
   knowThemWell = know;
@@ -231,14 +206,10 @@ function setKnowMode(know) {
   document.getElementById("unknownHint").className = "unknown-hint" + (know ? "" : " show");
 }
 
-function getCurrentSeason() {
-  var month = new Date().getMonth() + 1;
-  if (month >= 10 && month <= 11) return "Diwali and festive season";
-  if (month === 12 || month === 1) return "winter, Christmas and New Year season";
-  if (month >= 2 && month <= 3) return "Holi and spring season";
-  if (month >= 4 && month <= 6) return "summer season";
-  if (month >= 7 && month <= 9) return "monsoon and Rakhi season";
-  return "regular season";
+function getCurrentMonthYear() {
+  var now = new Date();
+  var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return months[now.getMonth()] + " " + now.getFullYear();
 }
 
 function platformURL(platform, giftName) {
@@ -254,14 +225,15 @@ function platformURL(platform, giftName) {
   return "https://www.google.com/search?q=" + encodeURIComponent(giftName + " buy india");
 }
 
-function buildPrompt(occasion, relationship, ageRange, budgetStr, about) {
-  var season = getCurrentSeason();
-  var ageStr = ageRange ? " aged " + ageRange : "";
+function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames) {
+  var monthYear = getCurrentMonthYear();
+  var ageStr = ageRange ? ", aged " + ageRange : "";
+  var avoidStr = (avoidNames && avoidNames.length > 0) ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give 5 completely different alternatives." : "";
 
   if (knowThemWell && about && about.trim().length > 10) {
-    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- About the person: " + about + "\n- Current season in India: " + season + "\n\nGive exactly 5 hyper-specific, personalised gift recommendations based on what you know about this person. Each should feel like it was chosen just for them. Make sure they are all different from each other.\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this is perfect for them specifically.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
+    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- About the person: " + about + "\n- Current date: " + monthYear + "\n\nGive exactly 5 hyper-specific, personalised gift recommendations based on what you know about this person. Each should feel chosen just for them. Make all 5 different from each other." + avoidStr + "\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this is perfect for them specifically.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
   } else {
-    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift but doesn't know the recipient very well:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- Current season in India: " + season + "\n\nSuggest exactly 5 gifts that are universally well-received in India for this occasion and relationship, culturally safe, popular in this price range, and relevant to the current season. Avoid generic gifts like plain gift cards or boring dry fruit boxes unless truly appropriate. Make sure all 5 suggestions are different from each other.\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this works as a safe, well-received gift.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
+    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift but does not know the recipient very well:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- Current date: " + monthYear + "\n\nUsing the current date, suggest exactly 5 gifts that are universally well-received in India for this occasion and relationship right now. They should be culturally appropriate, popular in this price range, and relevant to what people are buying in India this time of year. Do NOT suggest anything tied to festivals or occasions that have already passed this year. Make all 5 different from each other." + avoidStr + "\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this works as a well-received gift right now.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
   }
 }
 
@@ -277,28 +249,33 @@ async function getGifts() {
   if (!budgetMax) return showError("Please enter a maximum budget.");
 
   hideError();
+  lastParams = { occasion, relationship, ageRange, budgetMin, budgetMax, about };
+
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("submitBtn").disabled = true;
   document.getElementById("loadingText").textContent = knowThemWell
     ? "Thinking like a gifting expert who actually knows India..."
-    : "Finding what's popular and well-received in India right now...";
+    : "Finding what is popular and well-received in India right now...";
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
-  lastPrompt = buildPrompt(occasion, relationship, ageRange, budgetStr, about);
+  lastGiftNames = [];
+  var prompt = buildPrompt(occasion, relationship, ageRange, budgetStr, about, []);
 
-  await callAPI(lastPrompt, occasion, relationship);
+  await callAPI(prompt, occasion, relationship);
 }
 
 async function regenerate() {
-  if (!lastPrompt) return;
+  if (!lastParams) return;
   document.getElementById("results").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("loadingText").textContent = "Finding fresh ideas...";
 
-  var occasion = document.getElementById("occasion").value;
-  var relationship = document.getElementById("relationship").value;
-  await callAPI(lastPrompt + "\n\nIMPORTANT: Give 5 completely different suggestions from your previous response.", occasion, relationship);
+  var p = lastParams;
+  var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
+  var prompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, lastGiftNames);
+
+  await callAPI(prompt, p.occasion, p.relationship);
 }
 
 async function callAPI(prompt, occasion, relationship) {
@@ -321,10 +298,12 @@ async function callAPI(prompt, occasion, relationship) {
     if (!match) throw new Error("No gift data returned. Please try again.");
 
     var gifts = JSON.parse(match[0]);
+    lastGiftNames = gifts.map(function(g) { return g.name; });
     showResults(gifts, occasion, relationship);
 
   } catch(err) {
     document.getElementById("loading").style.display = "none";
+    document.getElementById("results").style.display = "none";
     document.getElementById("formCard").style.display = "block";
     showError("Error: " + err.message);
   }
@@ -358,7 +337,8 @@ function reset() {
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
-  lastPrompt = "";
+  lastParams = null;
+  lastGiftNames = [];
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
