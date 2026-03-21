@@ -7,41 +7,68 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --saffron: #E8621A; --cream: #FDF6ED; --ink: #1A1208; --muted: #8A7560; --card: #FFFAF4; --border: #EAD9C4; }
+  :root {
+    --saffron: #E8621A;
+    --saffron-light: rgba(232,98,26,0.08);
+    --saffron-border: rgba(232,98,26,0.2);
+    --teal: #0D8A6A;
+    --teal-light: rgba(13,138,106,0.07);
+    --teal-border: rgba(13,138,106,0.2);
+    --cream: #FDF6ED;
+    --ink: #1A1208;
+    --muted: #8A7560;
+    --card: #FFFAF4;
+    --border: #EAD9C4;
+  }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
   .container { max-width: 660px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
   header { text-align: center; padding: 48px 0 12px; }
   .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .logo-icon { width: 38px; height: 38px; background: var(--saffron); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; transform: rotate(-6deg); box-shadow: 3px 3px 0 var(--ink); }
   .logo-text { font-family: 'Playfair Display', serif; font-size: 30px; letter-spacing: -1px; }
   .tagline { font-size: 14px; color: var(--muted); font-style: italic; }
   .divider { width: 44px; height: 2px; background: var(--saffron); margin: 22px auto; border-radius: 2px; }
-  .why-strip { background: rgba(232,98,26,0.07); border: 1.5px solid rgba(232,98,26,0.18); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
+
+  /* Why strip */
+  .why-strip { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
   .why-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
   .why-text { font-size: 13px; line-height: 1.65; color: var(--ink); }
   .why-text strong { font-weight: 500; }
+
+  /* Card */
   .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 30px 28px; margin-bottom: 20px; box-shadow: 5px 5px 0 rgba(26,18,8,0.05); }
   .card-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; }
   .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
   .field { margin-bottom: 18px; }
   label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 7px; }
+
+  /* Inputs */
   select, input, textarea { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; background: white; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
   select:focus, input:focus, textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,98,26,0.1); }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; padding-right: 38px; cursor: pointer; }
   textarea { resize: none; height: 90px; line-height: 1.5; }
   .budget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .toggle-row { display: flex; gap: 0; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
+
+  /* Toggle */
+  .toggle-row { display: flex; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
   .toggle-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; text-align: center; }
   .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--border); }
   .toggle-btn.active { background: var(--saffron); color: white; }
-  .unknown-hint { background: rgba(232,98,26,0.06); border: 1.5px solid rgba(232,98,26,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; margin-bottom: 18px; }
+
+  .unknown-hint { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; margin-bottom: 18px; }
   .unknown-hint.show { display: block; }
   #aboutField.hidden { display: none; }
+
+  /* Buttons */
   .btn { width: 100%; padding: 16px; background: var(--saffron); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 8px; box-shadow: 3px 3px 0 rgba(26,18,8,0.15); transition: background 0.15s, transform 0.1s; }
   .btn:hover { background: #D4561A; transform: translateY(-1px); }
   .btn:active { transform: translateY(1px); }
   .btn:disabled { background: #C4A98A; cursor: not-allowed; transform: none; box-shadow: none; }
   .error { background: #FFF3F0; border: 1.5px solid #F4C4B4; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #C0402A; margin-top: 14px; display: none; word-break: break-word; }
+
+  /* Loading */
   #loading { display: none; text-align: center; padding: 48px 0; }
   .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
   .dot { width: 10px; height: 10px; background: var(--saffron); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
@@ -49,26 +76,52 @@
   .dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-10px); opacity: 1; } }
   .loading-text { font-size: 14px; color: var(--muted); font-style: italic; }
+
+  /* Results */
   #results { display: none; }
   .results-header { text-align: center; margin-bottom: 24px; }
   .results-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 6px; }
   .results-sub { font-size: 13px; color: var(--muted); }
-  .gift-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 22px; margin-bottom: 14px; box-shadow: 4px 4px 0 rgba(26,18,8,0.04); animation: fadeUp 0.4s ease forwards; opacity: 0; }
+
+  /* Gift cards */
+  .gift-card { border-radius: 16px; padding: 22px; margin-bottom: 14px; animation: fadeUp 0.4s ease forwards; opacity: 0; }
+  .gift-card.buy { background: var(--card); border: 1.5px solid var(--border); box-shadow: 4px 4px 0 rgba(26,18,8,0.04); }
+  .gift-card.make { background: #F4FBF8; border: 1.5px solid var(--teal-border); box-shadow: 4px 4px 0 rgba(13,138,106,0.06); }
   @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
   .gift-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-  .gift-num { width: 28px; height: 28px; background: var(--saffron); color: white; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+
+  /* Type badge */
+  .gift-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; margin-bottom: 10px; }
+  .gift-badge.buy { background: var(--saffron-light); color: var(--saffron); border: 1px solid var(--saffron-border); }
+  .gift-badge.make { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
+
+  .gift-num { width: 28px; height: 28px; color: white; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .gift-num.buy { background: var(--saffron); }
+  .gift-num.make { background: var(--teal); }
+
   .gift-name { font-family: 'Playfair Display', serif; font-size: 18px; flex: 1; line-height: 1.3; }
-  .gift-price { font-size: 13px; font-weight: 500; color: var(--saffron); white-space: nowrap; margin-top: 4px; }
+  .gift-price { font-size: 13px; font-weight: 500; white-space: nowrap; margin-top: 4px; }
+  .gift-price.buy { color: var(--saffron); }
+  .gift-price.make { color: var(--teal); }
+
   .gift-why { font-size: 14px; color: #4A3C2A; line-height: 1.65; margin-bottom: 14px; padding-left: 40px; }
   .gift-links { display: flex; gap: 8px; flex-wrap: wrap; padding-left: 40px; }
-  .gift-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--ink); text-decoration: none; background: white; }
-  .gift-link:hover { border-color: var(--saffron); color: var(--saffron); }
+
+  .gift-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.15s; }
+  .gift-link.buy { border: 1.5px solid var(--border); color: var(--ink); background: white; }
+  .gift-link.buy:hover { border-color: var(--saffron); color: var(--saffron); }
+  .gift-link.make { border: 1.5px solid var(--teal-border); color: var(--teal); background: white; }
+  .gift-link.make:hover { background: var(--teal-light); }
+
+  /* Results actions */
   .results-actions { display: flex; gap: 10px; margin-top: 24px; }
   .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
   .action-btn-primary { background: var(--saffron); color: white; border: none; box-shadow: 3px 3px 0 rgba(26,18,8,0.12); }
   .action-btn-primary:hover { background: #D4561A; transform: translateY(-1px); }
   .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
   .action-btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
+
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
   @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why, .gift-links { padding-left: 0; } .results-actions { flex-direction: column; } }
 </style>
@@ -87,7 +140,7 @@
   <div class="why-strip">
     <div class="why-icon">&#9889;</div>
     <div class="why-text">
-      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it's for, and your budget. We'll give you 5 specific, buyable gifts with links to Indian platforms. Takes 30 seconds.
+      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it's for, and your budget. We'll give you specific gifts to buy online, plus creative ideas you can make yourself. Takes 30 seconds.
     </div>
   </div>
 
@@ -212,9 +265,10 @@ function getCurrentMonthYear() {
   return months[now.getMonth()] + " " + now.getFullYear();
 }
 
-function platformURL(platform, giftName) {
+function platformURL(platform, giftName, type) {
   var q = encodeURIComponent(giftName);
   var p = platform.toLowerCase();
+  if (p.indexOf("youtube") >= 0) return "https://www.youtube.com/results?search_query=" + encodeURIComponent(giftName + " diy tutorial");
   if (p.indexOf("amazon") >= 0) return "https://www.amazon.in/s?k=" + q;
   if (p.indexOf("flipkart") >= 0) return "https://www.flipkart.com/search?q=" + q;
   if (p.indexOf("nykaa") >= 0) return "https://www.nykaa.com/search/result/?q=" + q;
@@ -222,19 +276,26 @@ function platformURL(platform, giftName) {
   if (p.indexOf("fabindia") >= 0) return "https://www.fabindia.com/search?q=" + q;
   if (p.indexOf("pepperfry") >= 0) return "https://www.pepperfry.com/search?q=" + q;
   if (p.indexOf("jaypore") >= 0) return "https://www.jaypore.com/search?q=" + q;
+  if (p.indexOf("bewakoof") >= 0) return "https://www.bewakoof.com/search?q=" + q;
   return "https://www.google.com/search?q=" + encodeURIComponent(giftName + " buy india");
 }
 
 function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames) {
   var monthYear = getCurrentMonthYear();
   var ageStr = ageRange ? ", aged " + ageRange : "";
-  var avoidStr = (avoidNames && avoidNames.length > 0) ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give 5 completely different alternatives." : "";
+  var avoidStr = (avoidNames && avoidNames.length > 0)
+    ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give 5 completely different alternatives."
+    : "";
 
-  if (knowThemWell && about && about.trim().length > 10) {
-    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- About the person: " + about + "\n- Current date: " + monthYear + "\n\nGive exactly 5 hyper-specific, personalised gift recommendations based on what you know about this person. Each should feel chosen just for them. Make all 5 different from each other." + avoidStr + "\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this is perfect for them specifically.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
-  } else {
-    return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift but does not know the recipient very well:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- Current date: " + monthYear + "\n\nUsing the current date, suggest exactly 5 gifts that are universally well-received in India for this occasion and relationship right now. They should be culturally appropriate, popular in this price range, and relevant to what people are buying in India this time of year. Do NOT suggest anything tied to festivals or occasions that have already passed this year. Make all 5 different from each other." + avoidStr + "\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"price\":\"Rs.X\",\"why\":\"Why this works as a well-received gift right now.\",\"where\":[\"Amazon India\",\"Flipkart\"]}]";
-  }
+  var baseContext = knowThemWell && about && about.trim().length > 10
+    ? "About the person: " + about + "\n"
+    : "";
+
+  var modeInstruction = knowThemWell && about && about.trim().length > 10
+    ? "Give exactly 5 gift recommendations personalised for this person. Each should feel chosen just for them."
+    : "Give exactly 5 gift recommendations that are universally well-received in India for this occasion and relationship. They should be culturally appropriate, popular in this price range, and relevant to what people are buying right now. Do NOT suggest anything tied to festivals or occasions that have already passed this year.";
+
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and relationships.\n\nSomeone needs a gift for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + "\n- " + baseContext + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nMix between 'buy' and 'make' type gifts:\n- 'buy' = a product they can purchase online. Only suggest platforms that actually sell this type of product (e.g. do NOT suggest Amazon for subscriptions, experiences or services). Suggest 2-3 appropriate Indian platforms.\n- 'make' = a creative DIY idea they can make themselves (e.g. handmade card, paper bouquet, photo album, painted pot, baked goods). For make gifts, suggest 'YouTube Tutorial' as the where. Keep make gifts achievable in 1-2 hours.\n\nAim for 3 buy and 2 make gifts, but adjust based on what feels right.\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array, no markdown, no explanation:\n[{\"name\":\"Gift name\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works for them.\",\"where\":[\"Amazon India\",\"Flipkart\"]},{\"name\":\"Paper Flower Bouquet\",\"type\":\"make\",\"price\":\"Rs.50 materials\",\"why\":\"Thoughtful and personal.\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
@@ -249,7 +310,8 @@ async function getGifts() {
   if (!budgetMax) return showError("Please enter a maximum budget.");
 
   hideError();
-  lastParams = { occasion, relationship, ageRange, budgetMin, budgetMax, about };
+  lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about };
+  lastGiftNames = [];
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
@@ -259,9 +321,7 @@ async function getGifts() {
     : "Finding what is popular and well-received in India right now...";
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
-  lastGiftNames = [];
   var prompt = buildPrompt(occasion, relationship, ageRange, budgetStr, about, []);
-
   await callAPI(prompt, occasion, relationship);
 }
 
@@ -274,7 +334,6 @@ async function regenerate() {
   var p = lastParams;
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
   var prompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, lastGiftNames);
-
   await callAPI(prompt, p.occasion, p.relationship);
 }
 
@@ -285,7 +344,7 @@ async function callAPI(prompt, occasion, relationship) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
-        max_tokens: 1024,
+        max_tokens: 1200,
         messages: [{ role: "user", content: prompt }]
       })
     });
@@ -311,20 +370,38 @@ async function callAPI(prompt, occasion, relationship) {
 
 function showResults(gifts, occasion, relationship) {
   document.getElementById("loading").style.display = "none";
-  document.getElementById("resultsSub").textContent = occasion + " · " + relationship + " · 5 ideas, curated for India";
+
+  var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
+  var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
+  var subText = occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make";
+  document.getElementById("resultsSub").textContent = subText;
 
   var list = document.getElementById("giftList");
   list.innerHTML = "";
 
   gifts.forEach(function(gift, i) {
+    var type = gift.type === "make" ? "make" : "buy";
+    var badgeIcon = type === "buy" ? "&#128722;" : "&#127912;";
+    var badgeLabel = type === "buy" ? "Buy it" : "Make it";
+
     var links = (gift.where || []).map(function(p) {
-      return '<a class="gift-link" href="' + platformURL(p, gift.name) + '" target="_blank" rel="noopener">&#8599; ' + p + '</a>';
+      var url = platformURL(p, gift.name, type);
+      var icon = p.toLowerCase().indexOf("youtube") >= 0 ? "&#9654;" : "&#8599;";
+      return '<a class="gift-link ' + type + '" href="' + url + '" target="_blank" rel="noopener">' + icon + ' ' + p + '</a>';
     }).join("");
 
     var card = document.createElement("div");
-    card.className = "gift-card";
+    card.className = "gift-card " + type;
     card.style.animationDelay = (i * 0.08) + "s";
-    card.innerHTML = '<div class="gift-top"><div class="gift-num">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price">' + gift.price + '</div></div><p class="gift-why">' + gift.why + '</p><div class="gift-links">' + links + '</div>';
+    card.innerHTML =
+      '<div class="gift-badge ' + type + '">' + badgeIcon + ' ' + badgeLabel + '</div>' +
+      '<div class="gift-top">' +
+        '<div class="gift-num ' + type + '">' + (i+1) + '</div>' +
+        '<div class="gift-name">' + gift.name + '</div>' +
+        '<div class="gift-price ' + type + '">' + gift.price + '</div>' +
+      '</div>' +
+      '<p class="gift-why">' + gift.why + '</p>' +
+      '<div class="gift-links">' + links + '</div>';
     list.appendChild(card);
   });
 
