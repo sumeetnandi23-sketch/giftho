@@ -901,6 +901,49 @@ function reset() {
 
 function showError(msg) { var b = document.getElementById("errorBox"); b.textContent = msg; b.style.display = "block"; }
 function hideError() { document.getElementById("errorBox").style.display = "none"; }
+
+function toggleEditPanel() {
+  var panel = document.getElementById("editPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+
+function updateEditBar(occasion, relationship, ageRange, budgetMin, budgetMax, gender) {
+  var parts = [occasion, relationship];
+  if (gender) parts.push(gender);
+  if (ageRange) parts.push(ageRange);
+  if (budgetMin) parts.push("Rs." + budgetMin + "-" + budgetMax);
+  else if (budgetMax) parts.push("up to Rs." + budgetMax);
+  document.getElementById("editSummary").textContent = parts.join(" · ");
+  document.getElementById("editOccasion").value = occasion || "";
+  document.getElementById("editRelationship").value = relationship || "";
+  document.getElementById("editAgeRange").value = ageRange || "";
+  document.getElementById("editBudgetMin").value = budgetMin || "";
+  document.getElementById("editBudgetMax").value = budgetMax || "";
+  document.getElementById("editGender").value = gender || "";
+}
+
+function regenerateFromEdit() {
+  var p = {
+    occasion: document.getElementById("editOccasion").value,
+    relationship: document.getElementById("editRelationship").value,
+    ageRange: document.getElementById("editAgeRange").value,
+    budgetMin: document.getElementById("editBudgetMin").value,
+    budgetMax: document.getElementById("editBudgetMax").value,
+    about: lastParams ? lastParams.about : ""
+  };
+  selectedGender = document.getElementById("editGender").value;
+  if (!p.occasion || !p.relationship) { alert("Please select an occasion and relationship."); return; }
+  if (!p.budgetMax) { alert("Please enter a maximum budget."); return; }
+  lastParams = p;
+  allSeenGiftNames = [];
+  document.getElementById("editPanel").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("loadingText").textContent = "Finding better ideas...";
+  startLoadingTips();
+  var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
+  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || "", []), p.occasion, p.relationship);
+}
 </script>
 </body>
 </html>
