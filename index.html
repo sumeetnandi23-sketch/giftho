@@ -246,7 +246,7 @@
     <!-- Know them well: free text -->
     <div class="field" id="aboutField">
       <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400">(optional but powerful)</span></label>
-      <textarea id="about" placeholder="Type like you'd text a friend — 'she's into yoga and coffee' works great"></textarea>
+      <textarea id="about" placeholder="e.g. loves yoga and coffee, hates clutter"></textarea>
     </div>
 
     <!-- Don't know them well: questionnaire -->
@@ -362,7 +362,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.16</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.17</footer>
 </div>
 
 <script>
@@ -476,66 +476,52 @@ function getCurrentMonthYear() {
 
 function platformURL(platform, giftName) {
   var p = platform.toLowerCase().trim();
+  var q = encodeURIComponent(giftName);
+  var pq = encodeURIComponent(giftName + " " + platform);
 
-  // YouTube DIY tutorials
+  // YouTube for DIY
   if (p.indexOf("youtube") >= 0) {
     return "https://www.youtube.com/results?search_query=" + encodeURIComponent(giftName + " diy tutorial how to make");
   }
 
-  // For known platforms with good search — direct search URL
-  var directSearch = {
-    "amazon": "https://www.amazon.in/s?k=",
-    "flipkart": "https://www.flipkart.com/search?q=",
-    "nykaa": "https://www.nykaa.com/search/result/?q=",
-    "myntra": "https://www.myntra.com/search?rawQuery=",
-    "meesho": "https://www.meesho.com/search?q=",
-    "firstcry": "https://www.firstcry.com/search?q=",
-    "ugaoo": "https://www.ugaoo.com/search?q=",
-    "bigbasket": "https://www.bigbasket.com/ps/?q=",
-    "blinkit": "https://blinkit.com/s/?q=",
-    "pepperfry": "https://www.pepperfry.com/search?q=",
-    "fabindia": "https://www.fabindia.com/search?q=",
-    "jaypore": "https://www.jaypore.com/search?q=",
-    "bigsmall": "https://www.bigsmall.in/search?q=",
-    "bewakoof": "https://www.bewakoof.com/search?q=",
-    "chumbak": "https://www.chumbak.com/search?type=product&q=",
-    "igp": "https://www.igp.com/search?q=",
-    "ferns n petals": "https://www.fernsnpetals.com/search?q=",
-    "fernsnpetals": "https://www.fernsnpetals.com/search?q=",
-    "decathlon": "https://www.decathlon.in/search?Ntt=",
-    "boat": "https://www.boat-lifestyle.com/search?q=",
-    "the bombay candle": "https://www.thebombaycandle.com/search?q=",
-    "bombay candle": "https://www.thebombaycandle.com/search?q=",
-    "blue tokai": "https://bluetokaicoffee.com/search?q=",
-    "bluetokai": "https://bluetokaicoffee.com/search?q=",
-    "araku": "https://www.arakucoffee.in/search?q=",
-    "heads up for tails": "https://www.headsupfortails.com/search?q=",
-    "heads up": "https://www.headsupfortails.com/search?q=",
-    "lenskart": "https://www.lenskart.com/search/?q=",
-    "clovia": "https://www.clovia.com/search/?q=",
-    "zivame": "https://www.zivame.com/catalogsearch/result/?q=",
-    "sugar": "https://www.sugarcosmetics.com/search?q=",
-    "mamaearth": "https://mamaearth.in/search?q=",
-    "wow skin": "https://www.wowskinscience.com/search?q=",
-    "forest essentials": "https://www.forestessentialsindia.com/search?q=",
-    "kama ayurveda": "https://www.kamaayurveda.com/search?q=",
-    "the moms co": "https://www.themomsco.com/search?q=",
-    "noise": "https://www.gonoise.com/search?q=",
-    "realme": "https://www.realme.com/in/search?q=",
-    "crossword": "https://www.crossword.in/search?q=",
-    "landmark": "https://www.landmarkonthenet.com/search?q="
+  // Fast path for major platforms with known search URLs
+  var direct = {
+    "amazon": "https://www.amazon.in/s?k=" + q,
+    "flipkart": "https://www.flipkart.com/search?q=" + q,
+    "nykaa": "https://www.nykaa.com/search/result/?q=" + q,
+    "myntra": "https://www.myntra.com/search?rawQuery=" + q,
+    "meesho": "https://www.meesho.com/search?q=" + q,
+    "firstcry": "https://www.firstcry.com/search?q=" + q,
+    "decathlon": "https://www.decathlon.in/search?Ntt=" + q,
+    "bigbasket": "https://www.bigbasket.com/ps/?q=" + q,
+    "ugaoo": "https://www.ugaoo.com/search?q=" + q,
+    "pepperfry": "https://www.pepperfry.com/search?q=" + q,
+    "fabindia": "https://www.fabindia.com/search?q=" + q,
+    "jaypore": "https://www.jaypore.com/search?q=" + q,
+    "bewakoof": "https://www.bewakoof.com/search?q=" + q,
+    "bigsmall": "https://www.bigsmall.in/search?q=" + q,
+    "chumbak": "https://www.chumbak.com/search?type=product&q=" + q,
+    "igp": "https://www.igp.com/search?q=" + q,
+    "ferns": "https://www.fernsnpetals.com/search?q=" + q,
+    "etsy": "https://www.etsy.com/in-en/search?q=" + q,
+    "boat": "https://www.boat-lifestyle.com/search?q=" + q,
+    "noise": "https://www.gonoise.com/search?q=" + q,
+    "mamaearth": "https://mamaearth.in/search?q=" + q,
+    "forest essentials": "https://www.forestessentialsindia.com/search?q=" + q,
+    "kama": "https://www.kamaayurveda.com/search?q=" + q,
+    "blue tokai": "https://bluetokaicoffee.com/search?q=" + q,
+    "araku": "https://www.arakucoffee.in/search?q=" + q,
+    "heads up": "https://www.headsupfortails.com/search?q=" + q,
+    "crossword": "https://www.crossword.in/search?q=" + q
   };
 
-  var q = encodeURIComponent(giftName);
-  for (var key in directSearch) {
-    if (p.indexOf(key) >= 0) {
-      return directSearch[key] + q;
-    }
+  for (var key in direct) {
+    if (p.indexOf(key) >= 0) return direct[key];
   }
 
-  // For any other platform — Google site search so user lands on that store's results
-  var domainGuess = p.replace(/[^a-z0-9]/g, "").replace("india", "").replace("store", "");
-  return "https://www.google.com/search?q=" + encodeURIComponent(giftName + " " + platform + " india");
+  // Universal fallback — Google Shopping scoped to platform
+  // Works for ANY platform name, forever, no hallucination risk
+  return "https://www.google.com/search?tbm=shop&q=" + pq;
 }
 
 function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames) {
@@ -560,7 +546,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
 
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nMATERIAL RULE — applies to ALL gifts regardless of relationship: Never suggest stainless steel, basic plastic, or commodity materials as a gifting choice. These feel impersonal and mass-produced. Always suggest gifts that feel handpicked, considered, and appropriate for the budget.\n\nVARIETY RULE — applies to ALL results: When a vibe or interest is mentioned, use it as a flavour, not a theme. Maximum 2 of the 5 suggestions should directly relate to that vibe or interest. The remaining suggestions must come from completely different categories — variety is essential. Never give 4 or 5 gifts all from the same category.\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nMATERIAL RULE — applies to ALL gifts regardless of relationship: Never suggest stainless steel, basic plastic, or commodity materials as a gifting choice. These feel impersonal and mass-produced. Always suggest gifts that feel handpicked, considered, and appropriate for the budget.\n\nNAMING RULE: Gift names must be clean product names only. Never include social media references, influencer names, or platform mentions in brackets like '(Instagram)', '(YouTube)', '(as seen on Instagram)'. Just the product name.\n\nVARIETY RULE — applies to ALL results: When a vibe or interest is mentioned, use it as a flavour, not a theme. Maximum 2 of the 5 suggestions should directly relate to that vibe or interest. The remaining suggestions must come from completely different categories — variety is essential. Never give 4 or 5 gifts all from the same category.\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
@@ -667,7 +653,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n' + platformURL((gift.where && gift.where[0]) || 'Amazon India', gift.name)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
