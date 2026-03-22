@@ -121,8 +121,7 @@
   .gift-link.make { border: 1.5px solid var(--teal-border); color: var(--teal); background: white; }
   .gift-link.make:hover { background: var(--teal-light); }
   .copy-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1.5px solid var(--border); background: white; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
-  .copy-btn:hover { border-color: var(--saffron); color: var(--saffron); }
-  .copy-btn.copied { border-color: var(--teal); color: var(--teal); }
+  .copy-btn:hover { border-color: #25D366; color: #25D366; }
   .etiquette-note { background: rgba(138,117,96,0.07); border: 1.5px solid rgba(138,117,96,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
   .also-gifted { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
   .also-gifted-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
@@ -286,8 +285,15 @@
             <div class="pill" onclick="togglePill(this,'vibe')">Practical</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Trendy</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Outdoorsy</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Homebody</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Into sports</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Foodie</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Gamer</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Gym person</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Movie buff</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Music lover</div>
           </div>
         </div>
 
@@ -297,12 +303,15 @@
             <span class="q-optional">pick any</span>
           </div>
           <div class="pills" id="pillsContext">
+            <div class="pill" onclick="togglePill(this,'context')">Cat parent</div>
+            <div class="pill" onclick="togglePill(this,'context')">Dog parent</div>
             <div class="pill" onclick="togglePill(this,'context')">New home</div>
             <div class="pill" onclick="togglePill(this,'context')">New baby</div>
             <div class="pill" onclick="togglePill(this,'context')">Into wellness</div>
             <div class="pill" onclick="togglePill(this,'context')">Works from home</div>
-            <div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div>
             <div class="pill" onclick="togglePill(this,'context')">Eco conscious</div>
+            <div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div>
+            <div class="pill" onclick="togglePill(this,'context')">Open to anything</div>
           </div>
         </div>
 
@@ -591,7 +600,8 @@ function showResults(gifts, occasion, relationship, fromSave) {
   document.getElementById("loading").style.display = "none";
   var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
   var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
-  document.getElementById("resultsSub").textContent = occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make";
+  var subText = makeCount > 0 ? occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make" : occasion + " · " + relationship + " · 5 ideas, curated for India";
+  document.getElementById("resultsSub").textContent = subText;
 
   var saveBtn = document.getElementById("saveBtn");
   if (fromSave) { saveBtn.innerHTML = "&#10003; Saved"; saveBtn.className = "save-btn saved"; }
@@ -623,7 +633,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><button class="copy-btn" onclick="handleCopy(' + i + ', this)">&#128203; Share idea</button></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n' + (gift.where || []).map(function(p) { return platformURL(p, gift.name); }).join(', ')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
@@ -639,18 +649,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function handleCopy(index, btn) {
-  var gift = currentGifts[index];
-  if (!gift) return;
-  var type = gift.type === "make" ? "Make it yourself" : "Buy online";
-  var links = (gift.where || []).map(function(p) { return platformURL(p, gift.name); }).join(", ");
-  var text = "Gift idea: " + gift.name + " (" + gift.price + ")\n" + type + "\n" + gift.why + "\n" + links;
-  navigator.clipboard.writeText(text).catch(function() {
-    var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
-  });
-  btn.innerHTML = "&#10003; Copied"; btn.className = "copy-btn copied";
-  setTimeout(function() { btn.innerHTML = "&#128203; Share idea"; btn.className = "copy-btn"; }, 2000);
-}
+
 
 function saveResults() {
   localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams }));
