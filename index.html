@@ -354,6 +354,7 @@
 var knowThemWell = true;
 var lastParams = null;
 var lastGiftNames = [];
+var allSeenGiftNames = [];
 var currentGifts = [];
 var currentContext = {};
 var selectedPills = { interests: [], vibe: [], context: [] };
@@ -418,8 +419,9 @@ function openQuestionnaire() {
 }
 
 function closeQuestionnaire() {
-  document.getElementById("questionnairePanel").className = "";
-  // Show a summary nudge if anything was selected
+  var panel = document.getElementById("questionnairePanel");
+  var panelTop = panel.getBoundingClientRect().top + window.pageYOffset;
+  panel.className = "";
   var total = selectedPills.interests.length + selectedPills.vibe.length + selectedPills.context.length;
   var nudge = document.getElementById("qNudge");
   nudge.style.display = "";
@@ -427,6 +429,7 @@ function closeQuestionnaire() {
     nudge.querySelector(".q-nudge-text").innerHTML = "&#10003; " + total + " detail" + (total > 1 ? "s" : "") + " added<span>Tap to adjust</span>";
     nudge.querySelector(".q-open-btn").textContent = "Edit";
   }
+  window.scrollTo({ top: panelTop - 80, behavior: 'smooth' });
 }
 
 function buildAboutFromPills() {
@@ -528,7 +531,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
 
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
@@ -545,6 +548,7 @@ async function getGifts() {
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about };
   lastGiftNames = [];
+  allSeenGiftNames = [];
   currentContext = { occasion: occasion, relationship: relationship };
 
   document.getElementById("formCard").style.display = "none";
@@ -565,7 +569,7 @@ async function regenerate() {
   document.getElementById("loadingText").textContent = "Finding fresh ideas...";
   var p = lastParams;
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
-  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, lastGiftNames), p.occasion, p.relationship);
+  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, allSeenGiftNames), p.occasion, p.relationship);
 }
 
 async function callAPI(prompt, occasion, relationship) {
@@ -586,6 +590,7 @@ async function callAPI(prompt, occasion, relationship) {
     if (!match) throw new Error("No gift data returned. Please try again.");
     var gifts = JSON.parse(match[0]);
     lastGiftNames = gifts.map(function(g) { return g.name; });
+    allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
     currentGifts = gifts;
     showResults(gifts, occasion, relationship, false);
   } catch(err) {
@@ -633,7 +638,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n' + (gift.where || []).map(function(p) { return platformURL(p, gift.name); }).join(', ')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\nSearch on Amazon: https://www.amazon.in/s?k=' + encodeURIComponent(gift.name)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
@@ -664,6 +669,8 @@ function loadSaved() {
   var data = JSON.parse(saved);
   currentGifts = data.gifts; currentContext = data.context; lastParams = data.params;
   lastGiftNames = data.gifts.map(function(g) { return g.name; });
+  allSeenGiftNames = data.gifts.map(function(g) { return g.name; });
+  document.getElementById("formCard").style.display = "none";
   showResults(data.gifts, data.context.occasion, data.context.relationship, true);
 }
 
@@ -672,7 +679,7 @@ function reset() {
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
-  lastParams = null; lastGiftNames = []; currentGifts = [];
+  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = [];
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
