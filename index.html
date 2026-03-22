@@ -127,7 +127,8 @@
   .also-gifted { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
   .also-gifted-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
   .also-gifted-items { display: flex; gap: 8px; flex-wrap: wrap; }
-  .also-gifted-item { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--ink); background: white; }
+  .also-gifted-item { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--ink); background: white; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; }
+  .also-gifted-item:hover { border-color: var(--saffron); color: var(--saffron); }
   .save-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; margin: 0 auto 20px; }
   .save-btn:hover { border-color: var(--saffron); color: var(--saffron); }
   .save-btn.saved { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
@@ -135,10 +136,10 @@
   .saved-banner.show { display: block; }
   .results-actions { display: flex; gap: 10px; margin-top: 8px; }
   .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
-  .action-btn-primary { background: var(--saffron); color: white; border: none; box-shadow: 3px 3px 0 rgba(26,18,8,0.12); }
-  .action-btn-primary:hover { background: #D4561A; transform: translateY(-1px); }
+  .action-btn-primary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .action-btn-primary:hover { border-color: var(--ink); color: var(--ink); }
   .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
-  .action-btn-secondary:hover { border-color: var(--saffron); color: var(--saffron); }
+  .action-btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
   @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why { padding-left: 0; } .gift-footer { padding-left: 0; } .results-actions { flex-direction: column; } }
 </style>
@@ -628,7 +629,10 @@ function showResults(gifts, occasion, relationship, fromSave) {
 
   var alsoItems = ALSO_GIFTED[occasion];
   document.getElementById("alsoGifted").innerHTML = alsoItems
-    ? '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<span class="also-gifted-item">' + item + "</span>"; }).join("") + "</div></div>"
+    ? '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) {
+        var url = "https://www.google.com/search?tbm=shop&q=" + encodeURIComponent(item + " india");
+        return '<a class="also-gifted-item" href="' + url + '" target="_blank" rel="noopener">' + item + ' &#8599;</a>';
+      }).join("") + "</div></div>"
     : "";
 
   document.getElementById("results").style.display = "block";
