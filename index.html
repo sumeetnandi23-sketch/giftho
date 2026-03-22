@@ -206,6 +206,15 @@
     </div>
 
     <div class="field">
+      <label>Their Gender</label>
+      <div class="toggle-row" id="genderToggle">
+        <button class="toggle-btn" id="genderHer" onclick="setGender('Her')">Her</button>
+        <button class="toggle-btn" id="genderHim" onclick="setGender('Him')">Him</button>
+        <button class="toggle-btn" id="genderThem" onclick="setGender('Them')">Them</button>
+      </div>
+    </div>
+
+    <div class="field">
       <label>Their Age Range</label>
       <select id="ageRange">
         <option value="">Select age range</option>
@@ -287,6 +296,7 @@
             <div class="pill" onclick="togglePill(this,'vibe')">Trendy</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Homebody</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Into sports</div>
+            <div class="pill" onclick="togglePill(this,'vibe')">Traveller</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Foodie</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div>
@@ -308,11 +318,16 @@
             <div class="pill" onclick="togglePill(this,'context')">New home</div>
             <div class="pill" onclick="togglePill(this,'context')">New baby</div>
             <div class="pill" onclick="togglePill(this,'context')">Into wellness</div>
-            <div class="pill" onclick="togglePill(this,'context')">Works from home</div>
-            <div class="pill" onclick="togglePill(this,'context')">Eco conscious</div>
             <div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div>
             <div class="pill" onclick="togglePill(this,'context')">Open to anything</div>
           </div>
+        </div>
+
+        <div class="q-section">
+          <div class="q-label">
+            Anything specific? <span class="q-optional">optional free text</span>
+          </div>
+          <input type="text" id="qFreeText" placeholder="e.g. obsessed with K-dramas, collects sneakers..." style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; background:white;">
         </div>
 
         <div class="q-footer">
@@ -352,6 +367,7 @@
 
 <script>
 var knowThemWell = true;
+var selectedGender = '';
 var lastParams = null;
 var lastGiftNames = [];
 var allSeenGiftNames = [];
@@ -386,6 +402,13 @@ window.onload = function() {
     document.getElementById("savedBanner").className = "saved-banner show";
   }
 };
+
+function setGender(g) {
+  selectedGender = (selectedGender === g) ? '' : g;
+  ['Her','Him','Them'].forEach(function(x) {
+    document.getElementById('gender' + x).className = 'toggle-btn' + (selectedGender === x ? ' active' : '');
+  });
+}
 
 function setKnowMode(know) {
   knowThemWell = know;
@@ -437,6 +460,8 @@ function buildAboutFromPills() {
   if (selectedPills.interests.length > 0) parts.push("They are into " + selectedPills.interests.join(", "));
   if (selectedPills.vibe.length > 0) parts.push("Their vibe is " + selectedPills.vibe[0]);
   if (selectedPills.context.length > 0) parts.push(selectedPills.context.join(", "));
+  var freeText = document.getElementById('qFreeText');
+  if (freeText && freeText.value.trim()) parts.push(freeText.value.trim());
   return parts.join(". ");
 }
 
@@ -531,7 +556,9 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
 
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nMATERIAL RULE — applies to ALL gifts regardless of relationship: Never suggest stainless steel, basic plastic, or commodity materials as a gifting choice. These feel impersonal and mass-produced. Always suggest gifts that feel handpicked, considered, and appropriate for the budget.
+
+SOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
@@ -638,7 +665,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\nSearch on Amazon: https://www.amazon.in/s?k=' + encodeURIComponent(gift.name)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n' + platformURL((gift.where && gift.where[0]) || 'Amazon India', gift.name)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
@@ -679,7 +706,7 @@ function reset() {
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
-  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = [];
+  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = []; selectedGender = ''; ['Her','Him','Them'].forEach(function(x) { document.getElementById('gender' + x).className = 'toggle-btn'; });
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
