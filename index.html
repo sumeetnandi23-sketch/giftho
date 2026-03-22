@@ -141,6 +141,22 @@
   .action-btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
   @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why { padding-left: 0; } .gift-footer { padding-left: 0; } .results-actions { flex-direction: column; } }
+
+  /* Top pick badge */
+  .gift-card.top-pick { border-width: 2px; }
+  .gift-card.top-pick.buy { border-color: var(--saffron); }
+  .gift-card.top-pick.make { border-color: var(--teal); }
+  .top-pick-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #FFF3E8; border: 1px solid var(--saffron-border); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--saffron); }
+
+  /* Loading tip */
+  .loading-tip { font-size: 12px; color: var(--muted); margin-top: 10px; max-width: 300px; margin-left: auto; margin-right: auto; line-height: 1.6; font-style: normal; background: var(--saffron-light); border-radius: 10px; padding: 10px 14px; transition: opacity 0.3s; }
+
+  /* Occasion nudge */
+  .occasion-nudge { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; cursor: pointer; font-size: 13px; color: var(--ink); line-height: 1.6; display: flex; align-items: center; gap: 12px; }
+  .occasion-nudge:hover { background: rgba(232,98,26,0.12); }
+  .nudge-icon { font-size: 22px; flex-shrink: 0; }
+  .nudge-text strong { display: block; font-weight: 500; margin-bottom: 2px; }
+  .nudge-text span { font-size: 12px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -157,13 +173,15 @@
   <div class="why-strip">
     <div class="why-icon">&#9889;</div>
     <div class="why-text">
-      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it is for, and your budget. We give you gifts to buy online plus creative ideas to make yourself. Takes 30 seconds.
+      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it is for, and your budget. We give you gifts to buy online plus creative ideas to make yourself. Takes 30 seconds. <span style="display:block;margin-top:6px;font-size:12px;color:var(--muted);">&#10003; Already helped 500+ people gift right across India</span>
     </div>
   </div>
 
   <div id="savedBanner" class="saved-banner" onclick="loadSaved()">
     &#127915; You have a saved gift list — tap to view it
   </div>
+
+  <div id="occasionNudge" class="occasion-nudge" style="display:none;" onclick="applyNudge()"></div>
 
   <div id="formCard" class="card">
     <h2 class="card-title">What's the occasion?</h2>
@@ -345,6 +363,7 @@
   <div id="loading">
     <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
+    <p class="loading-tip" id="loadingTip"></p>
   </div>
 
   <div id="results">
@@ -362,7 +381,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.17</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.18</footer>
 </div>
 
 <script>
@@ -374,6 +393,91 @@ var allSeenGiftNames = [];
 var currentGifts = [];
 var currentContext = {};
 var selectedPills = { interests: [], vibe: [], context: [] };
+
+
+var LOADING_TIPS = [
+  "In India, cash in an envelope is perfectly acceptable — and often preferred — at weddings and engagements.",
+  "The best gifts in India feel personal, not expensive. A Rs.500 gift with thought beats a Rs.2000 gift without it.",
+  "Diwali is India's biggest gifting season — over ₹50,000 crore is spent on gifts every year.",
+  "For housewarming gifts, Indians traditionally prefer items that bring prosperity — plants, diyas, and copper vessels are timeless.",
+  "Personalised gifts are growing 3x faster than generic gifts in India. People remember things made just for them.",
+  "The rakhi gifting market in India is worth over ₹12,000 crore — siblings know how to celebrate.",
+  "When in doubt, edible gifts like premium chocolates, mithai, or dry fruits work for almost every Indian occasion.",
+  "Research shows people remember how a gift made them feel, not what it cost."
+];
+
+var OCCASIONS_UPCOMING = [
+  { month: 3, day: 14, name: "Holi", msg: "Holi is around the corner", sub: "Gift colours, sweets, or something festive" },
+  { month: 4, day: 14, name: "Baisakhi", msg: "Baisakhi is coming up", sub: "A great time to gift something warm and celebratory" },
+  { month: 8, day: 15, name: "Independence Day", msg: "Independence Day is near", sub: "Celebrate with a thoughtful Indian gift" },
+  { month: 9, day: 7, name: "Rakhi", msg: "Rakhi season is here", sub: "Gift your sibling something they'll actually love" },
+  { month: 10, day: 2, name: "Gandhi Jayanti", msg: "Gandhi Jayanti is coming", sub: "Handmade or artisan gifts feel especially right" },
+  { month: 10, day: 24, name: "Diwali", msg: "Diwali is around the corner", sub: "Plan ahead — gifting sorted before the rush" },
+  { month: 12, day: 25, name: "Christmas", msg: "Christmas is coming up", sub: "Santa needs a little help from Giftho" },
+  { month: 1, day: 26, name: "Republic Day", msg: "Republic Day is near", sub: "A great occasion to gift something meaningful" }
+];
+
+var nudgeOccasion = null;
+
+function checkOccasionNudge() {
+  var now = new Date();
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+  for (var i = 0; i < OCCASIONS_UPCOMING.length; i++) {
+    var occ = OCCASIONS_UPCOMING[i];
+    var daysUntil;
+    if (occ.month === month) {
+      daysUntil = occ.day - day;
+    } else if (occ.month === month + 1 || (occ.month === 1 && month === 12)) {
+      var daysInMonth = new Date(now.getFullYear(), month, 0).getDate();
+      daysUntil = (daysInMonth - day) + occ.day;
+    } else {
+      continue;
+    }
+    if (daysUntil >= 0 && daysUntil <= 21) {
+      nudgeOccasion = occ;
+      var el = document.getElementById("occasionNudge");
+      el.innerHTML = '<div class="nudge-icon">&#127873;</div><div class="nudge-text"><strong>' + occ.msg + ' — gifting sorted?</strong><span>' + occ.sub + ' · Tap to get started</span></div>';
+      el.style.display = "flex";
+      return;
+    }
+  }
+}
+
+function applyNudge() {
+  if (!nudgeOccasion) return;
+  var sel = document.getElementById("occasion");
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].text === nudgeOccasion.name) {
+      sel.value = sel.options[i].value || nudgeOccasion.name;
+      break;
+    }
+  }
+  document.getElementById("occasionNudge").style.display = "none";
+  document.getElementById("occasion").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+var tipInterval = null;
+function startLoadingTips() {
+  var el = document.getElementById("loadingTip");
+  if (!el) return;
+  var idx = Math.floor(Math.random() * LOADING_TIPS.length);
+  el.textContent = LOADING_TIPS[idx];
+  tipInterval = setInterval(function() {
+    idx = (idx + 1) % LOADING_TIPS.length;
+    el.style.opacity = "0";
+    setTimeout(function() {
+      el.textContent = LOADING_TIPS[idx];
+      el.style.opacity = "1";
+    }, 300);
+  }, 4000);
+}
+
+function stopLoadingTips() {
+  if (tipInterval) { clearInterval(tipInterval); tipInterval = null; }
+  var el = document.getElementById("loadingTip");
+  if (el) el.textContent = "";
+}
 
 var ETIQUETTE = {
   "Wedding": "Cash or a gift envelope (shagun) is completely acceptable — and often preferred — for weddings in India.",
@@ -401,6 +505,7 @@ window.onload = function() {
   if (localStorage.getItem("giftho_saved")) {
     document.getElementById("savedBanner").className = "saved-banner show";
   }
+  checkOccasionNudge();
 };
 
 function setGender(g) {
@@ -495,7 +600,7 @@ function platformURL(platform, giftName) {
     "decathlon": "https://www.decathlon.in/search?Ntt=" + q,
     "bigbasket": "https://www.bigbasket.com/ps/?q=" + q,
     "ugaoo": "https://www.ugaoo.com/search?q=" + q,
-    "pepperfry": "https://www.pepperfry.com/search?q=" + q,
+    "pepperfry": "https://www.pepperfry.com/catalogsearch/result/?q=" + q,
     "fabindia": "https://www.fabindia.com/search?q=" + q,
     "jaypore": "https://www.jaypore.com/search?q=" + q,
     "bewakoof": "https://www.bewakoof.com/search?q=" + q,
@@ -569,6 +674,7 @@ async function getGifts() {
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("submitBtn").disabled = true;
+  startLoadingTips();
   document.getElementById("loadingText").textContent = knowThemWell
     ? "Thinking like a gifting expert who actually knows India..."
     : "Finding what is popular and well-received in India right now...";
@@ -617,6 +723,7 @@ async function callAPI(prompt, occasion, relationship) {
 }
 
 function showResults(gifts, occasion, relationship, fromSave) {
+  stopLoadingTips();
   document.getElementById("loading").style.display = "none";
   var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
   var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
@@ -641,16 +748,24 @@ function showResults(gifts, occasion, relationship, fromSave) {
     var metaHTML = type === "make"
       ? '<div class="make-meta"><span class="make-tag">&#9201; ' + (gift.time || "~1 hr") + '</span><span class="make-tag">' + (gift.difficulty || "Easy") + '</span></div>'
       : "";
-    var links = (gift.where || []).map(function(p) {
-      var url = platformURL(p, gift.name);
-      var icon = p.toLowerCase().indexOf("youtube") >= 0 ? "&#9654;" : "&#8599;";
-      return '<a class="gift-link ' + type + '" href="' + url + '" target="_blank" rel="noopener">' + icon + " " + p + "</a>";
-    }).join("");
+    var links;
+    if (type === "make") {
+      var ytUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(gift.name + " diy tutorial how to make gift");
+      var igUrl = "https://www.google.com/search?q=" + encodeURIComponent(gift.name + " diy gift instagram reels");
+      links = '<a class="gift-link make" href="' + ytUrl + '" target="_blank" rel="noopener">&#9654; YouTube Tutorial</a>' +
+              '<a class="gift-link make" href="' + igUrl + '" target="_blank" rel="noopener">&#127909; Instagram Reels</a>';
+    } else {
+      links = (gift.where || []).map(function(p) {
+        var url = platformURL(p, gift.name);
+        return '<a class="gift-link buy" href="' + url + '" target="_blank" rel="noopener">&#8599; ' + p + "</a>";
+      }).join("");
+    }
     var card = document.createElement("div");
-    card.className = "gift-card " + type;
+    card.className = "gift-card " + type + (i === 0 ? " top-pick" : "");
     card.style.animationDelay = (i * 0.08) + "s";
+    var topPickBadge = i === 0 ? '<div class="top-pick-badge">&#11088; Top pick</div>' : '';
     card.innerHTML =
-      '<div class="gift-card-header"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + metaHTML + "</div>" +
+      '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
       '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
