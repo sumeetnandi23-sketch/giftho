@@ -147,7 +147,6 @@
   .gift-card.top-pick.buy { border-color: var(--saffron); }
   .gift-card.top-pick.make { border-color: var(--teal); }
   .top-pick-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #FFF3E8; border: 1px solid var(--saffron-border); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--saffron); }
-  .budget-warn { font-size: 11px; color: #C0402A; background: #FFF3F0; border: 1px solid #F4C4B4; border-radius: 6px; padding: 3px 10px; margin-bottom: 8px; }
 
   /* Loading tip */
   .loading-tip { font-size: 12px; color: var(--muted); margin-top: 10px; max-width: 300px; margin-left: auto; margin-right: auto; line-height: 1.6; font-style: normal; background: var(--saffron-light); border-radius: 10px; padding: 10px 14px; transition: opacity 0.3s; }
@@ -432,6 +431,7 @@
           </select>
         </div>
       </div>
+      <div id="editErrorBox" class="error" style="display:none;margin-bottom:8px;"></div>
       <button class="btn" onclick="regenerateFromEdit()" style="margin-top:12px;">&#8635; Regenerate with these inputs</button>
     </div>
     <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127915; Save this list</button>
@@ -714,7 +714,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
 
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT BUDGET: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + ". Reject any idea outside this range before suggesting it.)" : " (STRICT BUDGET: every gift must be priced between Rs." + Math.round(parseInt(budgetMax)*0.7) + " and Rs." + budgetMax + ". Do not suggest anything below Rs." + Math.round(parseInt(budgetMax)*0.7) + ".)") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nCRITICAL RULES — follow every single one:\n\n1. GIFT TYPE RULE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal' or 'A high-quality chess set'. Bad: 'The Moleskine Classic Notebook Pro Edition' or 'Federer Legacy Coffee Table Book'. Generic enough to find on any platform, specific enough to be useful.\n\n2. MATERIAL RULE: Never suggest stainless steel, basic plastic, or commodity bulk-purchase materials. Gifts must feel handpicked and premium.\n\n3. NAMING RULE: Gift names must be clean — no social media references, no brand names of specific editions, no '(Instagram)' or '(as seen on)' in brackets.\n\n4. VARIETY RULE: Vibe and interests are a flavour, not a theme. Maximum 2 of 5 gifts may relate to the stated vibe. The other 3 must be from completely different categories.\n\n5. PLATFORM RULE: Only suggest platforms you are confident actually sell this type of product. If unsure, do not suggest it. Never suggest Amazon or Flipkart for subscriptions, artisanal products, or experiences.\n\n6. SOCIAL RULES by relationship:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal is better.\n- Parent: warm and practical — health, comfort, clothing, sweets. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical — food, plants, shared home items.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT BUDGET: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + ". Reject any idea outside this range before suggesting it.)" : " (STRICT BUDGET: every gift must be priced between Rs." + Math.round(parseInt(budgetMax)*0.8) + " and Rs." + budgetMax + ". Do not suggest anything below Rs." + Math.round(parseInt(budgetMax)*0.8) + " and nothing above Rs." + budgetMax + ". This is non-negotiable.)") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nCRITICAL RULES — follow every single one:\n\n1. GIFT TYPE RULE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal' or 'A high-quality chess set'. Bad: 'The Moleskine Classic Notebook Pro Edition' or 'Federer Legacy Coffee Table Book'. Generic enough to find on any platform, specific enough to be useful.\n\n2. MATERIAL RULE: Never suggest stainless steel, basic plastic, or commodity bulk-purchase materials. Gifts must feel handpicked and premium.\n\n3. NAMING RULE: Gift names must be clean — no social media references, no brand names of specific editions, no '(Instagram)' or '(as seen on)' in brackets.\n\n4. VARIETY RULE: Vibe and interests are a flavour, not a theme. Maximum 2 of 5 gifts may relate to the stated vibe. The other 3 must be from completely different categories.\n\n5. PLATFORM RULE: Only suggest platforms you are confident actually sell this type of product. If unsure, do not suggest it. Never suggest Amazon or Flipkart for subscriptions, artisanal products, or experiences.\n\n6. SOCIAL RULES by relationship:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal is better.\n- Parent: warm and practical — health, comfort, clothing, sweets. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical — food, plants, shared home items.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
@@ -776,20 +776,18 @@ async function callAPI(prompt, occasion, relationship) {
     lastGiftNames = gifts.map(function(g) { return g.name; });
     allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
 
-    // Client-side budget check — flag out-of-range items
+    // Client-side budget check — silently filter out-of-range items
     var p = lastParams;
     if (p && p.budgetMax) {
-      var minB = p.budgetMin ? parseInt(p.budgetMin) : Math.round(parseInt(p.budgetMax) * 0.7);
+      var minB = p.budgetMin ? parseInt(p.budgetMin) : Math.round(parseInt(p.budgetMax) * 0.8);
       var maxB = parseInt(p.budgetMax);
-      gifts = gifts.map(function(g) {
+      gifts = gifts.filter(function(g) {
         var priceMatch = g.price.replace(/,/g,'').match(/\d+/g);
         if (priceMatch) {
           var giftPrice = parseInt(priceMatch[0]);
-          if (giftPrice < minB * 0.85 || giftPrice > maxB * 1.15) {
-            g.outOfBudget = true;
-          }
+          return giftPrice >= minB * 0.85 && giftPrice <= maxB * 1.15;
         }
-        return g;
+        return true;
       });
     }
 
@@ -849,9 +847,9 @@ function showResults(gifts, occasion, relationship, fromSave) {
     card.className = "gift-card " + type + (i === 0 ? " top-pick" : "");
     card.style.animationDelay = (i * 0.08) + "s";
     var topPickBadge = i === 0 ? '<div class="top-pick-badge">&#11088; Top pick</div>' : '';
-    var budgetWarn = gift.outOfBudget ? '<div class="budget-warn">&#9888; Outside your budget range</div>' : '';
+    var budgetWarn = '';
     card.innerHTML =
-      '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" + budgetWarn +
+      '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
       '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
@@ -905,6 +903,7 @@ function hideError() { document.getElementById("errorBox").style.display = "none
 function toggleEditPanel() {
   var panel = document.getElementById("editPanel");
   panel.style.display = panel.style.display === "none" ? "block" : "none";
+  hideEditError();
 }
 
 function updateEditBar(occasion, relationship, ageRange, budgetMin, budgetMax, gender) {
@@ -932,8 +931,8 @@ function regenerateFromEdit() {
     about: lastParams ? lastParams.about : ""
   };
   selectedGender = document.getElementById("editGender").value;
-  if (!p.occasion || !p.relationship) { alert("Please select an occasion and relationship."); return; }
-  if (!p.budgetMax) { alert("Please enter a maximum budget."); return; }
+  if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
+  if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
   lastParams = p;
   allSeenGiftNames = [];
   document.getElementById("editPanel").style.display = "none";
@@ -943,6 +942,16 @@ function regenerateFromEdit() {
   startLoadingTips();
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
   callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || "", []), p.occasion, p.relationship);
+}
+
+function showEditError(msg) {
+  var b = document.getElementById("editErrorBox");
+  if (b) { b.textContent = msg; b.style.display = "block"; }
+}
+
+function hideEditError() {
+  var b = document.getElementById("editErrorBox");
+  if (b) { b.style.display = "none"; }
 }
 </script>
 </body>
