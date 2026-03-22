@@ -246,7 +246,7 @@
     <!-- Know them well: free text -->
     <div class="field" id="aboutField">
       <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400">(optional but powerful)</span></label>
-      <textarea id="about" placeholder="Their interests, hobbies, personality, what they already have..."></textarea>
+      <textarea id="about" placeholder="Type like you'd text a friend — 'she's into yoga and coffee' works great"></textarea>
     </div>
 
     <!-- Don't know them well: questionnaire -->
@@ -288,7 +288,7 @@
         <div class="q-section">
           <div class="q-label">
             What's their vibe?
-            <span class="q-optional">pick one</span>
+            <span class="q-optional">pick up to 2</span>
           </div>
           <div class="pills" id="pillsVibe">
             <div class="pill" onclick="togglePill(this,'vibe')">Practical</div>
@@ -362,7 +362,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.15</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.16</footer>
 </div>
 
 <script>
@@ -419,11 +419,10 @@ function setKnowMode(know) {
 }
 
 function togglePill(el, group) {
-  if (group === "vibe") {
-    // Single select for vibe
-    var pills = document.getElementById("pillsVibe").querySelectorAll(".pill");
-    pills.forEach(function(p) { p.classList.remove("selected"); });
-    selectedPills.vibe = [];
+  if (group === "vibe" && selectedPills.vibe.length >= 2) {
+    // Max 2 vibe selections
+    var val2 = el.textContent.trim();
+    if (selectedPills.vibe.indexOf(val2) < 0) return;
   }
   var val = el.textContent.trim();
   var idx = selectedPills[group].indexOf(val);
@@ -457,9 +456,13 @@ function closeQuestionnaire() {
 
 function buildAboutFromPills() {
   var parts = [];
+  var openToAnything = selectedPills.context.indexOf("Open to anything") >= 0;
+  var contextWithout = selectedPills.context.filter(function(c) { return c !== "Open to anything"; });
+
   if (selectedPills.interests.length > 0) parts.push("They are into " + selectedPills.interests.join(", "));
-  if (selectedPills.vibe.length > 0) parts.push("Their vibe is " + selectedPills.vibe[0]);
-  if (selectedPills.context.length > 0) parts.push(selectedPills.context.join(", "));
+  if (selectedPills.vibe.length > 0) parts.push("Their vibe is " + selectedPills.vibe.join(" and "));
+  if (contextWithout.length > 0) parts.push(contextWithout.join(", "));
+  if (openToAnything) parts.push("IMPORTANT: They are open to anything — surprise them with something unexpected, creative, and non-obvious. Avoid the safe and predictable. Think trending, quirky, or delightfully unusual gifts that are available in India right now");
   var freeText = document.getElementById('qFreeText');
   if (freeText && freeText.value.trim()) parts.push(freeText.value.trim());
   return parts.join(". ");
@@ -493,6 +496,7 @@ function platformURL(platform, giftName) {
     "pepperfry": "https://www.pepperfry.com/search?q=",
     "fabindia": "https://www.fabindia.com/search?q=",
     "jaypore": "https://www.jaypore.com/search?q=",
+    "bigsmall": "https://www.bigsmall.in/search?q=",
     "bewakoof": "https://www.bewakoof.com/search?q=",
     "chumbak": "https://www.chumbak.com/search?type=product&q=",
     "igp": "https://www.igp.com/search?q=",
@@ -556,7 +560,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
 
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nMATERIAL RULE — applies to ALL gifts regardless of relationship: Never suggest stainless steel, basic plastic, or commodity materials as a gifting choice. These feel impersonal and mass-produced. Always suggest gifts that feel handpicked, considered, and appropriate for the budget.\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + " — nothing below Rs." + budgetMin + " and nothing above Rs." + budgetMax + ")" : " (STRICT: no gift should exceed Rs." + budgetMax + ". Since no minimum is set, all suggestions should feel appropriately generous for this budget — do not suggest anything priced far below Rs." + budgetMax + ")") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nMATERIAL RULE — applies to ALL gifts regardless of relationship: Never suggest stainless steel, basic plastic, or commodity materials as a gifting choice. These feel impersonal and mass-produced. Always suggest gifts that feel handpicked, considered, and appropriate for the budget.\n\nVARIETY RULE — applies to ALL results: When a vibe or interest is mentioned, use it as a flavour, not a theme. Maximum 2 of the 5 suggestions should directly relate to that vibe or interest. The remaining suggestions must come from completely different categories — variety is essential. Never give 4 or 5 gifts all from the same category.\n\nSOCIAL APPROPRIATENESS RULES — follow strictly based on relationship:\n- Boss / Manager / Senior: Professional and aspirational only. Good: premium stationery, quality coffee or tea, desk accessories, business books, premium food hampers, experience vouchers. NEVER: kitchen items, utensils, clothing, home items, anything too personal or domestic. For ALL professional gifts: avoid cheap-feeling materials like basic plastic, commodity stainless steel, or anything that looks like a bulk purchase. Gifts should feel handpicked and premium for the budget given.\n- Colleague (peer): Friendly but not intimate. Good: snacks, plants, candles, fun desk items, books, stationery. NEVER: kitchen items, clothing, anything personal.\n- Acquaintance / Someone I just met: Safe and universally appreciated. Good: premium packaged food, candles, plants, tasteful home decor. NEVER: clothing, kitchen items, personal care, anything intimate.\n- Partner's Parent / In-laws: Respectful and generous. Good: dry fruits, sweets, quality home decor, religious items, premium food, plants. NEVER: clothing, anything casual or too personal.\n- Partner: Personal and intimate is great. Anything goes.\n- Parent: Warm and practical. Good: health products, home comfort, clothing, sweets, experiences. Avoid overly trendy items.\n- Close Friend / Sibling: Personal and fun. Most things work — the more specific to them the better.\n- Flatmate: Friendly and practical. Good: shared home items, food, plants, fun gifts. Keep it casual.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
 }
 
 async function getGifts() {
