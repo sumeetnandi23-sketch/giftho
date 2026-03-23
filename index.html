@@ -444,7 +444,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.19</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.20</footer>
 </div>
 
 <script>
@@ -512,7 +512,7 @@ function applyNudge() {
   var sel = document.getElementById("occasion");
   for (var i = 0; i < sel.options.length; i++) {
     if (sel.options[i].text === nudgeOccasion.name) {
-      sel.value = sel.options[i].value || nudgeOccasion.name;
+      sel.selectedIndex = i;
       break;
     }
   }
@@ -777,11 +777,12 @@ async function callAPI(prompt, occasion, relationship) {
     allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
 
     // Client-side budget check — silently filter out-of-range items
+    // Only filter if result has enough items — never show 0 results
     var p = lastParams;
-    if (p && p.budgetMax) {
+    if (p && p.budgetMax && gifts.length > 0) {
       var minB = p.budgetMin ? parseInt(p.budgetMin) : Math.round(parseInt(p.budgetMax) * 0.8);
       var maxB = parseInt(p.budgetMax);
-      gifts = gifts.filter(function(g) {
+      var filtered = gifts.filter(function(g) {
         var priceMatch = g.price.replace(/,/g,'').match(/\d+/g);
         if (priceMatch) {
           var giftPrice = parseInt(priceMatch[0]);
@@ -789,11 +790,14 @@ async function callAPI(prompt, occasion, relationship) {
         }
         return true;
       });
+      // Only apply filter if we keep at least 3 results
+      if (filtered.length >= 3) gifts = filtered;
     }
 
     currentGifts = gifts;
     showResults(gifts, occasion, relationship, false);
   } catch(err) {
+    stopLoadingTips();
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "none";
     document.getElementById("formCard").style.display = "block";
@@ -804,6 +808,12 @@ async function callAPI(prompt, occasion, relationship) {
 function showResults(gifts, occasion, relationship, fromSave) {
   stopLoadingTips();
   document.getElementById("loading").style.display = "none";
+
+  if (!gifts || gifts.length === 0) {
+    document.getElementById("formCard").style.display = "block";
+    showError("We couldn't find gifts matching your inputs. Try adjusting your budget or adding more details about them.");
+    return;
+  }
   var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
   var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
   var subText = makeCount > 0 ? occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make" : occasion + " · " + relationship + " · 5 ideas, curated for India";
@@ -852,7 +862,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent(('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')).substring(0, 1500)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
@@ -871,7 +881,13 @@ function showResults(gifts, occasion, relationship, fromSave) {
 
 
 function saveResults() {
-  localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams }));
+  var existing = localStorage.getItem("giftho_saved");
+  if (existing) {
+    var prev = JSON.parse(existing);
+    var prevLabel = prev.context ? prev.context.occasion + " · " + prev.context.relationship : "previous list";
+    if (!confirm("This will replace your saved list (" + prevLabel + "). Continue?")) return;
+  }
+  localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams, gender: selectedGender, knowThemWell: knowThemWell }));
   var btn = document.getElementById("saveBtn");
   btn.innerHTML = "&#10003; Saved"; btn.className = "save-btn saved";
   document.getElementById("savedBanner").className = "saved-banner show";
@@ -884,12 +900,18 @@ function loadSaved() {
   currentGifts = data.gifts; currentContext = data.context; lastParams = data.params;
   lastGiftNames = data.gifts.map(function(g) { return g.name; });
   allSeenGiftNames = data.gifts.map(function(g) { return g.name; });
+  selectedGender = data.gender || "";
+  knowThemWell = data.knowThemWell !== undefined ? data.knowThemWell : true;
   document.getElementById("formCard").style.display = "none";
+  document.getElementById("loading").style.display = "none";
+  stopLoadingTips();
+  if (data.params) updateEditBar(data.params.occasion, data.params.relationship, data.params.ageRange, data.params.budgetMin, data.params.budgetMax, data.gender || "");
   showResults(data.gifts, data.context.occasion, data.context.relationship, true);
 }
 
 function reset() {
   document.getElementById("results").style.display = "none";
+  document.getElementById("editPanel").style.display = "none";
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
@@ -934,6 +956,7 @@ function regenerateFromEdit() {
   if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
   if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
   lastParams = p;
+  currentContext = { occasion: p.occasion, relationship: p.relationship };
   allSeenGiftNames = [];
   document.getElementById("editPanel").style.display = "none";
   document.getElementById("results").style.display = "none";
