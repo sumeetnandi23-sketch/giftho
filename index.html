@@ -8,17 +8,10 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --saffron: #E8621A;
-    --saffron-light: rgba(232,98,26,0.08);
-    --saffron-border: rgba(232,98,26,0.2);
-    --teal: #0D8A6A;
-    --teal-light: rgba(13,138,106,0.07);
-    --teal-border: rgba(13,138,106,0.2);
-    --cream: #FDF6ED;
-    --ink: #1A1208;
-    --muted: #8A7560;
-    --card: #FFFAF4;
-    --border: #EAD9C4;
+    --saffron: #E8621A; --saffron-light: rgba(232,98,26,0.08); --saffron-border: rgba(232,98,26,0.2);
+    --teal: #0D8A6A; --teal-light: rgba(13,138,106,0.07); --teal-border: rgba(13,138,106,0.2);
+    --indigo: #4F46E5; --indigo-light: rgba(79,70,229,0.07); --indigo-border: rgba(79,70,229,0.2);
+    --cream: #FDF6ED; --ink: #1A1208; --muted: #8A7560; --card: #FFFAF4; --border: #EAD9C4;
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
   .container { max-width: 660px; margin: 0 auto; padding: 0 20px; }
@@ -46,42 +39,29 @@
   .toggle-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; text-align: center; }
   .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--border); }
   .toggle-btn.active { background: var(--saffron); color: white; }
-
-  /* Unknown mode area */
   #unknownArea { display: none; }
   #unknownArea.show { display: block; }
-
-  /* Questionnaire nudge */
   .q-nudge { display: flex; align-items: center; justify-content: space-between; background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; }
   .q-nudge-text { font-size: 13px; color: var(--ink); line-height: 1.5; }
   .q-nudge-text span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
   .q-open-btn { padding: 8px 16px; background: var(--saffron); color: white; border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: 12px; }
-
-  /* Questionnaire panel */
   #questionnairePanel { display: none; background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
   #questionnairePanel.open { display: block; }
   .q-section { margin-bottom: 16px; }
-  .q-section:last-child { margin-bottom: 0; }
   .q-label { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
   .q-optional { font-size: 11px; color: var(--muted); font-weight: 400; }
   .pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .pill { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--muted); background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; user-select: none; }
   .pill.selected { background: var(--saffron); border-color: var(--saffron); color: white; }
-  .pill.selected.teal { background: var(--teal); border-color: var(--teal); }
   .q-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
   .q-skip { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; }
   .q-done-btn { padding: 9px 20px; background: var(--saffron); color: white; border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
-
-  /* About field — shown below questionnaire optionally */
-  #aboutField { margin-bottom: 0; }
   #aboutField.hidden { display: none; }
-
   .btn { width: 100%; padding: 16px; background: var(--saffron); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 8px; box-shadow: 3px 3px 0 rgba(26,18,8,0.15); transition: background 0.15s, transform 0.1s; }
   .btn:hover { background: #D4561A; transform: translateY(-1px); }
   .btn:active { transform: translateY(1px); }
   .btn:disabled { background: #C4A98A; cursor: not-allowed; transform: none; box-shadow: none; }
   .error { background: #FFF3F0; border: 1.5px solid #F4C4B4; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #C0402A; margin-top: 14px; display: none; word-break: break-word; }
-
   #loading { display: none; text-align: center; padding: 48px 0; }
   .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
   .dot { width: 10px; height: 10px; background: var(--saffron); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
@@ -89,93 +69,118 @@
   .dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-10px); opacity: 1; } }
   .loading-text { font-size: 14px; color: var(--muted); font-style: italic; }
-
+  .loading-tip { font-size: 12px; color: var(--muted); margin-top: 10px; max-width: 300px; margin-left: auto; margin-right: auto; line-height: 1.6; background: var(--saffron-light); border-radius: 10px; padding: 10px 14px; transition: opacity 0.3s; }
   #results { display: none; }
-  .results-header { text-align: center; margin-bottom: 24px; }
+  .results-header { text-align: center; margin-bottom: 16px; }
   .results-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 6px; }
   .results-sub { font-size: 13px; color: var(--muted); }
-  .gift-card { border-radius: 16px; padding: 22px; margin-bottom: 14px; animation: fadeUp 0.4s ease forwards; opacity: 0; }
+  .results-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Gift cards — tappable */
+  .gift-card { border-radius: 16px; padding: 20px; margin-bottom: 14px; animation: fadeUp 0.4s ease forwards; opacity: 0; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; position: relative; }
+  .gift-card:hover { transform: translateY(-2px); }
+  .gift-card:active { transform: translateY(0px); }
   .gift-card.buy { background: var(--card); border: 1.5px solid var(--border); box-shadow: 4px 4px 0 rgba(26,18,8,0.04); }
+  .gift-card.buy:hover { box-shadow: 6px 6px 0 rgba(26,18,8,0.08); }
   .gift-card.make { background: #F4FBF8; border: 1.5px solid var(--teal-border); box-shadow: 4px 4px 0 rgba(13,138,106,0.06); }
+  .gift-card.make:hover { box-shadow: 6px 6px 0 rgba(13,138,106,0.1); }
+  .gift-card.experience { background: #F0F0FE; border: 1.5px solid var(--indigo-border); box-shadow: 4px 4px 0 rgba(79,70,229,0.06); }
+  .gift-card.experience:hover { box-shadow: 6px 6px 0 rgba(79,70,229,0.1); }
+  .gift-card.top-pick.buy { border-width: 2px; border-color: var(--saffron); }
+  .gift-card.top-pick.make { border-width: 2px; border-color: var(--teal); }
+  .gift-card.top-pick.experience { border-width: 2px; border-color: var(--indigo); }
   @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
-  .gift-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .gift-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-  .gift-badge.buy { background: var(--saffron-light); color: var(--saffron); border: 1px solid var(--saffron-border); }
-  .gift-badge.make { background: var(--teal-light); color: var(--teal); border: 1px solid var(--teal-border); }
-  .make-meta { display: flex; gap: 8px; }
-  .make-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; background: white; border: 1px solid var(--teal-border); color: var(--teal); }
-  .gift-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-  .gift-num { width: 28px; height: 28px; color: white; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-  .gift-num.buy { background: var(--saffron); }
-  .gift-num.make { background: var(--teal); }
+
+  /* Card type header */
+  .card-type-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .card-type-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; }
+  .card-type-label.buy { color: var(--saffron); }
+  .card-type-label.make { color: var(--teal); }
+  .card-type-label.experience { color: var(--indigo); }
+  .top-pick-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #FFF3E8; border: 1px solid var(--saffron-border); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--saffron); }
+
+  /* Card content */
+  .gift-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
   .gift-name { font-family: 'Playfair Display', serif; font-size: 18px; flex: 1; line-height: 1.3; }
-  .gift-price { font-size: 13px; font-weight: 500; white-space: nowrap; margin-top: 4px; }
+  .gift-price { font-size: 13px; font-weight: 500; white-space: nowrap; margin-top: 4px; flex-shrink: 0; }
   .gift-price.buy { color: var(--saffron); }
   .gift-price.make { color: var(--teal); }
-  .gift-why { font-size: 14px; color: #4A3C2A; line-height: 1.65; margin-bottom: 14px; padding-left: 40px; }
-  .gift-footer { display: flex; align-items: center; justify-content: space-between; padding-left: 40px; flex-wrap: wrap; gap: 10px; }
-  .gift-links { display: flex; gap: 8px; flex-wrap: wrap; }
-  .gift-link { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; text-decoration: none; transition: all 0.15s; }
-  .gift-link.buy { border: 1.5px solid var(--border); color: var(--ink); background: white; }
-  .gift-link.buy:hover { border-color: var(--saffron); color: var(--saffron); }
-  .gift-link.make { border: 1.5px solid var(--teal-border); color: var(--teal); background: white; }
-  .gift-link.make:hover { background: var(--teal-light); }
-  .copy-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 1.5px solid var(--border); background: white; color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
-  .copy-btn:hover { border-color: #25D366; color: #25D366; }
-  .etiquette-note { background: rgba(138,117,96,0.07); border: 1.5px solid rgba(138,117,96,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+  .gift-price.experience { color: var(--indigo); }
+  .gift-why { font-size: 14px; color: #4A3C2A; line-height: 1.65; margin-bottom: 12px; }
+  .gift-tap-hint { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+
+  /* Speedometer */
+  .make-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .speed-wrap { display: flex; align-items: center; gap: 6px; }
+  .speed-label { font-size: 11px; color: var(--teal); font-weight: 500; }
+  .time-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: white; border: 1px solid var(--teal-border); color: var(--teal); font-weight: 500; }
+
+  /* Platform modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(26,18,8,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-sheet { background: var(--card); border-radius: 24px 24px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 660px; animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-gift-name { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 4px; }
+  .modal-gift-price { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .modal-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
+  .modal-links { display: flex; flex-direction: column; gap: 10px; }
+  .modal-link { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: white; border: 1.5px solid var(--border); border-radius: 14px; text-decoration: none; color: var(--ink); font-size: 15px; font-weight: 500; transition: all 0.15s; }
+  .modal-link:hover { border-color: var(--saffron); color: var(--saffron); }
+  .modal-link.teal:hover { border-color: var(--teal); color: var(--teal); }
+  .modal-link.indigo:hover { border-color: var(--indigo); color: var(--indigo); }
+  .modal-link-arrow { font-size: 18px; opacity: 0.4; }
+  .modal-close { width: 100%; padding: 14px; background: transparent; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); cursor: pointer; margin-top: 16px; }
+
+  /* Edit bar */
+  .edit-bar { display: none; align-items: center; justify-content: space-between; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.15s; }
+  .edit-bar:hover { border-color: var(--saffron); }
+  .edit-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .edit-btn { font-size: 12px; font-weight: 500; color: var(--saffron); white-space: nowrap; margin-left: 12px; flex-shrink: 0; }
+  .edit-panel { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .edit-field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 5px; }
+  .edit-field select, .edit-field input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); outline: none; appearance: none; -webkit-appearance: none; }
+  #editQuestionnaireLink { margin-top: 12px; padding: 10px 14px; background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 10px; font-size: 13px; color: var(--ink); cursor: pointer; display: none; }
+
+  /* Also gifted */
   .also-gifted { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
   .also-gifted-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
   .also-gifted-items { display: flex; gap: 8px; flex-wrap: wrap; }
   .also-gifted-item { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--ink); background: white; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; }
   .also-gifted-item:hover { border-color: var(--saffron); color: var(--saffron); }
+
+  /* Etiquette */
+  .etiquette-note { background: rgba(138,117,96,0.07); border: 1.5px solid rgba(138,117,96,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+
+  /* Save / Saved */
   .save-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; margin: 0 auto 20px; }
   .save-btn:hover { border-color: var(--saffron); color: var(--saffron); }
   .save-btn.saved { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
   .saved-banner { background: var(--teal-light); border: 1.5px solid var(--teal-border); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--teal); margin-bottom: 16px; display: none; cursor: pointer; text-align: center; }
   .saved-banner.show { display: block; }
-  .results-actions { display: flex; gap: 10px; margin-top: 8px; }
-  .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
-  .action-btn-primary { background: var(--ink); color: var(--cream); border: 1.5px solid var(--ink); }
-  .action-btn-primary:hover { background: #2E1E0A; border-color: #2E1E0A; transform: translateY(-1px); }
-  .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
-  .action-btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
-  footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
-  @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .gift-why { padding-left: 0; } .gift-footer { padding-left: 0; } .results-actions { flex-direction: column; } }
-
-  /* Top pick badge */
-  .gift-card.top-pick { border-width: 2px; }
-  .gift-card.top-pick.buy { border-color: var(--saffron); }
-  .gift-card.top-pick.make { border-color: var(--teal); }
-  .top-pick-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #FFF3E8; border: 1px solid var(--saffron-border); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--saffron); }
-
-  /* Loading tip */
-  .loading-tip { font-size: 12px; color: var(--muted); margin-top: 10px; max-width: 300px; margin-left: auto; margin-right: auto; line-height: 1.6; font-style: normal; background: var(--saffron-light); border-radius: 10px; padding: 10px 14px; transition: opacity 0.3s; }
-
-  /* Occasion nudge */
-  .occasion-nudge { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; cursor: pointer; font-size: 13px; color: var(--ink); line-height: 1.6; display: flex; align-items: center; gap: 12px; }
-  .occasion-nudge:hover { background: rgba(232,98,26,0.12); }
-  .nudge-icon { font-size: 22px; flex-shrink: 0; }
+  .occasion-nudge { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; cursor: pointer; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; align-items: center; gap: 12px; }
   .nudge-text strong { display: block; font-weight: 500; margin-bottom: 2px; }
   .nudge-text span { font-size: 12px; color: var(--muted); }
 
-  .edit-bar { display:flex; align-items:center; justify-content:space-between; background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:10px 16px; margin-bottom:12px; cursor:pointer; transition:border-color 0.15s; }
-  .edit-bar:hover { border-color:var(--saffron); }
-  .edit-summary { font-size:12px; color:var(--muted); line-height:1.5; }
-  .edit-btn { font-size:12px; font-weight:500; color:var(--saffron); white-space:nowrap; margin-left:12px; flex-shrink:0; }
-  .edit-panel { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; }
-  .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .edit-field label { display:block; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:5px; }
-  .edit-field select, .edit-field input { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; background:white; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--ink); outline:none; appearance:none; -webkit-appearance:none; }
-  @media(max-width:480px) { .edit-grid { grid-template-columns:1fr; } }
+  /* Results actions */
+  .results-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
+  .action-btn-primary { background: var(--ink); color: var(--cream); border: 1.5px solid var(--ink); }
+  .action-btn-primary:hover { background: #2E1E0A; transform: translateY(-1px); }
+  .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .action-btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
+
+  footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
+  @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .edit-grid { grid-template-columns: 1fr; } .results-actions { flex-direction: column; } }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <div class="logo">
-      <div class="logo-icon">&#127873;</div>
-      <span class="logo-text">Giftho</span>
-    </div>
+    <div class="logo"><div class="logo-icon">&#127873;</div><span class="logo-text">Giftho</span></div>
     <p class="tagline">Stop stressing. Just gift right.</p>
   </header>
   <div class="divider"></div>
@@ -183,15 +188,13 @@
   <div class="why-strip">
     <div class="why-icon">&#9889;</div>
     <div class="why-text">
-      <strong>Giftho tells you exactly what to get</strong> — not a list of 50 vague ideas. Tell us the occasion, who it is for, and your budget. We give you gifts to buy online plus creative ideas to make yourself. Takes 30 seconds. <span style="display:block;margin-top:6px;font-size:12px;color:var(--muted);">&#10003; Already helped 500+ people gift right across India</span>
+      <strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.
+      <span style="display:block;margin-top:6px;font-size:12px;color:var(--muted);">&#10003; Already helped 500+ people gift right across India</span>
     </div>
   </div>
 
-  <div id="savedBanner" class="saved-banner" onclick="loadSaved()">
-    &#127915; You have a saved gift list — tap to view it
-  </div>
-
-  <div id="occasionNudge" class="occasion-nudge" style="display:none;" onclick="applyNudge()"></div>
+  <div id="savedBanner" class="saved-banner" onclick="loadSaved()">&#127915; You have a saved gift list — tap to view it</div>
+  <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
   <div id="formCard" class="card">
     <h2 class="card-title">What's the occasion?</h2>
@@ -201,17 +204,10 @@
       <label>Occasion</label>
       <select id="occasion">
         <option value="">Select occasion</option>
-        <option>Birthday</option>
-        <option>Engagement</option>
-        <option>Wedding</option>
-        <option>Diwali</option>
-        <option>Housewarming</option>
-        <option>Baby Shower</option>
-        <option>Rakhi</option>
-        <option>Anniversary</option>
-        <option>Job Promotion</option>
-        <option>Graduation</option>
-        <option>Just Because</option>
+        <option>Birthday</option><option>Engagement</option><option>Wedding</option>
+        <option>Diwali</option><option>Housewarming</option><option>Baby Shower</option>
+        <option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option>
+        <option>Graduation</option><option>Just Because</option>
       </select>
     </div>
 
@@ -219,17 +215,10 @@
       <label>Relationship</label>
       <select id="relationship">
         <option value="">Who are you gifting?</option>
-        <option>Close Friend</option>
-        <option>Flatmate</option>
-        <option>Partner</option>
-        <option>Parent</option>
-        <option>Sibling</option>
-        <option>Colleague</option>
-        <option>Boss</option>
-        <option>Cousin</option>
-        <option>Partner's Parent</option>
-        <option>Acquaintance</option>
-        <option>Someone I just met</option>
+        <option>Close Friend</option><option>Flatmate</option><option>Partner</option>
+        <option>Parent</option><option>Sibling</option><option>Colleague</option>
+        <option>Boss</option><option>Cousin</option><option>Partner's Parent</option>
+        <option>Acquaintance</option><option>Someone I just met</option>
       </select>
     </div>
 
@@ -246,12 +235,8 @@
       <label>Their Age Range</label>
       <select id="ageRange">
         <option value="">Select age range</option>
-        <option>Under 10</option>
-        <option>10 to 17</option>
-        <option>18 to 25</option>
-        <option>26 to 35</option>
-        <option>36 to 50</option>
-        <option>50 plus</option>
+        <option>Under 10</option><option>10 to 17</option><option>18 to 25</option>
+        <option>26 to 35</option><option>36 to 50</option><option>50 plus</option>
       </select>
     </div>
 
@@ -271,32 +256,19 @@
       </div>
     </div>
 
-    <!-- Know them well: free text -->
     <div class="field" id="aboutField">
       <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400">(optional but powerful)</span></label>
       <textarea id="about" placeholder="e.g. loves yoga and coffee, hates clutter"></textarea>
     </div>
 
-    <!-- Don't know them well: questionnaire -->
     <div id="unknownArea">
-
-      <!-- Nudge -->
       <div class="q-nudge" id="qNudge">
-        <div class="q-nudge-text">
-          Want better suggestions?
-          <span>Answer 3 quick questions — no typing needed</span>
-        </div>
+        <div class="q-nudge-text">Want better suggestions?<span>Answer 3 quick questions — no typing needed</span></div>
         <button class="q-open-btn" onclick="openQuestionnaire()">Help me &#8594;</button>
       </div>
-
-      <!-- Questionnaire panel -->
       <div id="questionnairePanel">
-
         <div class="q-section">
-          <div class="q-label">
-            What are they into?
-            <span class="q-optional">pick any</span>
-          </div>
+          <div class="q-label">What are they into? <span class="q-optional">pick any</span></div>
           <div class="pills" id="pillsInterests">
             <div class="pill" onclick="togglePill(this,'interests')">Books</div>
             <div class="pill" onclick="togglePill(this,'interests')">Cooking</div>
@@ -312,12 +284,8 @@
             <div class="pill" onclick="togglePill(this,'interests')">Home Decor</div>
           </div>
         </div>
-
         <div class="q-section">
-          <div class="q-label">
-            What's their vibe?
-            <span class="q-optional">pick up to 2</span>
-          </div>
+          <div class="q-label">What's their vibe? <span class="q-optional">pick up to 2</span></div>
           <div class="pills" id="pillsVibe">
             <div class="pill" onclick="togglePill(this,'vibe')">Practical</div>
             <div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div>
@@ -334,12 +302,8 @@
             <div class="pill" onclick="togglePill(this,'vibe')">Music lover</div>
           </div>
         </div>
-
         <div class="q-section">
-          <div class="q-label">
-            Anything else useful?
-            <span class="q-optional">pick any</span>
-          </div>
+          <div class="q-label">Anything else useful? <span class="q-optional">pick any</span></div>
           <div class="pills" id="pillsContext">
             <div class="pill" onclick="togglePill(this,'context')">Cat parent</div>
             <div class="pill" onclick="togglePill(this,'context')">Dog parent</div>
@@ -350,27 +314,22 @@
             <div class="pill" onclick="togglePill(this,'context')">Open to anything</div>
           </div>
         </div>
-
         <div class="q-section">
-          <div class="q-label">
-            Anything specific? <span class="q-optional">optional free text</span>
-          </div>
-          <input type="text" id="qFreeText" placeholder="e.g. obsessed with K-dramas, collects sneakers..." style="width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; background:white;">
+          <div class="q-label">Anything specific? <span class="q-optional">optional</span></div>
+          <input type="text" id="qFreeText" placeholder="e.g. obsessed with K-dramas, collects sneakers..." style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;background:white;">
         </div>
-
         <div class="q-footer">
           <button class="q-skip" onclick="closeQuestionnaire()">Skip</button>
           <button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button>
         </div>
       </div>
-
     </div>
 
     <button class="btn" id="submitBtn" onclick="getGifts()">Find the perfect gift</button>
     <div class="error" id="errorBox"></div>
   </div>
 
-  <div id="loading" style="display:none;">
+  <div id="loading" style="display:none;text-align:center;padding:48px 0;">
     <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
     <p class="loading-tip" id="loadingTip"></p>
@@ -381,60 +340,30 @@
       <h2 class="results-title">Here's what to get</h2>
       <p class="results-sub" id="resultsSub"></p>
     </div>
+    <div id="resultsLegend" class="results-legend"></div>
     <div id="editBar" class="edit-bar" onclick="toggleEditPanel()">
       <span id="editSummary" class="edit-summary"></span>
       <span class="edit-btn">&#9998; Edit</span>
     </div>
     <div id="editPanel" class="edit-panel" style="display:none;">
       <div class="edit-grid">
-        <div class="edit-field">
-          <label>Occasion</label>
-          <select id="editOccasion">
-            <option value="">Select</option>
-            <option>Birthday</option><option>Engagement</option><option>Wedding</option>
-            <option>Diwali</option><option>Housewarming</option><option>Baby Shower</option>
-            <option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option>
-            <option>Graduation</option><option>Just Because</option>
-          </select>
+        <div class="edit-field"><label>Occasion</label>
+          <select id="editOccasion"><option value="">Select</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select>
         </div>
-        <div class="edit-field">
-          <label>Relationship</label>
-          <select id="editRelationship">
-            <option value="">Select</option>
-            <option>Close Friend</option><option>Flatmate</option><option>Partner</option>
-            <option>Parent</option><option>Sibling</option><option>Colleague</option>
-            <option>Boss</option><option>Cousin</option><option>Partner's Parent</option>
-            <option>Acquaintance</option><option>Someone I just met</option>
-          </select>
+        <div class="edit-field"><label>Relationship</label>
+          <select id="editRelationship"><option value="">Select</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partner's Parent</option><option>Acquaintance</option><option>Someone I just met</option></select>
         </div>
-        <div class="edit-field">
-          <label>Min Budget (Rs.)</label>
-          <input type="number" id="editBudgetMin" placeholder="Min" min="0">
+        <div class="edit-field"><label>Min Budget</label><input type="number" id="editBudgetMin" placeholder="Min" min="0"></div>
+        <div class="edit-field"><label>Max Budget</label><input type="number" id="editBudgetMax" placeholder="Max" min="0"></div>
+        <div class="edit-field"><label>Age Range</label>
+          <select id="editAgeRange"><option value="">Select</option><option>Under 10</option><option>10 to 17</option><option>18 to 25</option><option>26 to 35</option><option>36 to 50</option><option>50 plus</option></select>
         </div>
-        <div class="edit-field">
-          <label>Max Budget (Rs.)</label>
-          <input type="number" id="editBudgetMax" placeholder="Max" min="0">
-        </div>
-        <div class="edit-field">
-          <label>Age Range</label>
-          <select id="editAgeRange">
-            <option value="">Select</option>
-            <option>Under 10</option><option>10 to 17</option><option>18 to 25</option>
-            <option>26 to 35</option><option>36 to 50</option><option>50 plus</option>
-          </select>
-        </div>
-        <div class="edit-field">
-          <label>Gender</label>
-          <select id="editGender">
-            <option value="">Select</option>
-            <option>Her</option><option>Him</option><option>Them</option>
-          </select>
+        <div class="edit-field"><label>Gender</label>
+          <select id="editGender"><option value="">Select</option><option>Her</option><option>Him</option><option>Them</option></select>
         </div>
       </div>
-      <div id="editQuestionnaireLink" style="margin-top:12px; padding:10px 14px; background:var(--saffron-light); border:1.5px solid var(--saffron-border); border-radius:10px; font-size:13px; color:var(--ink); cursor:pointer; display:none;" onclick="openQuestionnaireFromEdit()">
-        &#9998; Update what you know about them (interests, vibe, context)
-      </div>
-      <div id="editErrorBox" class="error" style="display:none;margin-bottom:8px;"></div>
+      <div id="editQuestionnaireLink" onclick="openQuestionnaireFromEdit()">&#9998; Update what you know about them</div>
+      <div class="error" id="editErrorBox" style="display:none;margin-top:8px;"></div>
       <button class="btn" onclick="regenerateFromEdit()" style="margin-top:12px;">&#8635; Regenerate with these inputs</button>
     </div>
     <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127915; Save this list</button>
@@ -447,108 +376,48 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.23</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.24</footer>
+</div>
+
+<!-- Platform modal -->
+<div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div id="modalGiftName" class="modal-gift-name"></div>
+    <div id="modalGiftPrice" class="modal-gift-price"></div>
+    <div class="modal-title" id="modalTitle">Where do you want to go?</div>
+    <div id="modalLinks" class="modal-links"></div>
+    <button class="modal-close" onclick="closeModal()">Close</button>
+  </div>
 </div>
 
 <script>
 var knowThemWell = true;
 var selectedGender = '';
+var selectedPills = { interests: [], vibe: [], context: [] };
 var lastParams = null;
 var lastGiftNames = [];
 var allSeenGiftNames = [];
 var currentGifts = [];
 var currentContext = {};
-var selectedPills = { interests: [], vibe: [], context: [] };
-
+var nudgeOccasion = null;
+var tipInterval = null;
 
 var LOADING_TIPS = [
-  "In India, cash in an envelope is perfectly acceptable — and often preferred — at weddings and engagements.",
-  "The best gifts in India feel personal, not expensive. A Rs.500 gift with thought beats a Rs.2000 gift without it.",
-  "Diwali is India's biggest gifting season — over ₹50,000 crore is spent on gifts every year.",
-  "For housewarming gifts, Indians traditionally prefer items that bring prosperity — plants, diyas, and copper vessels are timeless.",
-  "Personalised gifts are growing 3x faster than generic gifts in India. People remember things made just for them.",
-  "The rakhi gifting market in India is worth over ₹12,000 crore — siblings know how to celebrate.",
-  "When in doubt, edible gifts like premium chocolates, mithai, or dry fruits work for almost every Indian occasion.",
+  "In India, cash in an envelope is perfectly acceptable — and often preferred — at weddings.",
+  "The best gifts feel personal, not expensive. A Rs.500 gift with thought beats a Rs.2000 gift without it.",
+  "Diwali is India's biggest gifting season — over Rs.50,000 crore is spent on gifts every year.",
+  "For housewarming gifts, Indians traditionally prefer items that bring prosperity — plants and copper vessels are timeless.",
+  "Personalised gifts are growing 3x faster than generic gifts in India.",
+  "The rakhi gifting market in India is worth over Rs.12,000 crore.",
+  "When in doubt, premium edible gifts work for almost every Indian occasion.",
   "Research shows people remember how a gift made them feel, not what it cost."
 ];
-
-var OCCASIONS_UPCOMING = [
-  { month: 3, day: 14, name: "Holi", msg: "Holi is around the corner", sub: "Gift colours, sweets, or something festive" },
-  { month: 4, day: 14, name: "Baisakhi", msg: "Baisakhi is coming up", sub: "A great time to gift something warm and celebratory" },
-  { month: 8, day: 15, name: "Independence Day", msg: "Independence Day is near", sub: "Celebrate with a thoughtful Indian gift" },
-  { month: 9, day: 7, name: "Rakhi", msg: "Rakhi season is here", sub: "Gift your sibling something they'll actually love" },
-  { month: 10, day: 2, name: "Gandhi Jayanti", msg: "Gandhi Jayanti is coming", sub: "Handmade or artisan gifts feel especially right" },
-  { month: 10, day: 24, name: "Diwali", msg: "Diwali is around the corner", sub: "Plan ahead — gifting sorted before the rush" },
-  { month: 12, day: 25, name: "Christmas", msg: "Christmas is coming up", sub: "Santa needs a little help from Giftho" },
-  { month: 1, day: 26, name: "Republic Day", msg: "Republic Day is near", sub: "A great occasion to gift something meaningful" }
-];
-
-var nudgeOccasion = null;
-
-function checkOccasionNudge() {
-  var now = new Date();
-  var month = now.getMonth() + 1;
-  var day = now.getDate();
-  for (var i = 0; i < OCCASIONS_UPCOMING.length; i++) {
-    var occ = OCCASIONS_UPCOMING[i];
-    var daysUntil;
-    if (occ.month === month) {
-      daysUntil = occ.day - day;
-    } else if (occ.month === month + 1 || (occ.month === 1 && month === 12)) {
-      var daysInMonth = new Date(now.getFullYear(), month, 0).getDate();
-      daysUntil = (daysInMonth - day) + occ.day;
-    } else {
-      continue;
-    }
-    if (daysUntil >= 0 && daysUntil <= 21) {
-      nudgeOccasion = occ;
-      var el = document.getElementById("occasionNudge");
-      el.innerHTML = '<div class="nudge-icon">&#127873;</div><div class="nudge-text"><strong>' + occ.msg + ' — gifting sorted?</strong><span>' + occ.sub + ' · Tap to get started</span></div>';
-      el.style.display = "flex";
-      return;
-    }
-  }
-}
-
-function applyNudge() {
-  if (!nudgeOccasion) return;
-  var sel = document.getElementById("occasion");
-  for (var i = 0; i < sel.options.length; i++) {
-    if (sel.options[i].text === nudgeOccasion.name) {
-      sel.selectedIndex = i;
-      break;
-    }
-  }
-  document.getElementById("occasionNudge").style.display = "none";
-  document.getElementById("occasion").scrollIntoView({ behavior: "smooth", block: "center" });
-}
-
-var tipInterval = null;
-function startLoadingTips() {
-  var el = document.getElementById("loadingTip");
-  if (!el) return;
-  var idx = Math.floor(Math.random() * LOADING_TIPS.length);
-  el.textContent = LOADING_TIPS[idx];
-  tipInterval = setInterval(function() {
-    idx = (idx + 1) % LOADING_TIPS.length;
-    el.style.opacity = "0";
-    setTimeout(function() {
-      el.textContent = LOADING_TIPS[idx];
-      el.style.opacity = "1";
-    }, 300);
-  }, 4000);
-}
-
-function stopLoadingTips() {
-  if (tipInterval) { clearInterval(tipInterval); tipInterval = null; }
-  var el = document.getElementById("loadingTip");
-  if (el) el.textContent = "";
-}
 
 var ETIQUETTE = {
   "Wedding": "Cash or a gift envelope (shagun) is completely acceptable — and often preferred — for weddings in India.",
   "Engagement": "Cash or a gift envelope is a perfectly thoughtful choice for engagements in India.",
-  "Baby Shower": "Practical gifts like diapers, baby clothes, or feeding essentials are always appreciated at baby showers.",
+  "Baby Shower": "Practical gifts like diapers, baby clothes, or feeding essentials are always appreciated.",
   "Diwali": "Sweets, dry fruits, or diyas are classic Diwali gifts — never go wrong with these.",
   "Rakhi": "For Rakhi, cash gifts from brother to sister are traditional and always welcome."
 };
@@ -567,12 +436,28 @@ var ALSO_GIFTED = {
   "Just Because": ["Scented candle", "Chocolates", "Personalised keychain", "Succulent"]
 };
 
+var OCCASIONS_UPCOMING = [
+  { month: 8, day: 19, name: "Rakhi", msg: "Rakhi season is here", sub: "Gift your sibling something they'll actually love" },
+  { month: 10, day: 20, name: "Diwali", msg: "Diwali is around the corner", sub: "Plan ahead — gifting sorted before the rush" },
+  { month: 12, day: 25, name: "Christmas", msg: "Christmas is coming up", sub: "Santa needs a little help from Giftho" },
+  { month: 1, day: 26, name: "Republic Day", msg: "Republic Day is near", sub: "A great occasion to gift something meaningful" }
+];
+
 window.onload = function() {
   if (localStorage.getItem("giftho_saved")) {
     document.getElementById("savedBanner").className = "saved-banner show";
   }
   checkOccasionNudge();
 };
+
+function sanitise(str) {
+  var s = String(str || "");
+  s = s.replace(/&/g, "&amp;");
+  s = s.replace(/</g, "&lt;");
+  s = s.replace(/>/g, "&gt;");
+  s = s.replace(/"/g, "&quot;");
+  return s;
+}
 
 function setGender(g) {
   selectedGender = (selectedGender === g) ? '' : g;
@@ -591,19 +476,13 @@ function setKnowMode(know) {
 
 function togglePill(el, group) {
   if (group === "vibe" && selectedPills.vibe.length >= 2) {
-    // Max 2 vibe selections
     var val2 = el.textContent.trim();
     if (selectedPills.vibe.indexOf(val2) < 0) return;
   }
   var val = el.textContent.trim();
   var idx = selectedPills[group].indexOf(val);
-  if (idx >= 0) {
-    selectedPills[group].splice(idx, 1);
-    el.classList.remove("selected");
-  } else {
-    selectedPills[group].push(val);
-    el.classList.add("selected");
-  }
+  if (idx >= 0) { selectedPills[group].splice(idx, 1); el.classList.remove("selected"); }
+  else { selectedPills[group].push(val); el.classList.add("selected"); }
 }
 
 function openQuestionnaire() {
@@ -612,9 +491,7 @@ function openQuestionnaire() {
 }
 
 function closeQuestionnaire() {
-  var panel = document.getElementById("questionnairePanel");
-  var panelTop = panel.getBoundingClientRect().top + window.pageYOffset;
-  panel.className = "";
+  document.getElementById("questionnairePanel").className = "";
   var total = selectedPills.interests.length + selectedPills.vibe.length + selectedPills.context.length;
   var nudge = document.getElementById("qNudge");
   nudge.style.display = "";
@@ -622,18 +499,16 @@ function closeQuestionnaire() {
     nudge.querySelector(".q-nudge-text").innerHTML = "&#10003; " + total + " detail" + (total > 1 ? "s" : "") + " added<span>Tap to adjust</span>";
     nudge.querySelector(".q-open-btn").textContent = "Edit";
   }
-  window.scrollTo({ top: panelTop - 80, behavior: 'smooth' });
 }
 
 function buildAboutFromPills() {
   var parts = [];
   var openToAnything = selectedPills.context.indexOf("Open to anything") >= 0;
   var contextWithout = selectedPills.context.filter(function(c) { return c !== "Open to anything"; });
-
   if (selectedPills.interests.length > 0) parts.push("They are into " + selectedPills.interests.join(", "));
   if (selectedPills.vibe.length > 0) parts.push("Their vibe is " + selectedPills.vibe.join(" and "));
   if (contextWithout.length > 0) parts.push(contextWithout.join(", "));
-  if (openToAnything) parts.push("IMPORTANT: They are open to anything — surprise them with something unexpected, creative, and non-obvious. Avoid the safe and predictable. Think trending, quirky, or delightfully unusual gifts that are available in India right now");
+  if (openToAnything) parts.push("IMPORTANT: They are open to anything — surprise them with something unexpected, creative, and non-obvious. Avoid the safe and predictable. Think trending, quirky, or delightfully unusual gifts available in India right now");
   var freeText = document.getElementById('qFreeText');
   if (freeText && freeText.value.trim()) parts.push(freeText.value.trim());
   return parts.join(". ");
@@ -645,88 +520,110 @@ function getCurrentMonthYear() {
   return months[now.getMonth()] + " " + now.getFullYear();
 }
 
-function sanitise(str) {
-  var s = String(str || "");
-  s = s.replace(/&/g, "&amp;");
-  s = s.replace(/</g, "&lt;");
-  s = s.replace(/>/g, "&gt;");
-  s = s.replace(/"/g, "&quot;");
-  return s;
+function checkOccasionNudge() {
+  var now = new Date();
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+  for (var i = 0; i < OCCASIONS_UPCOMING.length; i++) {
+    var occ = OCCASIONS_UPCOMING[i];
+    var daysUntil;
+    if (occ.month === month) { daysUntil = occ.day - day; }
+    else if (occ.month === month + 1 || (occ.month === 1 && month === 12)) {
+      var daysInMonth = new Date(now.getFullYear(), month, 0).getDate();
+      daysUntil = (daysInMonth - day) + occ.day;
+    } else { continue; }
+    if (daysUntil >= 0 && daysUntil <= 21) {
+      nudgeOccasion = occ;
+      var el = document.getElementById("occasionNudge");
+      el.innerHTML = '<div style="font-size:22px;flex-shrink:0;">&#127873;</div><div class="nudge-text"><strong>' + occ.msg + ' — gifting sorted?</strong><span>' + occ.sub + ' · Tap to get started</span></div>';
+      el.style.display = "flex";
+      return;
+    }
+  }
 }
 
-function platformURL(platform, giftName) {
-  var p = platform.toLowerCase().trim();
-  var q = encodeURIComponent(giftName);
-  var pq = encodeURIComponent(giftName + " " + platform);
-
-  // YouTube for DIY
-  if (p.indexOf("youtube") >= 0) {
-    return "https://www.youtube.com/results?search_query=" + encodeURIComponent(giftName + " diy tutorial how to make");
+function applyNudge() {
+  if (!nudgeOccasion) return;
+  var sel = document.getElementById("occasion");
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].text === nudgeOccasion.name) { sel.selectedIndex = i; break; }
   }
-
-  // Fast path for major platforms with known search URLs
-  var direct = {
-    "amazon": "https://www.amazon.in/s?k=" + q,
-    "flipkart": "https://www.flipkart.com/search?q=" + q,
-    "nykaa": "https://www.nykaa.com/search/result/?q=" + q,
-    "myntra": "https://www.myntra.com/search?rawQuery=" + q,
-    "meesho": "https://www.meesho.com/search?q=" + q,
-    "firstcry": "https://www.firstcry.com/search?q=" + q,
-    "decathlon": "https://www.decathlon.in/search?Ntt=" + q,
-    "bigbasket": "https://www.bigbasket.com/ps/?q=" + q,
-    "ugaoo": "https://www.ugaoo.com/search?q=" + q,
-    "pepperfry": "https://www.pepperfry.com/catalogsearch/result/?q=" + q,
-    "fabindia": "https://www.fabindia.com/search?q=" + q,
-    "jaypore": "https://www.jaypore.com/search?q=" + q,
-    "bewakoof": "https://www.bewakoof.com/search?q=" + q,
-    "bigsmall": "https://www.bigsmall.in/search?q=" + q,
-    "chumbak": "https://www.chumbak.com/search?type=product&q=" + q,
-    "igp": "https://www.igp.com/search?q=" + q,
-    "ferns": "https://www.fernsnpetals.com/search?q=" + q,
-    "etsy": "https://www.etsy.com/in-en/search?q=" + q,
-    "boat": "https://www.boat-lifestyle.com/search?q=" + q,
-    "noise": "https://www.gonoise.com/search?q=" + q,
-    "mamaearth": "https://mamaearth.in/search?q=" + q,
-    "forest essentials": "https://www.forestessentialsindia.com/search?q=" + q,
-    "kama": "https://www.kamaayurveda.com/search?q=" + q,
-    "blue tokai": "https://bluetokaicoffee.com/search?q=" + q,
-    "araku": "https://www.arakucoffee.in/search?q=" + q,
-    "heads up": "https://www.headsupfortails.com/search?q=" + q,
-    "crossword": "https://www.crossword.in/search?q=" + q
-  };
-
-  for (var key in direct) {
-    if (p.indexOf(key) >= 0) return direct[key];
-  }
-
-  // Universal fallback — Google Shopping scoped to platform
-  // Works for ANY platform name, forever, no hallucination risk
-  return "https://www.google.com/search?tbm=shop&q=" + pq;
+  document.getElementById("occasionNudge").style.display = "none";
+  document.getElementById("occasion").scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames) {
+function startLoadingTips() {
+  stopLoadingTips();
+  var el = document.getElementById("loadingTip");
+  if (!el) return;
+  var idx = Math.floor(Math.random() * LOADING_TIPS.length);
+  el.textContent = LOADING_TIPS[idx];
+  el.style.opacity = "1";
+  tipInterval = setInterval(function() {
+    idx = (idx + 1) % LOADING_TIPS.length;
+    el.style.opacity = "0";
+    setTimeout(function() { el.textContent = LOADING_TIPS[idx]; el.style.opacity = "1"; }, 300);
+  }, 4000);
+}
+
+function stopLoadingTips() {
+  if (tipInterval) { clearInterval(tipInterval); tipInterval = null; }
+  var el = document.getElementById("loadingTip");
+  if (el) { el.textContent = ""; el.style.opacity = "1"; }
+}
+
+function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
   var monthYear = getCurrentMonthYear();
   var ageStr = ageRange ? ", aged " + ageRange : "";
+  var genderStr = selectedGender ? "\n- Gender: " + selectedGender : "";
   var avoidStr = (avoidNames && avoidNames.length > 0)
-    ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give 5 completely different alternatives."
+    ? "\n\nDo NOT suggest any of these gifts again: " + avoidNames.join(", ") + ". Give completely different alternatives."
+    : "";
+  var regenStr = isRegenerate
+    ? "\n\nCREATIVITY INSTRUCTION: The user did not like the previous suggestions. Think MORE laterally and creatively. Explore unexpected categories, niche Indian brands, non-obvious ideas. Keep the personal context but widen the lens significantly — surprise them."
     : "";
 
-  // Build context from free text or pills
   var contextStr = "";
-  if (knowThemWell && about && about.trim().length > 10) {
-    contextStr = about;
-  } else {
-    var fromPills = buildAboutFromPills();
-    if (fromPills) contextStr = fromPills;
-  }
-
-  var modeInstruction = (contextStr.length > 0)
-    ? "Give exactly 5 gift recommendations personalised using the context provided."
-    : "Give exactly 5 gift recommendations that are universally well-received in India for this occasion. Do NOT suggest anything tied to festivals that have already passed this year.";
-
+  if (knowThemWell && about && about.trim().length > 10) { contextStr = about; }
+  else { var fromPills = buildAboutFromPills(); if (fromPills) contextStr = fromPills; }
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + (selectedGender ? "\n- Gender: " + selectedGender : "") + "\n- Budget: " + budgetStr + (budgetMin ? " (STRICT BUDGET: every single gift must be priced between Rs." + budgetMin + " and Rs." + budgetMax + ". Reject any idea outside this range before suggesting it.)" : " (STRICT BUDGET: every gift must be priced between Rs." + Math.round(parseInt(budgetMax)*0.8) + " and Rs." + budgetMax + ". Do not suggest anything below Rs." + Math.round(parseInt(budgetMax)*0.8) + " and nothing above Rs." + budgetMax + ". This is non-negotiable.)") + "\n" + contextLine + "- Current date: " + monthYear + "\n\nCRITICAL RULES — follow every single one:\n\n1. GIFT TYPE RULE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal' or 'A high-quality chess set'. Bad: 'The Moleskine Classic Notebook Pro Edition' or 'Federer Legacy Coffee Table Book'. Generic enough to find on any platform, specific enough to be useful.\n\n2. MATERIAL RULE: Never suggest stainless steel, basic plastic, or commodity bulk-purchase materials. Gifts must feel handpicked and premium.\n\n3. NAMING RULE: Gift names must be clean — no social media references, no brand names of specific editions, no '(Instagram)' or '(as seen on)' in brackets.\n\n4. VARIETY RULE: Vibe and interests are a flavour, not a theme. Maximum 2 of 5 gifts may relate to the stated vibe. The other 3 must be from completely different categories.\n\n5. PLATFORM RULE: Only suggest platforms you are confident actually sell this type of product. If unsure, do not suggest it. Never suggest Amazon or Flipkart for subscriptions, artisanal products, or experiences.\n\n6. SOCIAL RULES by relationship:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal is better.\n- Parent: warm and practical — health, comfort, clothing, sweets. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical — food, plants, shared home items.\n\n" + modeInstruction + "\n\n" + (knowThemWell ? "Mix between buy and make gifts (aim for 3 buy, 2 make):\n- buy = purchasable product online. Suggest the most relevant Indian platform(s) for this specific product — could be Amazon India, Flipkart, Nykaa, Myntra, Decathlon, Ugaoo, Fabindia, Meesho, Pepperfry, Jaypore, IGP, Firstcry, Boat, Blue Tokai, Araku, or any other genuine Indian platform that sells this product. Use the exact platform name. Do NOT suggest Amazon India or Flipkart for subscriptions, experiences, or artisanal/specialty products — use the brand's own store instead.\n- make = creative DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate." : "All 5 gifts must be type buy — purchasable products available online in India. Only suggest platforms that genuinely sell this product. Do NOT suggest Amazon or Flipkart for subscriptions or experiences. Do not include any make or DIY suggestions.") + "\n" + avoidStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"reason\",\"where\":[\"Amazon India\"]},{\"name\":\"DIY Gift\",\"type\":\"make\",\"price\":\"Rs.50\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"reason\",\"where\":[\"YouTube Tutorial\"]}]";
+  var isProfessional = relationship === "Boss" || relationship === "Colleague" || relationship === "Acquaintance" || relationship === "Someone I just met";
+  var modeInstruction = (contextStr.length > 0)
+    ? "Give between 5 and 7 gift recommendations personalised for this person. Use your judgment — return more only if you have genuinely great options."
+    : "Give between 5 and 7 gift recommendations that are universally well-received in India for this occasion. Do NOT suggest anything tied to festivals that have already passed this year.";
+
+  var typeInstruction = isProfessional
+    ? "Use only buy and experience types. No make/DIY gifts for professional relationships. Minimum 2 buy, maximum 1 experience."
+    : knowThemWell
+    ? "Mix buy, make, and experience types based on what fits best. Minimum 2 buy. Make only if you have a genuinely great DIY idea. Experience if they seem like someone who values experiences over things (trekking, spa, concerts, cooking classes, weekend getaways). Maximum 2 experience."
+    : "Mostly buy gifts. You may include 1 experience if clearly relevant. No make/DIY for people the gifter doesn't know well. Minimum 3 buy.";
+
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: Never suggest stainless steel, basic plastic, or commodity materials.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names must be clean — no social media references, no (Instagram) or (as seen on) in brackets.\n7. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
+}
+
+function speedometerSVG(difficulty) {
+  var d = (difficulty || "Easy").toLowerCase();
+  var arc, needle, color;
+  if (d === "easy") { arc = "M8 44 A32 32 0 0 1 29 15"; needle = "22 20"; color = "#4CAF82"; }
+  else if (d === "hard") { arc = "M8 44 A32 32 0 0 1 72 44"; needle = "58 20"; color = "#E8621A"; }
+  else { arc = "M8 44 A32 32 0 0 1 40 12"; needle = "40 13"; color = "#F4A435"; }
+  return '<svg width="56" height="36" viewBox="0 0 80 48" style="display:inline-block;vertical-align:middle;">' +
+    '<path d="M8 44 A32 32 0 0 1 72 44" fill="none" stroke="#E8D5C4" stroke-width="7" stroke-linecap="round"/>' +
+    '<path d="' + arc + '" fill="none" stroke="' + color + '" stroke-width="7" stroke-linecap="round"/>' +
+    '<line x1="40" y1="44" x2="' + needle + '" stroke="#1A1208" stroke-width="2.5" stroke-linecap="round"/>' +
+    '<circle cx="40" cy="44" r="4" fill="#1A1208"/>' +
+    '</svg>';
+}
+
+function isValidUrl(url) {
+  return url && typeof url === 'string' && url.startsWith('https://') && url.length > 15;
+}
+
+function getGiftUrl(platform, giftName) {
+  if (platform && isValidUrl(platform.url)) return platform.url;
+  var name = platform ? platform.name || platform : giftName;
+  return "https://www.google.com/search?tbm=shop&q=" + encodeURIComponent(giftName + " " + name);
 }
 
 async function getGifts() {
@@ -742,27 +639,23 @@ async function getGifts() {
 
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
-  lastGiftNames = [];
-  allSeenGiftNames = [];
-  currentContext = { occasion: occasion, relationship: relationship };
+  lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship };
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("submitBtn").disabled = true;
   document.getElementById("saveBtn").innerHTML = "&#127915; Save this list";
   document.getElementById("saveBtn").className = "save-btn";
-  stopLoadingTips();
-  startLoadingTips();
-  document.getElementById("loadingText").textContent = knowThemWell
-    ? "Thinking like a gifting expert who actually knows India..."
-    : "Finding what is popular and well-received in India right now...";
+  document.getElementById("loadingText").textContent = knowThemWell ? "Thinking like a gifting expert who actually knows India..." : "Finding what is popular and well-received in India right now...";
+  stopLoadingTips(); startLoadingTips();
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
-  await callAPI(buildPrompt(occasion, relationship, ageRange, budgetStr, about, []), occasion, relationship);
+  await callAPI(buildPrompt(occasion, relationship, ageRange, budgetStr, about, [], false), occasion, relationship);
 }
 
 async function regenerate() {
   if (!lastParams) return;
+  currentContext = { occasion: lastParams.occasion, relationship: lastParams.relationship };
   document.getElementById("results").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("loadingText").textContent = "Finding fresh ideas...";
@@ -770,7 +663,7 @@ async function regenerate() {
   var p = lastParams;
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
   var aboutRegen = p.about || buildAboutFromPills();
-  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutRegen, allSeenGiftNames), p.occasion, p.relationship);
+  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutRegen, allSeenGiftNames, true), p.occasion, p.relationship);
 }
 
 async function callAPI(prompt, occasion, relationship) {
@@ -781,11 +674,7 @@ async function callAPI(prompt, occasion, relationship) {
       method: "POST",
       signal: controller.signal,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1400,
-        messages: [{ role: "user", content: prompt }]
-      })
+      body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 2048, messages: [{ role: "user", content: prompt }] })
     });
     clearTimeout(timeoutId);
     var data = await response.json();
@@ -794,28 +683,41 @@ async function callAPI(prompt, occasion, relationship) {
     var match = text.match(/\[[\s\S]*\]/);
     if (!match) throw new Error("No gift data returned. Please try again.");
     var gifts = JSON.parse(match[0]);
-    lastGiftNames = gifts.map(function(g) { return g.name; });
-    allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
-    if (allSeenGiftNames.length > 25) allSeenGiftNames = allSeenGiftNames.slice(-25);
 
-    // Client-side budget check — silently filter out-of-range items
-    // Only filter if result has enough items — never show 0 results
+    // Deduplicate where[] links per gift
+    gifts = gifts.map(function(g) {
+      if (g.where && g.where.length) {
+        var seen = {};
+        g.where = g.where.filter(function(w) {
+          var key = typeof w === 'string' ? w : (w.name || w.url || JSON.stringify(w));
+          if (seen[key]) return false;
+          seen[key] = true;
+          return true;
+        });
+      }
+      return g;
+    });
+
+    // Budget filter — exclude Make cards (material cost), apply to buy/experience only
     var p = lastParams;
     if (p && p.budgetMax && gifts.length > 0) {
       var minB = p.budgetMin ? parseInt(p.budgetMin) : Math.round(parseInt(p.budgetMax) * 0.8);
       var maxB = parseInt(p.budgetMax);
       var filtered = gifts.filter(function(g) {
-        var priceMatch = g.price.replace(/,/g,'').match(/\d+/g);
+        if (g.type === "make") return true;
+        var priceMatch = g.price.replace(/,/g, '').match(/\d+/g);
         if (priceMatch) {
           var giftPrice = parseInt(priceMatch[0]);
           return giftPrice >= minB * 0.85 && giftPrice <= maxB * 1.15;
         }
         return true;
       });
-      // Only apply filter if we keep at least 3 results
       if (filtered.length >= 3) gifts = filtered;
     }
 
+    lastGiftNames = gifts.map(function(g) { return g.name; });
+    allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
+    if (allSeenGiftNames.length > 25) allSeenGiftNames = allSeenGiftNames.slice(-25);
     currentGifts = gifts;
     showResults(gifts, occasion, relationship, false);
   } catch(err) {
@@ -823,7 +725,8 @@ async function callAPI(prompt, occasion, relationship) {
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "none";
     document.getElementById("formCard").style.display = "block";
-    showError("Error: " + err.message);
+    document.getElementById("submitBtn").disabled = false;
+    showError(err.name === 'AbortError' ? "Request timed out. Please try again." : "Error: " + err.message);
   }
 }
 
@@ -834,101 +737,213 @@ function showResults(gifts, occasion, relationship, fromSave) {
 
   if (!gifts || gifts.length === 0) {
     document.getElementById("formCard").style.display = "block";
-    showError("We couldn't find gifts matching your inputs. Try adjusting your budget or adding more details about them.");
+    showError("We couldn't find gifts matching your inputs. Try adjusting your budget or adding more details.");
     return;
   }
+
   var buyCount = gifts.filter(function(g) { return g.type === "buy"; }).length;
   var makeCount = gifts.filter(function(g) { return g.type === "make"; }).length;
-  var subText = makeCount > 0 ? occasion + " · " + relationship + " · " + buyCount + " to buy, " + makeCount + " to make" : occasion + " · " + relationship + " · 5 ideas, curated for India";
-  document.getElementById("resultsSub").textContent = subText;
-  if (lastParams && !fromSave) {
-    updateEditBar(lastParams.occasion, lastParams.relationship, lastParams.ageRange, lastParams.budgetMin, lastParams.budgetMax, selectedGender);
-  }
+  var expCount = gifts.filter(function(g) { return g.type === "experience"; }).length;
+  document.getElementById("resultsSub").textContent = occasion + " · " + relationship + " · " + gifts.length + " ideas";
+
+  // Legend
+  var legend = document.getElementById("resultsLegend");
+  var legendHTML = "";
+  if (buyCount) legendHTML += '<div class="legend-item"><div class="legend-dot" style="background:var(--saffron);"></div>Buy it (' + buyCount + ')</div>';
+  if (makeCount) legendHTML += '<div class="legend-item"><div class="legend-dot" style="background:var(--teal);"></div>Make it (' + makeCount + ')</div>';
+  if (expCount) legendHTML += '<div class="legend-item"><div class="legend-dot" style="background:var(--indigo);"></div>Experience it (' + expCount + ')</div>';
+  legend.innerHTML = legendHTML;
 
   var saveBtn = document.getElementById("saveBtn");
   if (fromSave) { saveBtn.innerHTML = "&#10003; Saved"; saveBtn.className = "save-btn saved"; }
   else { saveBtn.innerHTML = "&#127915; Save this list"; saveBtn.className = "save-btn"; }
 
   var etiquetteEl = document.getElementById("etiquetteNote");
-  etiquetteEl.innerHTML = ETIQUETTE[occasion]
-    ? '<div class="etiquette-note"><span>&#128161;</span><span>' + ETIQUETTE[occasion] + '</span></div>'
-    : "";
+  etiquetteEl.innerHTML = ETIQUETTE[occasion] ? '<div class="etiquette-note"><span>&#128161;</span><span>' + ETIQUETTE[occasion] + '</span></div>' : "";
 
   var list = document.getElementById("giftList");
   list.innerHTML = "";
+
   gifts.forEach(function(gift, i) {
-    var type = gift.type === "make" ? "make" : "buy";
-    var badgeIcon = type === "buy" ? "&#128722;" : "&#127912;";
-    var badgeLabel = type === "buy" ? "Buy it" : "Make it";
-    var metaHTML = type === "make"
-      ? '<div class="make-meta"><span class="make-tag">&#9201; ' + (gift.time || "~1 hr") + '</span><span class="make-tag">' + (gift.difficulty || "Easy") + '</span></div>'
-      : "";
-    var links;
+    var type = gift.type === "make" ? "make" : gift.type === "experience" ? "experience" : "buy";
+    var typeLabel = type === "buy" ? "&#128722; Buy it" : type === "make" ? "&#127912; Make it" : "&#127775; Experience it";
+    var topPickBadge = i === 0 ? '<span class="top-pick-badge">&#11088; Top pick</span>' : '';
+    var metaHTML = "";
     if (type === "make") {
-      var ytUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(gift.name + " diy tutorial how to make gift");
-      var igTag = gift.name.toLowerCase().replace(/[^a-z0-9]/g, "") + "diy";
-      var igUrl = "https://www.instagram.com/explore/tags/" + encodeURIComponent(igTag);
-      links = '<a class="gift-link make" href="' + ytUrl + '" target="_blank" rel="noopener">&#9654; YouTube Tutorial</a>' +
-              '<a class="gift-link make" href="' + igUrl + '" target="_blank" rel="noopener">&#127909; Instagram Reels</a>';
-    } else {
-      links = (gift.where || []).map(function(p) {
-        var url = platformURL(p, gift.name);
-        return '<a class="gift-link buy" href="' + url + '" target="_blank" rel="noopener">&#8599; ' + p + "</a>";
-      }).join("");
+      metaHTML = '<div class="make-meta">' + speedometerSVG(gift.difficulty) + '<span class="speed-label">' + sanitise(gift.difficulty || "Easy") + '</span><span class="time-tag">&#9201; ' + sanitise(gift.time || "~1 hr") + '</span></div>';
     }
     var card = document.createElement("div");
     card.className = "gift-card " + type + (i === 0 ? " top-pick" : "");
     card.style.animationDelay = (i * 0.08) + "s";
-    var topPickBadge = i === 0 ? '<div class="top-pick-badge">&#11088; Top pick</div>' : '';
-    var budgetWarn = '';
+    card.setAttribute("data-gift-index", i);
+    (function(idx) {
+      var startY = 0;
+      card.addEventListener('touchstart', function(e) { startY = e.touches[0].clientY; }, { passive: true });
+      card.addEventListener('touchend', function(e) {
+        if (Math.abs(e.changedTouches[0].clientY - startY) < 10) openModal(idx);
+      });
+      card.addEventListener('click', function(e) {
+        if (e.pointerType !== 'touch') openModal(idx);
+      });
+    })(i);
     card.innerHTML =
-      '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" +
-      '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
-      '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent((type === "make" ? ('DIY Gift idea: ' + gift.name + ' (' + gift.price + ' in materials)\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\nHow to make it:\nhttps://www.youtube.com/results?search_query=' + encodeURIComponent(gift.name + ' diy tutorial')) : ('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\n' + (gift.where || []).map(function(wp) { return 'Buy on ' + wp + ': ' + platformURL(wp, gift.name); }).join('\n'))).substring(0, 1500)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="card-type-header"><div class="card-type-label ' + type + '">' + typeLabel + '</div><div>' + topPickBadge + '</div></div>' +
+      metaHTML +
+      '<div class="gift-main"><div class="gift-name">' + sanitise(gift.name) + '</div><div class="gift-price ' + type + '">' + sanitise(gift.price) + '</div></div>' +
+      '<p class="gift-why">' + sanitise(gift.why) + '</p>' +
+      '<div class="gift-tap-hint">&#128070; Tap to see where to get it</div>';
     list.appendChild(card);
   });
 
   var alsoItems = ALSO_GIFTED[occasion];
   document.getElementById("alsoGifted").innerHTML = alsoItems
-    ? '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) {
-        var url = "https://www.google.com/search?tbm=shop&q=" + encodeURIComponent(item + " india");
-        return '<a class="also-gifted-item" href="' + url + '" target="_blank" rel="noopener">' + item + ' &#8599;</a>';
-      }).join("") + "</div></div>"
+    ? '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<a class="also-gifted-item" href="https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(item + " india") + '" target="_blank" rel="noopener">' + sanitise(item) + ' &#8599;</a>'; }).join("") + '</div></div>'
     : "";
 
+  updateEditBar(lastParams ? lastParams.occasion : occasion, lastParams ? lastParams.relationship : relationship, lastParams ? lastParams.ageRange : "", lastParams ? lastParams.budgetMin : "", lastParams ? lastParams.budgetMax : "", selectedGender);
   document.getElementById("editBar").style.display = "flex";
   document.getElementById("results").style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function openModal(idx) {
+  var gift = currentGifts[idx];
+  if (!gift) return;
+  var type = gift.type === "make" ? "make" : gift.type === "experience" ? "experience" : "buy";
+  document.getElementById("modalGiftName").textContent = gift.name;
+  document.getElementById("modalGiftPrice").textContent = gift.price;
 
+  var linksHTML = "";
+  if (type === "make") {
+    document.getElementById("modalTitle").textContent = "How to make it";
+    var ytUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(gift.name + " diy tutorial how to make gift");
+    linksHTML = '<a class="modal-link teal" href="' + ytUrl + '" target="_blank" rel="noopener"><span>&#9654; YouTube Tutorial</span><span class="modal-link-arrow">&#8599;</span></a>';
+    var waText = encodeURIComponent("DIY Gift idea: " + gift.name + " (" + gift.price + " in materials)\n" + gift.why.substring(0,120) + "\n\nHow to make it:\n" + ytUrl);
+    linksHTML += '<a class="modal-link teal" href="https://wa.me/?text=' + waText + '" target="_blank" rel="noopener"><span>&#128226; Share on WhatsApp</span><span class="modal-link-arrow">&#8599;</span></a>';
+  } else {
+    document.getElementById("modalTitle").textContent = type === "experience" ? "Where to book" : "Where to buy";
+    var where = gift.where || [];
+    where.forEach(function(w) {
+      var url = getGiftUrl(w, gift.name);
+      var name = typeof w === 'string' ? w : (w.name || "Buy here");
+      linksHTML += '<a class="modal-link ' + type + '" href="' + url + '" target="_blank" rel="noopener"><span>&#8599; ' + sanitise(name) + '</span><span class="modal-link-arrow">&#8250;</span></a>';
+    });
+    var waLinks = where.map(function(w) { return (typeof w === 'string' ? w : w.name) + ": " + getGiftUrl(w, gift.name); }).join("\n");
+    var waMsg = encodeURIComponent((type === "experience" ? "Experience idea: " : "Gift idea: ") + gift.name + " (" + gift.price + ")\n" + gift.why.substring(0, 120) + "\n\n" + waLinks);
+    waMsg = waMsg.substring(0, 1500);
+    linksHTML += '<a class="modal-link" href="https://wa.me/?text=' + waMsg + '" target="_blank" rel="noopener"><span>&#128226; Share on WhatsApp</span><span class="modal-link-arrow">&#8599;</span></a>';
+  }
+
+  document.getElementById("modalLinks").innerHTML = linksHTML;
+  document.getElementById("modalOverlay").style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(e) {
+  if (e && e.target && e.target.id !== "modalOverlay") return;
+  var overlay = document.getElementById("modalOverlay");
+  if (overlay) overlay.style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function toggleEditPanel() {
+  var panel = document.getElementById("editPanel");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+  hideEditError();
+}
+
+function updateEditBar(occasion, relationship, ageRange, budgetMin, budgetMax, gender) {
+  var parts = [occasion, relationship];
+  if (gender) parts.push(gender);
+  if (ageRange) parts.push(ageRange);
+  if (budgetMin) parts.push("Rs." + budgetMin + "-" + budgetMax);
+  else if (budgetMax) parts.push("up to Rs." + budgetMax);
+  document.getElementById("editSummary").textContent = parts.filter(Boolean).join(" · ");
+  document.getElementById("editOccasion").value = occasion || "";
+  document.getElementById("editRelationship").value = relationship || "";
+  document.getElementById("editAgeRange").value = ageRange || "";
+  document.getElementById("editBudgetMin").value = budgetMin || "";
+  document.getElementById("editBudgetMax").value = budgetMax || "";
+  document.getElementById("editGender").value = gender || "";
+  showEditQuestionnaireLink(!knowThemWell);
+}
+
+function showEditQuestionnaireLink(show) {
+  var el = document.getElementById("editQuestionnaireLink");
+  if (el) el.style.display = show ? "block" : "none";
+}
+
+function openQuestionnaireFromEdit() {
+  document.getElementById("editPanel").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("formCard").style.display = "block";
+  setKnowMode(knowThemWell);
+  document.querySelectorAll(".pill").forEach(function(pill) {
+    var match = pill.getAttribute("onclick").match(/togglePill\(this,'(\w+)'\)/);
+    if (match) {
+      var g = match[1];
+      var val = pill.textContent.trim();
+      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) pill.classList.add("selected");
+      else pill.classList.remove("selected");
+    }
+  });
+  openQuestionnaire();
+  document.getElementById("questionnairePanel").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function regenerateFromEdit() {
+  var p = {
+    occasion: document.getElementById("editOccasion").value,
+    relationship: document.getElementById("editRelationship").value,
+    ageRange: document.getElementById("editAgeRange").value,
+    budgetMin: document.getElementById("editBudgetMin").value,
+    budgetMax: document.getElementById("editBudgetMax").value,
+    about: lastParams ? lastParams.about : "",
+    knowThemWell: knowThemWell
+  };
+  var newGender = document.getElementById("editGender").value;
+  if (newGender !== selectedGender) setGender(newGender);
+  if (lastParams && lastParams.knowThemWell !== undefined) knowThemWell = lastParams.knowThemWell;
+  if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
+  if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
+  lastParams = p;
+  currentContext = { occasion: p.occasion, relationship: p.relationship };
+  allSeenGiftNames = [];
+  document.getElementById("editPanel").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("loadingText").textContent = "Finding better ideas...";
+  startLoadingTips();
+  var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
+  var aboutForRegen = p.about || buildAboutFromPills();
+  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutForRegen, [], false), p.occasion, p.relationship).catch(function(err) {
+    stopLoadingTips();
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("results").style.display = "block";
+    showEditError("Something went wrong. Please try again.");
+  });
+}
 
 function saveResults() {
   var existing = localStorage.getItem("giftho_saved");
-  if (existing) {
+  var btn = document.getElementById("saveBtn");
+  if (existing && !btn.getAttribute("data-confirming-ready")) {
     var prev = JSON.parse(existing);
     var prevLabel = prev.context ? prev.context.occasion + " · " + prev.context.relationship : "previous list";
-    var btn = document.getElementById("saveBtn");
-    btn.innerHTML = "Replace saved list (" + prevLabel + ")? Tap again to confirm.";
-    btn.setAttribute("data-confirming", "true");
+    btn.innerHTML = "Replace '" + prevLabel + "'? Tap again to confirm.";
+    btn.setAttribute("data-confirming-ready", "true");
     setTimeout(function() {
-      if (btn.getAttribute("data-confirming")) {
+      if (btn.getAttribute("data-confirming-ready")) {
         btn.innerHTML = "&#127915; Save this list";
         btn.className = "save-btn";
-        btn.removeAttribute("data-confirming");
+        btn.removeAttribute("data-confirming-ready");
       }
     }, 3000);
-    if (!btn.getAttribute("data-confirming-ready")) {
-      btn.setAttribute("data-confirming-ready", "true");
-      return;
-    }
-    btn.removeAttribute("data-confirming");
-    btn.removeAttribute("data-confirming-ready");
+    return;
   }
-  localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams, gender: selectedGender, knowThemWell: knowThemWell }));
-  var btn2 = document.getElementById("saveBtn");
-  btn2.innerHTML = "&#10003; Saved"; btn2.className = "save-btn saved";
+  btn.removeAttribute("data-confirming-ready");
+  localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams, gender: selectedGender, knowThemWell: knowThemWell, selectedPills: selectedPills }));
+  btn.innerHTML = "&#10003; Saved"; btn.className = "save-btn saved";
   document.getElementById("savedBanner").className = "saved-banner show";
 }
 
@@ -943,6 +958,7 @@ function loadSaved() {
       return;
     }
     currentGifts = data.gifts; currentContext = data.context; lastParams = data.params;
+    if (data.selectedPills) selectedPills = data.selectedPills;
     lastGiftNames = data.gifts.map(function(g) { return g.name; });
     allSeenGiftNames = data.gifts.map(function(g) { return g.name; });
     knowThemWell = data.knowThemWell !== undefined ? data.knowThemWell : true;
@@ -963,115 +979,38 @@ function loadSaved() {
 function reset() {
   document.getElementById("results").style.display = "none";
   document.getElementById("editPanel").style.display = "none";
+  document.getElementById("editBar").style.display = "none";
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
-  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = []; selectedGender = '';
+  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = [];
+  selectedGender = '';
   ['Her','Him','Them'].forEach(function(x) { document.getElementById('gender' + x).className = 'toggle-btn'; });
   selectedPills = { interests: [], vibe: [], context: [] };
   document.querySelectorAll('.pill.selected').forEach(function(p) { p.classList.remove('selected'); });
   var ft = document.getElementById('qFreeText'); if (ft) ft.value = '';
+  document.getElementById('occasion').selectedIndex = 0;
+  document.getElementById('relationship').selectedIndex = 0;
+  document.getElementById('ageRange').selectedIndex = 0;
+  document.getElementById('budgetMin').value = '';
+  document.getElementById('budgetMax').value = '';
   document.getElementById('occasionNudge').style.display = 'none';
+  document.getElementById('alsoGifted').innerHTML = '';
+  document.getElementById('etiquetteNote').innerHTML = '';
+  document.getElementById('resultsLegend').innerHTML = '';
   document.getElementById('savedBanner').className = 'saved-banner';
-  document.getElementById('editBar').style.display = 'none';
   var qp = document.getElementById('questionnairePanel'); if (qp) qp.className = '';
-  var qn = document.getElementById('qNudge'); if (qn) { qn.style.display = ''; qn.querySelector('.q-nudge-text').innerHTML = 'Want better suggestions?<span>Answer 3 quick questions — no typing needed</span>'; qn.querySelector('.q-open-btn').textContent = 'Help me →'; }
+  var qn = document.getElementById('qNudge');
+  if (qn) { qn.style.display = ''; qn.querySelector('.q-nudge-text').innerHTML = 'Want better suggestions?<span>Answer 3 quick questions — no typing needed</span>'; qn.querySelector('.q-open-btn').textContent = 'Help me \u2192'; }
+  closeModal();
+  document.body.style.overflow = "";
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showError(msg) { var b = document.getElementById("errorBox"); b.textContent = msg; b.style.display = "block"; }
 function hideError() { document.getElementById("errorBox").style.display = "none"; }
-
-function toggleEditPanel() {
-  var panel = document.getElementById("editPanel");
-  panel.style.display = panel.style.display === "none" ? "block" : "none";
-  hideEditError();
-}
-
-function updateEditBar(occasion, relationship, ageRange, budgetMin, budgetMax, gender) {
-  var parts = [occasion, relationship];
-  if (gender) parts.push(gender);
-  if (ageRange) parts.push(ageRange);
-  if (budgetMin) parts.push("Rs." + budgetMin + "-" + budgetMax);
-  else if (budgetMax) parts.push("up to Rs." + budgetMax);
-  document.getElementById("editSummary").textContent = parts.filter(Boolean).join(" · ");
-  showEditQuestionnaireLink(!knowThemWell);
-  document.getElementById("editOccasion").value = occasion || "";
-  document.getElementById("editRelationship").value = relationship || "";
-  document.getElementById("editAgeRange").value = ageRange || "";
-  document.getElementById("editBudgetMin").value = budgetMin || "";
-  document.getElementById("editBudgetMax").value = budgetMax || "";
-  document.getElementById("editGender").value = gender || "";
-}
-
-function regenerateFromEdit() {
-  var p = {
-    occasion: document.getElementById("editOccasion").value,
-    relationship: document.getElementById("editRelationship").value,
-    ageRange: document.getElementById("editAgeRange").value,
-    budgetMin: document.getElementById("editBudgetMin").value,
-    budgetMax: document.getElementById("editBudgetMax").value,
-    about: lastParams ? lastParams.about : ""
-  };
-  var newGender = document.getElementById("editGender").value;
-  if (newGender !== selectedGender) setGender(newGender);
-  if (lastParams && lastParams.knowThemWell !== undefined) knowThemWell = lastParams.knowThemWell;
-  if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
-  if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
-  lastParams = p;
-  currentContext = { occasion: p.occasion, relationship: p.relationship };
-  allSeenGiftNames = [];
-  document.getElementById("editPanel").style.display = "none";
-  document.getElementById("results").style.display = "none";
-  document.getElementById("loading").style.display = "block";
-  document.getElementById("loadingText").textContent = "Finding better ideas...";
-  startLoadingTips();
-  var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
-  var aboutForRegen = p.about || buildAboutFromPills();
-  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutForRegen, []), p.occasion, p.relationship).catch(function(err) {
-    stopLoadingTips();
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("results").style.display = "block";
-    showEditError("Something went wrong. Please try again.");
-  });
-}
-
-function showEditError(msg) {
-  var b = document.getElementById("editErrorBox");
-  if (b) { b.textContent = msg; b.style.display = "block"; }
-}
-
-function hideEditError() {
-  var b = document.getElementById("editErrorBox");
-  if (b) { b.style.display = "none"; }
-}
-
-function openQuestionnaireFromEdit() {
-  document.getElementById("editPanel").style.display = "none";
-  document.getElementById("results").style.display = "none";
-  document.getElementById("formCard").style.display = "block";
-  setKnowMode(knowThemWell);
-  // Restore pill visual state from selectedPills
-  document.querySelectorAll(".pill").forEach(function(pill) {
-    var group = pill.getAttribute("onclick").match(/togglePill\(this,'(\w+)'\)/);
-    if (group) {
-      var g = group[1];
-      var val = pill.textContent.trim();
-      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) {
-        pill.classList.add("selected");
-      } else {
-        pill.classList.remove("selected");
-      }
-    }
-  });
-  openQuestionnaire();
-  document.getElementById("questionnairePanel").scrollIntoView({ behavior: "smooth", block: "center" });
-}
-
-function showEditQuestionnaireLink(show) {
-  var el = document.getElementById("editQuestionnaireLink");
-  if (el) el.style.display = show ? "block" : "none";
-}
+function showEditError(msg) { var b = document.getElementById("editErrorBox"); if (b) { b.textContent = msg; b.style.display = "block"; } }
+function hideEditError() { var b = document.getElementById("editErrorBox"); if (b) b.style.display = "none"; }
 </script>
 </body>
 </html>
