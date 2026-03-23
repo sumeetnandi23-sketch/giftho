@@ -370,13 +370,13 @@
     <div class="error" id="errorBox"></div>
   </div>
 
-  <div id="loading">
+  <div id="loading" style="display:none;">
     <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
     <p class="loading-tip" id="loadingTip"></p>
   </div>
 
-  <div id="results">
+  <div id="results" style="display:none;">
     <div class="results-header">
       <h2 class="results-title">Here's what to get</h2>
       <p class="results-sub" id="resultsSub"></p>
@@ -431,6 +431,9 @@
           </select>
         </div>
       </div>
+      <div id="editQuestionnaireLink" style="margin-top:12px; padding:10px 14px; background:var(--saffron-light); border:1.5px solid var(--saffron-border); border-radius:10px; font-size:13px; color:var(--ink); cursor:pointer; display:none;" onclick="openQuestionnaireFromEdit()">
+        &#9998; Update what you know about them (interests, vibe, context)
+      </div>
       <div id="editErrorBox" class="error" style="display:none;margin-bottom:8px;"></div>
       <button class="btn" onclick="regenerateFromEdit()" style="margin-top:12px;">&#8635; Regenerate with these inputs</button>
     </div>
@@ -444,7 +447,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.20</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.23</footer>
 </div>
 
 <script>
@@ -642,6 +645,15 @@ function getCurrentMonthYear() {
   return months[now.getMonth()] + " " + now.getFullYear();
 }
 
+function sanitise(str) {
+  var s = String(str || "");
+  s = s.replace(/&/g, "&amp;");
+  s = s.replace(/</g, "&lt;");
+  s = s.replace(/>/g, "&gt;");
+  s = s.replace(/"/g, "&quot;");
+  return s;
+}
+
 function platformURL(platform, giftName) {
   var p = platform.toLowerCase().trim();
   var q = encodeURIComponent(giftName);
@@ -729,7 +741,7 @@ async function getGifts() {
   if (!budgetMax) return showError("Please enter a maximum budget.");
 
   hideError();
-  lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about };
+  lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
   lastGiftNames = [];
   allSeenGiftNames = [];
   currentContext = { occasion: occasion, relationship: relationship };
@@ -737,6 +749,9 @@ async function getGifts() {
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("submitBtn").disabled = true;
+  document.getElementById("saveBtn").innerHTML = "&#127915; Save this list";
+  document.getElementById("saveBtn").className = "save-btn";
+  stopLoadingTips();
   startLoadingTips();
   document.getElementById("loadingText").textContent = knowThemWell
     ? "Thinking like a gifting expert who actually knows India..."
@@ -751,15 +766,20 @@ async function regenerate() {
   document.getElementById("results").style.display = "none";
   document.getElementById("loading").style.display = "block";
   document.getElementById("loadingText").textContent = "Finding fresh ideas...";
+  startLoadingTips();
   var p = lastParams;
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
-  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about, allSeenGiftNames), p.occasion, p.relationship);
+  var aboutRegen = p.about || buildAboutFromPills();
+  await callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutRegen, allSeenGiftNames), p.occasion, p.relationship);
 }
 
 async function callAPI(prompt, occasion, relationship) {
   try {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 15000);
     var response = await fetch("/api/recommend", {
       method: "POST",
+      signal: controller.signal,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-haiku-4-5-20251001",
@@ -767,6 +787,7 @@ async function callAPI(prompt, occasion, relationship) {
         messages: [{ role: "user", content: prompt }]
       })
     });
+    clearTimeout(timeoutId);
     var data = await response.json();
     if (!response.ok) throw new Error(data.error ? data.error.message : "API error " + response.status);
     var text = data.content.filter(function(b) { return b.type === "text"; }).map(function(b) { return b.text; }).join("");
@@ -775,6 +796,7 @@ async function callAPI(prompt, occasion, relationship) {
     var gifts = JSON.parse(match[0]);
     lastGiftNames = gifts.map(function(g) { return g.name; });
     allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
+    if (allSeenGiftNames.length > 25) allSeenGiftNames = allSeenGiftNames.slice(-25);
 
     // Client-side budget check — silently filter out-of-range items
     // Only filter if result has enough items — never show 0 results
@@ -808,6 +830,7 @@ async function callAPI(prompt, occasion, relationship) {
 function showResults(gifts, occasion, relationship, fromSave) {
   stopLoadingTips();
   document.getElementById("loading").style.display = "none";
+  document.getElementById("submitBtn").disabled = false;
 
   if (!gifts || gifts.length === 0) {
     document.getElementById("formCard").style.display = "block";
@@ -862,7 +885,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       '<div class="gift-card-header"><div style="display:flex;align-items:center;gap:8px;"><div class="gift-badge ' + type + '">' + badgeIcon + " " + badgeLabel + "</div>" + topPickBadge + "</div>" + metaHTML + "</div>" +
       '<div class="gift-top"><div class="gift-num ' + type + '">' + (i+1) + '</div><div class="gift-name">' + gift.name + '</div><div class="gift-price ' + type + '">' + gift.price + "</div></div>" +
       '<p class="gift-why">' + gift.why + "</p>" +
-      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent(('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\n' + (gift.where || []).map(function(p) { return 'Buy on ' + p + ': ' + platformURL(p, gift.name); }).join('\n')).substring(0, 1500)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
+      '<div class="gift-footer"><div class="gift-links">' + links + '</div><a class="copy-btn" href="https://wa.me/?text=' + encodeURIComponent((type === "make" ? ('DIY Gift idea: ' + gift.name + ' (' + gift.price + ' in materials)\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\nHow to make it:\nhttps://www.youtube.com/results?search_query=' + encodeURIComponent(gift.name + ' diy tutorial')) : ('Gift idea: ' + gift.name + ' (' + gift.price + ')\n' + gift.why.substring(0,120) + (gift.why.length > 120 ? '...' : '') + '\n\n' + (gift.where || []).map(function(wp) { return 'Buy on ' + wp + ': ' + platformURL(wp, gift.name); }).join('\n'))).substring(0, 1500)) + '" target="_blank" rel="noopener">&#128226; Share on WhatsApp</a></div>';
     list.appendChild(card);
   });
 
@@ -874,6 +897,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
       }).join("") + "</div></div>"
     : "";
 
+  document.getElementById("editBar").style.display = "flex";
   document.getElementById("results").style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -885,28 +909,55 @@ function saveResults() {
   if (existing) {
     var prev = JSON.parse(existing);
     var prevLabel = prev.context ? prev.context.occasion + " · " + prev.context.relationship : "previous list";
-    if (!confirm("This will replace your saved list (" + prevLabel + "). Continue?")) return;
+    var btn = document.getElementById("saveBtn");
+    btn.innerHTML = "Replace saved list (" + prevLabel + ")? Tap again to confirm.";
+    btn.setAttribute("data-confirming", "true");
+    setTimeout(function() {
+      if (btn.getAttribute("data-confirming")) {
+        btn.innerHTML = "&#127915; Save this list";
+        btn.className = "save-btn";
+        btn.removeAttribute("data-confirming");
+      }
+    }, 3000);
+    if (!btn.getAttribute("data-confirming-ready")) {
+      btn.setAttribute("data-confirming-ready", "true");
+      return;
+    }
+    btn.removeAttribute("data-confirming");
+    btn.removeAttribute("data-confirming-ready");
   }
   localStorage.setItem("giftho_saved", JSON.stringify({ gifts: currentGifts, context: currentContext, params: lastParams, gender: selectedGender, knowThemWell: knowThemWell }));
-  var btn = document.getElementById("saveBtn");
-  btn.innerHTML = "&#10003; Saved"; btn.className = "save-btn saved";
+  var btn2 = document.getElementById("saveBtn");
+  btn2.innerHTML = "&#10003; Saved"; btn2.className = "save-btn saved";
   document.getElementById("savedBanner").className = "saved-banner show";
 }
 
 function loadSaved() {
   var saved = localStorage.getItem("giftho_saved");
   if (!saved) return;
-  var data = JSON.parse(saved);
-  currentGifts = data.gifts; currentContext = data.context; lastParams = data.params;
-  lastGiftNames = data.gifts.map(function(g) { return g.name; });
-  allSeenGiftNames = data.gifts.map(function(g) { return g.name; });
-  selectedGender = data.gender || "";
-  knowThemWell = data.knowThemWell !== undefined ? data.knowThemWell : true;
-  document.getElementById("formCard").style.display = "none";
-  document.getElementById("loading").style.display = "none";
-  stopLoadingTips();
-  if (data.params) updateEditBar(data.params.occasion, data.params.relationship, data.params.ageRange, data.params.budgetMin, data.params.budgetMax, data.gender || "");
-  showResults(data.gifts, data.context.occasion, data.context.relationship, true);
+  try {
+    var data = JSON.parse(saved);
+    if (!data.gifts || !data.gifts.length || !data.context) {
+      localStorage.removeItem("giftho_saved");
+      document.getElementById("savedBanner").className = "saved-banner";
+      return;
+    }
+    currentGifts = data.gifts; currentContext = data.context; lastParams = data.params;
+    lastGiftNames = data.gifts.map(function(g) { return g.name; });
+    allSeenGiftNames = data.gifts.map(function(g) { return g.name; });
+    knowThemWell = data.knowThemWell !== undefined ? data.knowThemWell : true;
+    setKnowMode(knowThemWell);
+    selectedGender = data.gender || "";
+    if (selectedGender) setGender(selectedGender);
+    document.getElementById("formCard").style.display = "none";
+    document.getElementById("loading").style.display = "none";
+    stopLoadingTips();
+    if (data.params) updateEditBar(data.params.occasion, data.params.relationship, data.params.ageRange, data.params.budgetMin, data.params.budgetMax, data.gender || "");
+    showResults(data.gifts, data.context.occasion, data.context.relationship, true);
+  } catch(e) {
+    localStorage.removeItem("giftho_saved");
+    document.getElementById("savedBanner").className = "saved-banner";
+  }
 }
 
 function reset() {
@@ -915,8 +966,17 @@ function reset() {
   document.getElementById("formCard").style.display = "block";
   document.getElementById("giftList").innerHTML = "";
   document.getElementById("submitBtn").disabled = false;
-  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = []; selectedGender = ''; ['Her','Him','Them'].forEach(function(x) { document.getElementById('gender' + x).className = 'toggle-btn'; });
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = []; selectedGender = '';
+  ['Her','Him','Them'].forEach(function(x) { document.getElementById('gender' + x).className = 'toggle-btn'; });
+  selectedPills = { interests: [], vibe: [], context: [] };
+  document.querySelectorAll('.pill.selected').forEach(function(p) { p.classList.remove('selected'); });
+  var ft = document.getElementById('qFreeText'); if (ft) ft.value = '';
+  document.getElementById('occasionNudge').style.display = 'none';
+  document.getElementById('savedBanner').className = 'saved-banner';
+  document.getElementById('editBar').style.display = 'none';
+  var qp = document.getElementById('questionnairePanel'); if (qp) qp.className = '';
+  var qn = document.getElementById('qNudge'); if (qn) { qn.style.display = ''; qn.querySelector('.q-nudge-text').innerHTML = 'Want better suggestions?<span>Answer 3 quick questions — no typing needed</span>'; qn.querySelector('.q-open-btn').textContent = 'Help me →'; }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showError(msg) { var b = document.getElementById("errorBox"); b.textContent = msg; b.style.display = "block"; }
@@ -934,7 +994,8 @@ function updateEditBar(occasion, relationship, ageRange, budgetMin, budgetMax, g
   if (ageRange) parts.push(ageRange);
   if (budgetMin) parts.push("Rs." + budgetMin + "-" + budgetMax);
   else if (budgetMax) parts.push("up to Rs." + budgetMax);
-  document.getElementById("editSummary").textContent = parts.join(" · ");
+  document.getElementById("editSummary").textContent = parts.filter(Boolean).join(" · ");
+  showEditQuestionnaireLink(!knowThemWell);
   document.getElementById("editOccasion").value = occasion || "";
   document.getElementById("editRelationship").value = relationship || "";
   document.getElementById("editAgeRange").value = ageRange || "";
@@ -952,7 +1013,9 @@ function regenerateFromEdit() {
     budgetMax: document.getElementById("editBudgetMax").value,
     about: lastParams ? lastParams.about : ""
   };
-  selectedGender = document.getElementById("editGender").value;
+  var newGender = document.getElementById("editGender").value;
+  if (newGender !== selectedGender) setGender(newGender);
+  if (lastParams && lastParams.knowThemWell !== undefined) knowThemWell = lastParams.knowThemWell;
   if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
   if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
   lastParams = p;
@@ -964,7 +1027,13 @@ function regenerateFromEdit() {
   document.getElementById("loadingText").textContent = "Finding better ideas...";
   startLoadingTips();
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
-  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || "", []), p.occasion, p.relationship);
+  var aboutForRegen = p.about || buildAboutFromPills();
+  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutForRegen, []), p.occasion, p.relationship).catch(function(err) {
+    stopLoadingTips();
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("results").style.display = "block";
+    showEditError("Something went wrong. Please try again.");
+  });
 }
 
 function showEditError(msg) {
@@ -975,6 +1044,33 @@ function showEditError(msg) {
 function hideEditError() {
   var b = document.getElementById("editErrorBox");
   if (b) { b.style.display = "none"; }
+}
+
+function openQuestionnaireFromEdit() {
+  document.getElementById("editPanel").style.display = "none";
+  document.getElementById("results").style.display = "none";
+  document.getElementById("formCard").style.display = "block";
+  setKnowMode(knowThemWell);
+  // Restore pill visual state from selectedPills
+  document.querySelectorAll(".pill").forEach(function(pill) {
+    var group = pill.getAttribute("onclick").match(/togglePill\(this,'(\w+)'\)/);
+    if (group) {
+      var g = group[1];
+      var val = pill.textContent.trim();
+      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) {
+        pill.classList.add("selected");
+      } else {
+        pill.classList.remove("selected");
+      }
+    }
+  });
+  openQuestionnaire();
+  document.getElementById("questionnairePanel").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function showEditQuestionnaireLink(show) {
+  var el = document.getElementById("editQuestionnaireLink");
+  if (el) el.style.display = show ? "block" : "none";
 }
 </script>
 </body>
