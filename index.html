@@ -376,7 +376,7 @@
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.24</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.26</footer>
 </div>
 
 <!-- Platform modal -->
@@ -616,14 +616,84 @@ function speedometerSVG(difficulty) {
     '</svg>';
 }
 
-function isValidUrl(url) {
-  return url && typeof url === 'string' && url.startsWith('https://') && url.length > 15;
+function isValidSearchUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  if (!url.startsWith('https://')) return false;
+  if (url.length < 20) return false;
+  var homepages = ['thrillophilia.com/', 'bookmyshow.com/', 'airbnb.co.in/', 'amazon.in/', 'flipkart.com/',
+    'nykaa.com/', 'myntra.com/', 'decathlon.in/', 'pepperfry.com/', 'bigbasket.com/'];
+  for (var i = 0; i < homepages.length; i++) {
+    if (url.endsWith(homepages[i]) || url === 'https://www.' + homepages[i] || url === 'https://' + homepages[i]) return false;
+  }
+  var hasSearchParam = url.indexOf('?') > -1 || url.split('/').length > 4;
+  return hasSearchParam;
 }
 
-function getGiftUrl(platform, giftName) {
-  if (platform && isValidUrl(platform.url)) return platform.url;
-  var name = platform ? platform.name || platform : giftName;
-  return "https://www.google.com/search?tbm=shop&q=" + encodeURIComponent(giftName + " " + name);
+var EXPERIENCE_PLATFORMS = {
+  'thrillophilia': 'https://www.thrillophilia.com/search?q=',
+  'bookmyshow': 'https://in.bookmyshow.com/search?q=',
+  'airbnb': 'https://www.airbnb.co.in/s/',
+  'getyourguide': 'https://www.getyourguide.com/s/?q=',
+  'cleartrip': 'https://www.cleartrip.com/activities/search?query=',
+  'makemytrip': 'https://www.makemytrip.com/activities/search?query=',
+  'holidify': 'https://www.holidify.com/search?query='
+};
+
+var BUY_PLATFORMS = {
+  'amazon': function(q, min, max) {
+    var url = 'https://www.amazon.in/s?k=' + encodeURIComponent(q);
+    if (max) url += '&rh=p_36%3A' + (min ? min*100 : Math.round(max*0.5)*100) + '-' + max*100;
+    return url;
+  },
+  'flipkart': function(q, min, max) {
+    var url = 'https://www.flipkart.com/search?q=' + encodeURIComponent(q);
+    if (max) url += '&p%5B%5D=facets.price_range.from%3D' + (min || Math.round(max*0.5)) + '&p%5B%5D=facets.price_range.to%3D' + max;
+    return url;
+  },
+  'nykaa': function(q) { return 'https://www.nykaa.com/search/result/?q=' + encodeURIComponent(q); },
+  'myntra': function(q) { return 'https://www.myntra.com/search?rawQuery=' + encodeURIComponent(q); },
+  'meesho': function(q) { return 'https://www.meesho.com/search?q=' + encodeURIComponent(q); },
+  'firstcry': function(q) { return 'https://www.firstcry.com/search?q=' + encodeURIComponent(q); },
+  'decathlon': function(q) { return 'https://www.decathlon.in/search?Ntt=' + encodeURIComponent(q); },
+  'bigbasket': function(q) { return 'https://www.bigbasket.com/ps/?q=' + encodeURIComponent(q); },
+  'ugaoo': function(q) { return 'https://www.ugaoo.com/search?q=' + encodeURIComponent(q); },
+  'pepperfry': function(q) { return 'https://www.pepperfry.com/catalogsearch/result/?q=' + encodeURIComponent(q); },
+  'fabindia': function(q) { return 'https://www.fabindia.com/catalogsearch/result/?q=' + encodeURIComponent(q); },
+  'jaypore': function(q) { return 'https://www.google.com/search?q=' + encodeURIComponent(q + ' site:jaypore.com'); },
+  'chumbak': function(q) { return 'https://www.chumbak.com/search?type=product&q=' + encodeURIComponent(q); },
+  'bigsmall': function(q) { return 'https://www.bigsmall.in/search?q=' + encodeURIComponent(q); },
+  'bewakoof': function(q) { return 'https://www.bewakoof.com/search?q=' + encodeURIComponent(q); },
+  'etsy': function(q) { return 'https://www.etsy.com/in-en/search?q=' + encodeURIComponent(q); },
+  'igp': function(q) { return 'https://www.igp.com/search?q=' + encodeURIComponent(q); },
+  'blue tokai': function(q) { return 'https://bluetokaicoffee.com/search?q=' + encodeURIComponent(q); },
+  'crossword': function(q) { return 'https://www.crossword.in/search?q=' + encodeURIComponent(q); }
+};
+
+function getGiftUrl(platform, giftName, giftType) {
+  var wname = typeof platform === 'string' ? platform : (platform ? platform.name || '' : '');
+  var wurl = typeof platform === 'string' ? null : (platform ? platform.url : null);
+  var q = giftName;
+  var p = (lastParams && lastParams.budgetMax) ? lastParams : {};
+  var min = p.budgetMin ? parseInt(p.budgetMin) : null;
+  var max = p.budgetMax ? parseInt(p.budgetMax) : null;
+
+  // Known platforms: always use our map — never trust model URL for these
+  var pLower = wname.toLowerCase();
+  for (var key in BUY_PLATFORMS) {
+    if (pLower.indexOf(key) >= 0) return BUY_PLATFORMS[key](q, min, max);
+  }
+  for (var ekey in EXPERIENCE_PLATFORMS) {
+    if (pLower.indexOf(ekey) >= 0) return EXPERIENCE_PLATFORMS[ekey] + encodeURIComponent(q);
+  }
+
+  // Unknown platform: use model URL only if it passes strict search URL validation
+  if (isValidSearchUrl(wurl)) return wurl;
+
+  // Final fallback — regular Google search (not Shopping) scoped to platform
+  // Better for experiences as it returns booking pages not product listings
+  var suffix = (giftType === 'experience') ? ' india book online' : ' india buy online';
+  if (wname) return 'https://www.google.com/search?q=' + encodeURIComponent(q + ' ' + wname + suffix);
+  return 'https://www.google.com/search?q=' + encodeURIComponent(q + suffix);
 }
 
 async function getGifts() {
@@ -683,6 +753,22 @@ async function callAPI(prompt, occasion, relationship) {
     var match = text.match(/\[[\s\S]*\]/);
     if (!match) throw new Error("No gift data returned. Please try again.");
     var gifts = JSON.parse(match[0]);
+
+    // Sort gifts — buy/experience by price proximity to budget, Make interleaved naturally
+    var p = lastParams;
+    if (p && p.budgetMax) {
+      var maxB = parseInt(p.budgetMax);
+      gifts.sort(function(a, b) {
+        // Make cards: treat their position as mid-budget equivalent so they interleave
+        var aPrice = a.type === "make"
+          ? maxB * 0.6
+          : parseInt((a.price.replace(/,/g,'').match(/\d+/) || [0])[0]);
+        var bPrice = b.type === "make"
+          ? maxB * 0.6
+          : parseInt((b.price.replace(/,/g,'').match(/\d+/) || [0])[0]);
+        return Math.abs(maxB - aPrice) - Math.abs(maxB - bPrice);
+      });
+    }
 
     // Deduplicate where[] links per gift
     gifts = gifts.map(function(g) {
@@ -770,20 +856,26 @@ function showResults(gifts, occasion, relationship, fromSave) {
     var topPickBadge = i === 0 ? '<span class="top-pick-badge">&#11088; Top pick</span>' : '';
     var metaHTML = "";
     if (type === "make") {
-      metaHTML = '<div class="make-meta">' + speedometerSVG(gift.difficulty) + '<span class="speed-label">' + sanitise(gift.difficulty || "Easy") + '</span><span class="time-tag">&#9201; ' + sanitise(gift.time || "~1 hr") + '</span></div>';
+      var diffLabel = sanitise(gift.difficulty || 'Easy') + ' effort';
+      metaHTML = '<div class="make-meta">' + speedometerSVG(gift.difficulty) + '<div><span class="speed-label">' + diffLabel + '</span><div style="font-size:10px;color:var(--muted);margin-top:1px;">to make</div></div><span class="time-tag">&#9201; ' + sanitise(gift.time || '~1 hr') + '</span></div>';
     }
     var card = document.createElement("div");
     card.className = "gift-card " + type + (i === 0 ? " top-pick" : "");
     card.style.animationDelay = (i * 0.08) + "s";
     card.setAttribute("data-gift-index", i);
     (function(idx) {
-      var startY = 0;
-      card.addEventListener('touchstart', function(e) { startY = e.touches[0].clientY; }, { passive: true });
+      var startY = 0, tapped = false;
+      card.addEventListener('touchstart', function(e) {
+        startY = e.touches[0].clientY; tapped = false;
+      }, { passive: true });
       card.addEventListener('touchend', function(e) {
-        if (Math.abs(e.changedTouches[0].clientY - startY) < 10) openModal(idx);
+        if (Math.abs(e.changedTouches[0].clientY - startY) < 10) {
+          tapped = true; openModal(idx);
+        }
       });
-      card.addEventListener('click', function(e) {
-        if (e.pointerType !== 'touch') openModal(idx);
+      card.addEventListener('click', function() {
+        if (!tapped) openModal(idx);
+        tapped = false;
       });
     })(i);
     card.innerHTML =
@@ -916,7 +1008,7 @@ function regenerateFromEdit() {
   startLoadingTips();
   var budgetStr = p.budgetMin ? "Rs." + p.budgetMin + " to Rs." + p.budgetMax : "up to Rs." + p.budgetMax;
   var aboutForRegen = p.about || buildAboutFromPills();
-  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutForRegen, [], false), p.occasion, p.relationship).catch(function(err) {
+  callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, aboutForRegen, [], true), p.occasion, p.relationship).catch(function(err) {
     stopLoadingTips();
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "block";
