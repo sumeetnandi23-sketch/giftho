@@ -135,7 +135,7 @@
   .modal-close { width: 100%; padding: 14px; background: transparent; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); cursor: pointer; margin-top: 16px; }
 
   /* Edit bar */
-  .edit-bar { display: none; align-items: center; justify-content: space-between; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.15s; }
+  .edit-bar { display: none; align-items: center; justify-content: space-between; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.15s; position: sticky; top: 12px; z-index: 100; box-shadow: 0 2px 12px rgba(26,18,8,0.08); }
   .edit-bar:hover { border-color: var(--saffron); }
   .edit-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
   .edit-btn { font-size: 12px; font-weight: 500; color: var(--saffron); white-space: nowrap; margin-left: 12px; flex-shrink: 0; }
@@ -175,6 +175,64 @@
 
   footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
   @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .edit-grid { grid-template-columns: 1fr; } .results-actions { flex-direction: column; } }
+
+  /* Age range pills */
+  .age-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .age-pill { padding: 9px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .age-pill:hover { border-color: var(--saffron); color: var(--saffron); }
+  .age-pill.active { background: var(--saffron); border-color: var(--saffron); color: white; }
+
+  /* Budget chips */
+  .budget-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+  .budget-chip { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .budget-chip:hover { border-color: var(--saffron); color: var(--saffron); }
+  .budget-chip.active { background: var(--saffron-light); border-color: var(--saffron); color: var(--saffron); font-weight: 500; }
+  .budget-chip::before { content: "Rs. "; font-size: 11px; }
+
+  /* Gift box loader */
+  .gift-loader { display: flex; justify-content: center; margin-bottom: 24px; }
+  .gift-box { position: relative; width: 52px; height: 48px; animation: giftFloat 1.8s ease-in-out infinite; }
+  .gift-lid { position: absolute; top: 0; left: -3px; right: -3px; height: 16px; background: var(--saffron); border-radius: 4px 4px 0 0; animation: lidBounce 1.8s ease-in-out infinite; }
+  .gift-body { position: absolute; top: 14px; left: 0; right: 0; bottom: 0; background: #F4A435; border-radius: 0 0 4px 4px; }
+  .gift-ribbon-h { position: absolute; top: 14px; left: 0; right: 0; height: 8px; background: white; opacity: 0.3; }
+  .gift-ribbon-v { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 8px; bottom: 0; background: white; opacity: 0.3; }
+  .gift-bow { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 16px; height: 10px; border: 3px solid white; border-radius: 50%; opacity: 0.6; }
+  @keyframes giftFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes lidBounce { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(-4deg); } }
+
+  /* Top pick hero card */
+  .gift-card.top-pick { padding: 28px; }
+  .gift-card.top-pick.buy { background: linear-gradient(160deg, #FFF8F2 0%, var(--card) 100%); border-color: var(--saffron); border-width: 2px; }
+  .gift-card.top-pick.make { background: linear-gradient(160deg, #F0FAF6 0%, #F4FBF8 100%); border-color: var(--teal); border-width: 2px; }
+  .gift-card.top-pick.experience { background: linear-gradient(160deg, #EFEFFB 0%, #F0F0FE 100%); border-color: var(--indigo); border-width: 2px; }
+  .top-pick-label { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .top-pick-badge { padding: 4px 12px; background: var(--saffron); color: white; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .card-type-label.inline { font-size: 12px; }
+  .hero-name { font-family: 'Playfair Display', serif; font-size: 26px; line-height: 1.25; margin-bottom: 8px; color: var(--ink); }
+  .hero-price { font-size: 22px; font-weight: 600; margin-bottom: 14px; }
+  .hero-price.buy { color: var(--saffron); }
+  .hero-price.make { color: var(--teal); }
+  .hero-price.experience { color: var(--indigo); }
+  .hero-why { font-size: 15px; color: #4A3C2A; line-height: 1.7; margin-bottom: 18px; }
+  .hero-cta { display: inline-block; padding: 13px 22px; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .hero-cta.buy { background: var(--saffron); color: white; box-shadow: 3px 3px 0 rgba(232,98,26,0.2); }
+  .hero-cta.make { background: var(--teal); color: white; box-shadow: 3px 3px 0 rgba(13,138,106,0.2); }
+  .hero-cta.experience { background: var(--indigo); color: white; box-shadow: 3px 3px 0 rgba(79,70,229,0.2); }
+
+  /* Also gifted revamp */
+  .also-gifted { padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 8px; }
+  .also-gifted-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 4px; }
+  .also-gifted-title { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 16px; color: var(--ink); }
+  .also-gifted-items { display: flex; gap: 10px; flex-wrap: wrap; }
+  .also-gifted-item { padding: 10px 18px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--ink); background: var(--card); text-decoration: none; transition: all 0.15s; font-weight: 500; }
+  .also-gifted-item:hover { border-color: var(--saffron); color: var(--saffron); transform: translateY(-1px); }
+
+  /* Start over — distinct */
+  .action-btn-reset { flex: 0 0 auto; padding: 13px 20px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; cursor: pointer; background: transparent; border: 1.5px solid var(--border); color: var(--muted); transition: all 0.15s; letter-spacing: 0.3px; }
+  .action-btn-reset:hover { border-color: #C0402A; color: #C0402A; }
+
+  /* Card transition */
+  .gift-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
 </style>
 </head>
 <body>
@@ -233,18 +291,29 @@
 
     <div class="field">
       <label>Their Age Range</label>
-      <select id="ageRange">
-        <option value="">Select age range</option>
-        <option>Under 10</option><option>10 to 17</option><option>18 to 25</option>
-        <option>26 to 35</option><option>36 to 50</option><option>50 plus</option>
-      </select>
+      <input type="hidden" id="ageRange" value="">
+      <div class="age-pills" id="agePills">
+        <button class="age-pill" onclick="setAge('Under 10')">Under 10</button>
+        <button class="age-pill" onclick="setAge('10 to 17')">10–17</button>
+        <button class="age-pill" onclick="setAge('18 to 25')">18–25</button>
+        <button class="age-pill" onclick="setAge('26 to 35')">26–35</button>
+        <button class="age-pill" onclick="setAge('36 to 50')">36–50</button>
+        <button class="age-pill" onclick="setAge('50 plus')">50+</button>
+      </div>
     </div>
 
     <div class="field">
       <label>Budget (Rs.)</label>
-      <div class="budget-row">
+      <div class="budget-chips">
+        <button class="budget-chip" onclick="setBudget(500)">500</button>
+        <button class="budget-chip" onclick="setBudget(1000)">1,000</button>
+        <button class="budget-chip" onclick="setBudget(2000)">2,000</button>
+        <button class="budget-chip" onclick="setBudget(5000)">5,000</button>
+        <button class="budget-chip" onclick="setBudget(10000)">10,000</button>
+      </div>
+      <div class="budget-row" style="margin-top:10px;">
         <input type="number" id="budgetMin" placeholder="Min (optional)" min="0">
-        <input type="number" id="budgetMax" placeholder="Max" min="0">
+        <input type="number" id="budgetMax" placeholder="Max" min="0" oninput="clearBudgetChips()">
       </div>
     </div>
 
@@ -315,8 +384,8 @@
           </div>
         </div>
         <div class="q-section">
-          <div class="q-label">Anything specific? <span class="q-optional">optional</span></div>
-          <input type="text" id="qFreeText" placeholder="e.g. obsessed with K-dramas, collects sneakers..." style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;background:white;">
+          <div class="q-label">The juicy details <span class="q-optional">anything the pills missed</span></div>
+          <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas, planning a Goa trip — the more specific the better" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;background:white;resize:none;height:72px;line-height:1.5;"></textarea>
         </div>
         <div class="q-footer">
           <button class="q-skip" onclick="closeQuestionnaire()">Skip</button>
@@ -330,7 +399,15 @@
   </div>
 
   <div id="loading" style="display:none;text-align:center;padding:48px 0;">
-    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="gift-loader">
+      <div class="gift-box">
+        <div class="gift-lid"></div>
+        <div class="gift-body"></div>
+        <div class="gift-ribbon-h"></div>
+        <div class="gift-ribbon-v"></div>
+        <div class="gift-bow"></div>
+      </div>
+    </div>
     <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
     <p class="loading-tip" id="loadingTip"></p>
   </div>
@@ -372,11 +449,11 @@
     <div id="alsoGifted"></div>
     <div class="results-actions">
       <button class="action-btn action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
-      <button class="action-btn action-btn-secondary" onclick="reset()">&#8592; Start over</button>
+      <button class="action-btn action-btn-reset" onclick="confirmReset()">Start over</button>
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.26</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.27</footer>
 </div>
 
 <!-- Platform modal -->
@@ -559,6 +636,7 @@ function startLoadingTips() {
   var idx = Math.floor(Math.random() * LOADING_TIPS.length);
   el.textContent = LOADING_TIPS[idx];
   el.style.opacity = "1";
+  startSlowNetworkTimer();
   tipInterval = setInterval(function() {
     idx = (idx + 1) % LOADING_TIPS.length;
     el.style.opacity = "0";
@@ -566,7 +644,19 @@ function startLoadingTips() {
   }, 4000);
 }
 
+var slowNetworkTimer = null;
+function startSlowNetworkTimer() {
+  slowNetworkTimer = setTimeout(function() {
+    var lt = document.getElementById("loadingText");
+    if (lt) lt.textContent = "Still thinking... Indian gifting is complex. Almost there.";
+  }, 8000);
+}
+function clearSlowNetworkTimer() {
+  if (slowNetworkTimer) { clearTimeout(slowNetworkTimer); slowNetworkTimer = null; }
+}
+
 function stopLoadingTips() {
+  clearSlowNetworkTimer();
   if (tipInterval) { clearInterval(tipInterval); tipInterval = null; }
   var el = document.getElementById("loadingTip");
   if (el) { el.textContent = ""; el.style.opacity = "1"; }
@@ -716,7 +806,19 @@ async function getGifts() {
   document.getElementById("submitBtn").disabled = true;
   document.getElementById("saveBtn").innerHTML = "&#127915; Save this list";
   document.getElementById("saveBtn").className = "save-btn";
-  document.getElementById("loadingText").textContent = knowThemWell ? "Thinking like a gifting expert who actually knows India..." : "Finding what is popular and well-received in India right now...";
+  var loadingTexts = [
+    "Thinking like a gifting expert who actually knows India...",
+    "Checking what's available on Indian platforms...",
+    "Picking options they'll actually love...",
+    "Almost there — finding the best mix..."
+  ];
+  var ltIdx = 0;
+  document.getElementById("loadingText").textContent = loadingTexts[ltIdx];
+  var ltTimer = setInterval(function() {
+    ltIdx = (ltIdx + 1) % loadingTexts.length;
+    document.getElementById("loadingText").textContent = loadingTexts[ltIdx];
+  }, 3000);
+  setTimeout(function() { clearInterval(ltTimer); }, 12000);
   stopLoadingTips(); startLoadingTips();
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
@@ -870,26 +972,42 @@ function showResults(gifts, occasion, relationship, fromSave) {
       }, { passive: true });
       card.addEventListener('touchend', function(e) {
         if (Math.abs(e.changedTouches[0].clientY - startY) < 10) {
-          tapped = true; openModal(idx);
+          tapped = true;
+          card.style.transform = "scale(0.97)";
+          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 120);
         }
       });
       card.addEventListener('click', function() {
-        if (!tapped) openModal(idx);
+        if (!tapped) {
+          card.style.transform = "scale(0.97)";
+          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 120);
+        }
         tapped = false;
       });
     })(i);
-    card.innerHTML =
-      '<div class="card-type-header"><div class="card-type-label ' + type + '">' + typeLabel + '</div><div>' + topPickBadge + '</div></div>' +
-      metaHTML +
-      '<div class="gift-main"><div class="gift-name">' + sanitise(gift.name) + '</div><div class="gift-price ' + type + '">' + sanitise(gift.price) + '</div></div>' +
-      '<p class="gift-why">' + sanitise(gift.why) + '</p>' +
-      '<div class="gift-tap-hint">&#128070; Tap to see where to get it</div>';
+
+    if (i === 0) {
+      card.innerHTML =
+        '<div class="top-pick-label"><span class="top-pick-badge">Top pick</span><span class="card-type-label ' + type + ' inline">' + typeLabel + '</span></div>' +
+        '<div class="hero-name">' + sanitise(gift.name) + '</div>' +
+        '<div class="hero-price ' + type + '">' + sanitise(gift.price) + '</div>' +
+        metaHTML +
+        '<p class="hero-why">' + sanitise(gift.why) + '</p>' +
+        '<div class="hero-cta ' + type + '">Tap to see where to get it &rarr;</div>';
+    } else {
+      card.innerHTML =
+        '<div class="card-type-header"><div class="card-type-label ' + type + '">' + typeLabel + '</div></div>' +
+        metaHTML +
+        '<div class="gift-main"><div class="gift-name">' + sanitise(gift.name) + '</div><div class="gift-price ' + type + '">' + sanitise(gift.price) + '</div></div>' +
+        '<p class="gift-why">' + sanitise(gift.why) + '</p>' +
+        '<div class="gift-tap-hint">Tap to see where to get it</div>';
+    }
     list.appendChild(card);
   });
 
   var alsoItems = ALSO_GIFTED[occasion];
   document.getElementById("alsoGifted").innerHTML = alsoItems
-    ? '<div class="also-gifted"><div class="also-gifted-title">People also gifted for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<a class="also-gifted-item" href="https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(item + " india") + '" target="_blank" rel="noopener">' + sanitise(item) + ' &#8599;</a>'; }).join("") + '</div></div>'
+    ? '<div class="also-gifted"><div class="also-gifted-eyebrow">What others loved gifting</div><div class="also-gifted-title">Popular for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<a class="also-gifted-item" href="https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(item + ' india') + '" target="_blank" rel="noopener">' + sanitise(item) + '</a>'; }).join('') + '</div></div>'
     : "";
 
   updateEditBar(lastParams ? lastParams.occasion : occasion, lastParams ? lastParams.relationship : relationship, lastParams ? lastParams.ageRange : "", lastParams ? lastParams.budgetMin : "", lastParams ? lastParams.budgetMax : "", selectedGender);
@@ -1083,9 +1201,11 @@ function reset() {
   var ft = document.getElementById('qFreeText'); if (ft) ft.value = '';
   document.getElementById('occasion').selectedIndex = 0;
   document.getElementById('relationship').selectedIndex = 0;
-  document.getElementById('ageRange').selectedIndex = 0;
+  document.getElementById('ageRange').value = '';
+  document.querySelectorAll('.age-pill').forEach(function(p) { p.className = 'age-pill'; });
   document.getElementById('budgetMin').value = '';
   document.getElementById('budgetMax').value = '';
+  document.querySelectorAll('.budget-chip').forEach(function(c) { c.className = 'budget-chip'; });
   document.getElementById('occasionNudge').style.display = 'none';
   document.getElementById('alsoGifted').innerHTML = '';
   document.getElementById('etiquetteNote').innerHTML = '';
@@ -1103,6 +1223,46 @@ function showError(msg) { var b = document.getElementById("errorBox"); b.textCon
 function hideError() { document.getElementById("errorBox").style.display = "none"; }
 function showEditError(msg) { var b = document.getElementById("editErrorBox"); if (b) { b.textContent = msg; b.style.display = "block"; } }
 function hideEditError() { var b = document.getElementById("editErrorBox"); if (b) b.style.display = "none"; }
+
+function setAge(val) {
+  document.getElementById("ageRange").value = val;
+  document.querySelectorAll(".age-pill").forEach(function(p) {
+    p.className = "age-pill" + (p.textContent.trim().replace("–","-") === val.replace(" to ", "-").replace(" plus", "+") || p.textContent.trim() === val ? " active" : "");
+  });
+}
+
+function setBudget(val) {
+  document.getElementById("budgetMax").value = val;
+  document.querySelectorAll(".budget-chip").forEach(function(c) {
+    var chipVal = parseInt(c.textContent.replace(/[^0-9]/g,""));
+    c.className = "budget-chip" + (chipVal === val ? " active" : "");
+  });
+}
+
+function clearBudgetChips() {
+  document.querySelectorAll(".budget-chip").forEach(function(c) { c.className = "budget-chip"; });
+}
+
+function confirmReset() {
+  var btn = document.querySelector(".action-btn-reset");
+  if (!btn.getAttribute("data-confirming")) {
+    btn.textContent = "Tap again to confirm";
+    btn.style.borderColor = "#C0402A";
+    btn.style.color = "#C0402A";
+    btn.setAttribute("data-confirming", "true");
+    setTimeout(function() {
+      if (btn.getAttribute("data-confirming")) {
+        btn.textContent = "Start over";
+        btn.style.borderColor = "";
+        btn.style.color = "";
+        btn.removeAttribute("data-confirming");
+      }
+    }, 2500);
+    return;
+  }
+  btn.removeAttribute("data-confirming");
+  reset();
+}
 </script>
 </body>
 </html>
