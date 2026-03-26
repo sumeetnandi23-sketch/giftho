@@ -4,471 +4,394 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Giftho — Gift someone right</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --saffron: #E8621A; --saffron-light: rgba(232,98,26,0.08); --saffron-border: rgba(232,98,26,0.2);
-    --teal: #0D8A6A; --teal-light: rgba(13,138,106,0.07); --teal-border: rgba(13,138,106,0.2);
-    --indigo: #4F46E5; --indigo-light: rgba(79,70,229,0.07); --indigo-border: rgba(79,70,229,0.2);
-    --cream: #FDF6ED; --ink: #1A1208; --muted: #8A7560; --card: #FFFAF4; --border: #EAD9C4;
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
-  .container { max-width: 660px; margin: 0 auto; padding: 0 20px; }
-  header { text-align: center; padding: 48px 0 12px; }
-  .logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .logo-icon { width: 38px; height: 38px; background: var(--saffron); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; transform: rotate(-6deg); box-shadow: 3px 3px 0 var(--ink); }
-  .logo-text { font-family: 'Playfair Display', serif; font-size: 30px; letter-spacing: -1px; }
-  .tagline { font-size: 14px; color: var(--muted); font-style: italic; }
-  .divider { width: 44px; height: 2px; background: var(--saffron); margin: 22px auto; border-radius: 2px; }
-  .why-strip { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 14px; align-items: flex-start; }
-  .why-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-  .why-text { font-size: 13px; line-height: 1.65; color: var(--ink); }
-  .why-text strong { font-weight: 500; }
-  .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 30px 28px; margin-bottom: 20px; box-shadow: 5px 5px 0 rgba(26,18,8,0.05); }
-  .card-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; }
-  .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-  .field { margin-bottom: 18px; }
-  label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 7px; }
-  select, input, textarea { width: 100%; padding: 13px 15px; border: 1.5px solid var(--border); border-radius: 12px; background: white; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink); outline: none; transition: border-color 0.2s; appearance: none; -webkit-appearance: none; }
-  select:focus, input:focus, textarea:focus { border-color: var(--saffron); box-shadow: 0 0 0 3px rgba(232,98,26,0.1); }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; padding-right: 38px; cursor: pointer; }
-  textarea { resize: none; height: 80px; line-height: 1.5; }
-  .budget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .toggle-row { display: flex; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; background: white; }
-  .toggle-btn { flex: 1; padding: 12px 8px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; text-align: center; }
-  .toggle-btn:not(:last-child) { border-right: 1.5px solid var(--border); }
-  .toggle-btn.active { background: var(--saffron); color: white; }
-  #unknownArea { display: none; }
-  #unknownArea.show { display: block; }
-  .q-nudge { display: flex; align-items: center; justify-content: space-between; background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; }
-  .q-nudge-text { font-size: 13px; color: var(--ink); line-height: 1.5; }
-  .q-nudge-text span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .q-open-btn { padding: 8px 16px; background: var(--saffron); color: white; border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: 12px; }
-  #questionnairePanel { display: none; background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
-  #questionnairePanel.open { display: block; }
-  .q-section { margin-bottom: 16px; }
-  .q-label { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-  .q-optional { font-size: 11px; color: var(--muted); font-weight: 400; }
-  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
-  .pill { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--muted); background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; user-select: none; }
-  .pill.selected { background: var(--saffron); border-color: var(--saffron); color: white; }
-  .q-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
-  .q-skip { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: underline; }
-  .q-done-btn { padding: 9px 20px; background: var(--saffron); color: white; border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
-  #aboutField.hidden { display: none; }
-  .btn { width: 100%; padding: 16px; background: var(--saffron); color: white; border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 8px; box-shadow: 3px 3px 0 rgba(26,18,8,0.15); transition: background 0.15s, transform 0.1s; }
-  .btn:hover { background: #D4561A; transform: translateY(-1px); }
-  .btn:active { transform: translateY(1px); }
-  .btn:disabled { background: #C4A98A; cursor: not-allowed; transform: none; box-shadow: none; }
-  .error { background: #FFF3F0; border: 1.5px solid #F4C4B4; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #C0402A; margin-top: 14px; display: none; word-break: break-word; }
-  #loading { display: none; text-align: center; padding: 48px 0; }
-  .dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
-  .dot { width: 10px; height: 10px; background: var(--saffron); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
-  .dot:nth-child(2) { animation-delay: 0.2s; }
-  .dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-10px); opacity: 1; } }
-  .loading-text { font-size: 14px; color: var(--muted); font-style: italic; }
-  .loading-tip { font-size: 12px; color: var(--muted); margin-top: 10px; max-width: 300px; margin-left: auto; margin-right: auto; line-height: 1.6; background: var(--saffron-light); border-radius: 10px; padding: 10px 14px; transition: opacity 0.3s; }
-  #results { display: none; }
-  .results-header { text-align: center; margin-bottom: 16px; }
-  .results-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 6px; }
-  .results-sub { font-size: 13px; color: var(--muted); }
-  .results-legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1A1209; --ink-deep: #0F0B06;
+  --saffron: #E8621A; --saff-dark: #B54D14; --saff-light: rgba(232,98,26,0.09); --saff-border: rgba(232,98,26,0.22);
+  --rose: #C94F6D; --rose-light: #FDF4F6; --rose-border: #EDD5DC;
+  --forest: #2D6A4F; --forest-light: #F2F8F5; --forest-border: #C8DDD4;
+  --bg: #FAFAF8; --card: #FFFFFF; --muted: #8A7A6A; --border: #EDEAE6;
+}
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding-bottom: 60px; }
 
-  /* Gift cards — tappable */
-  .gift-card { border-radius: 16px; padding: 20px; margin-bottom: 14px; animation: fadeUp 0.4s ease forwards; opacity: 0; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; position: relative; }
-  .gift-card:hover { transform: translateY(-2px); }
-  .gift-card:active { transform: translateY(0px); }
-  .gift-card.buy { background: var(--card); border: 1.5px solid var(--border); box-shadow: 4px 4px 0 rgba(26,18,8,0.04); }
-  .gift-card.buy:hover { box-shadow: 6px 6px 0 rgba(26,18,8,0.08); }
-  .gift-card.make { background: #F4FBF8; border: 1.5px solid var(--teal-border); box-shadow: 4px 4px 0 rgba(13,138,106,0.06); }
-  .gift-card.make:hover { box-shadow: 6px 6px 0 rgba(13,138,106,0.1); }
-  .gift-card.experience { background: #F0F0FE; border: 1.5px solid var(--indigo-border); box-shadow: 4px 4px 0 rgba(79,70,229,0.06); }
-  .gift-card.experience:hover { box-shadow: 6px 6px 0 rgba(79,70,229,0.1); }
-  .gift-card.top-pick.buy { border-width: 2px; border-color: var(--saffron); }
-  .gift-card.top-pick.make { border-width: 2px; border-color: var(--teal); }
-  .gift-card.top-pick.experience { border-width: 2px; border-color: var(--indigo); }
-  @keyframes fadeUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+#splashScreen { position:fixed; inset:0; background:var(--ink-deep); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 32px; cursor:pointer; transition:opacity 0.6s ease; overflow:hidden; }
+#splashScreen.fade-out { opacity:0; pointer-events:none; }
+.splash-ring { position:absolute; border-radius:50%; pointer-events:none; }
+.sr1 { width:300px; height:300px; top:-90px; right:-90px; border:1px solid rgba(232,98,26,0.12); }
+.sr2 { width:180px; height:180px; top:-30px; right:-30px; border:1px solid rgba(232,98,26,0.22); }
+.sr3 { width:260px; height:260px; bottom:-100px; left:-80px; border:1px solid rgba(232,98,26,0.07); }
+.splash-grid { position:absolute; inset:0; pointer-events:none; background-image: repeating-linear-gradient(0deg,transparent,transparent 44px,rgba(255,255,255,0.018) 44px,rgba(255,255,255,0.018) 45px), repeating-linear-gradient(90deg,transparent,transparent 44px,rgba(255,255,255,0.018) 44px,rgba(255,255,255,0.018) 45px); }
+.splash-inner { max-width:360px; width:100%; position:relative; }
+.splash-wordmark { font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-weight:600; font-size:62px; line-height:1; letter-spacing:-2.5px; margin-bottom:6px; animation:splashUp 0.7s ease forwards; }
+.splash-wordmark .sw-g { color:var(--saffron); } .splash-wordmark .sw-r { color:#F5EDD8; }
+.splash-tagline { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:3.5px; color:#8A7060; margin-bottom:44px; animation:splashUp 0.7s 0.1s ease both; }
+.splash-steps { display:flex; flex-direction:column; margin-bottom:40px; }
+.splash-step { display:flex; gap:18px; padding:18px 0; border-top:1px solid #231808; opacity:0; animation:splashUp 0.5s ease forwards; }
+.splash-step:last-child { border-bottom:1px solid #231808; }
+.ss1{animation-delay:0.25s;} .ss2{animation-delay:0.45s;} .ss3{animation-delay:0.65s;}
+.splash-num { font-family:'Cormorant Garamond',Georgia,serif; font-size:44px; font-weight:300; font-style:italic; line-height:1; flex-shrink:0; width:42px; }
+.splash-step.off .splash-num { color:#241A0C; } .splash-step.on .splash-num { color:var(--saffron); }
+.splash-kicker { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:2px; margin-bottom:5px; }
+.splash-step.off .splash-kicker { color:#33220E; } .splash-step.on .splash-kicker { color:#C8621A; }
+.splash-body { font-family:'Cormorant Garamond',Georgia,serif; font-size:17px; font-weight:300; line-height:1.65; }
+.splash-step.off .splash-body { color:#241A0C; } .splash-step.on .splash-body { color:#C8B49A; }
+.splash-step.on .splash-body em { color:#F5EDD8; font-weight:600; font-style:italic; }
+.splash-bottom { display:flex; align-items:center; justify-content:space-between; opacity:0; animation:splashUp 0.5s 0.85s ease forwards; }
+.splash-cta { background:var(--saffron); color:white; border:none; padding:15px 32px; border-radius:50px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
+.splash-cta:hover { background:var(--saff-dark); }
+.splash-timer-label { font-size:10px; color:#2E1E0A; text-align:right; margin-bottom:6px; }
+.splash-timer-track { width:56px; height:2px; background:#1E150A; border-radius:2px; margin-left:auto; overflow:hidden; }
+.splash-timer-fill { height:100%; background:var(--saffron); border-radius:2px; width:100%; animation:timerDrain 12s linear forwards; }
+@keyframes splashUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+@keyframes timerDrain { from{width:100%;}to{width:0%;} }
 
-  /* Card type header */
-  .card-type-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); }
-  .card-type-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; }
-  .card-type-label.buy { color: var(--saffron); }
-  .card-type-label.make { color: var(--teal); }
-  .card-type-label.experience { color: var(--indigo); }
-  .top-pick-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: #FFF3E8; border: 1px solid var(--saffron-border); border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--saffron); }
+.container { max-width:660px; margin:0 auto; padding:0 20px; }
+header { text-align:center; padding:44px 0 10px; }
+.logo { display:inline-flex; align-items:center; gap:10px; margin-bottom:10px; }
+.logo-mark { width:40px; height:40px; background:var(--saffron); border-radius:10px; display:flex; align-items:center; justify-content:center; transform:rotate(-6deg); box-shadow:3px 3px 0 var(--ink); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; font-weight:600; color:white; }
+.logo-text { font-family:'Cormorant Garamond',Georgia,serif; font-style:italic; font-size:32px; font-weight:600; letter-spacing:-1px; color:var(--ink); }
+.tagline { font-size:13px; color:var(--muted); font-style:italic; font-family:'Cormorant Garamond',serif; }
+.divider { width:40px; height:2px; background:var(--saffron); margin:20px auto; border-radius:2px; }
 
-  /* Card content */
-  .gift-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-  .gift-name { font-family: 'Playfair Display', serif; font-size: 18px; flex: 1; line-height: 1.3; }
-  .gift-price { font-size: 13px; font-weight: 500; white-space: nowrap; margin-top: 4px; flex-shrink: 0; }
-  .gift-price.buy { color: var(--saffron); }
-  .gift-price.make { color: var(--teal); }
-  .gift-price.experience { color: var(--indigo); }
-  .gift-why { font-size: 14px; color: #4A3C2A; line-height: 1.65; margin-bottom: 12px; }
-  .gift-tap-hint { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.why-strip { background:var(--saff-light); border:1.5px solid var(--saff-border); border-radius:16px; padding:16px 20px; margin-bottom:20px; display:flex; gap:14px; align-items:flex-start; }
+.why-icon { font-size:16px; flex-shrink:0; margin-top:3px; color:var(--saffron); }
+.why-text { font-size:13px; line-height:1.7; color:var(--ink); }
+.why-text strong { font-weight:600; font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; }
 
-  /* Speedometer */
-  .make-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .speed-wrap { display: flex; align-items: center; gap: 6px; }
-  .speed-label { font-size: 11px; color: var(--teal); font-weight: 500; }
-  .time-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: white; border: 1px solid var(--teal-border); color: var(--teal); font-weight: 500; }
+.saved-banner { background:var(--forest-light); border:1.5px solid var(--forest-border); border-radius:12px; padding:12px 16px; font-size:13px; color:var(--forest); margin-bottom:16px; display:none; cursor:pointer; text-align:center; }
+.saved-banner.show { display:block; }
+.occasion-nudge { background:var(--saff-light); border:1.5px solid var(--saff-border); border-radius:14px; padding:14px 18px; margin-bottom:16px; cursor:pointer; font-size:13px; color:var(--ink); line-height:1.6; display:none; align-items:center; gap:12px; }
+.nudge-text strong { display:block; font-weight:600; margin-bottom:2px; }
+.nudge-text span { font-size:12px; color:var(--muted); }
 
-  /* Platform modal */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(26,18,8,0.5); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.2s ease; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .modal-sheet { background: var(--card); border-radius: 24px 24px 0 0; padding: 24px 20px 40px; width: 100%; max-width: 660px; animation: slideUp 0.3s ease; }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-  .modal-gift-name { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 4px; }
-  .modal-gift-price { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-  .modal-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
-  .modal-links { display: flex; flex-direction: column; gap: 10px; }
-  .modal-link { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: white; border: 1.5px solid var(--border); border-radius: 14px; text-decoration: none; color: var(--ink); font-size: 15px; font-weight: 500; transition: all 0.15s; }
-  .modal-link:hover { border-color: var(--saffron); color: var(--saffron); }
-  .modal-link.teal:hover { border-color: var(--teal); color: var(--teal); }
-  .modal-link.indigo:hover { border-color: var(--indigo); color: var(--indigo); }
-  .modal-link-arrow { font-size: 18px; opacity: 0.4; }
-  .modal-close { width: 100%; padding: 14px; background: transparent; border: 1.5px solid var(--border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--muted); cursor: pointer; margin-top: 16px; }
+.card { background:var(--card); border:1.5px solid var(--border); border-radius:20px; padding:28px 26px; margin-bottom:20px; box-shadow:0 2px 0 var(--border); }
+.card-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:26px; font-weight:600; font-style:italic; margin-bottom:4px; color:var(--ink); }
+.card-sub { font-size:13px; color:var(--muted); margin-bottom:24px; line-height:1.6; }
+label { display:block; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:8px; }
+.field { margin-bottom:20px; }
+select, input[type=number], input[type=text], textarea { width:100%; padding:13px 15px; border:1.5px solid var(--border); border-radius:12px; background:var(--bg); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; color:var(--ink); outline:none; transition:border-color 0.2s; appearance:none; -webkit-appearance:none; }
+select:focus, input:focus, textarea:focus { border-color:var(--saffron); box-shadow:0 0 0 3px rgba(232,98,26,0.08); }
+select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A7A6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 15px center; padding-right:38px; cursor:pointer; }
+textarea { resize:none; height:78px; line-height:1.5; }
 
-  /* Edit bar */
-  .edit-bar { display: none; align-items: center; justify-content: space-between; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 16px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.15s; position: sticky; top: 12px; z-index: 100; box-shadow: 0 2px 12px rgba(26,18,8,0.08); }
-  .edit-bar:hover { border-color: var(--saffron); }
-  .edit-summary { font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .edit-btn { font-size: 12px; font-weight: 500; color: var(--saffron); white-space: nowrap; margin-left: 12px; flex-shrink: 0; }
-  .edit-panel { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
-  .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .edit-field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 5px; }
-  .edit-field select, .edit-field input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); outline: none; appearance: none; -webkit-appearance: none; }
-  #editQuestionnaireLink { margin-top: 12px; padding: 10px 14px; background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 10px; font-size: 13px; color: var(--ink); cursor: pointer; display: none; }
+.toggle-row { display:flex; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; background:var(--card); }
+.toggle-btn { flex:1; padding:12px 8px; border:none; background:transparent; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:background 0.15s,color 0.15s; text-align:center; }
+.toggle-btn:not(:last-child) { border-right:1.5px solid var(--border); }
+.toggle-btn.active { background:var(--ink); color:white; }
 
-  /* Also gifted */
-  .also-gifted { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 20px; margin-bottom: 16px; }
-  .also-gifted-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
-  .also-gifted-items { display: flex; gap: 8px; flex-wrap: wrap; }
-  .also-gifted-item { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 13px; color: var(--ink); background: white; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s; }
-  .also-gifted-item:hover { border-color: var(--saffron); color: var(--saffron); }
+.age-pills { display:flex; gap:8px; flex-wrap:wrap; }
+.age-pill { padding:9px 16px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.age-pill:hover { border-color:var(--saffron); color:var(--saffron); }
+.age-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
 
-  /* Etiquette */
-  .etiquette-note { background: rgba(138,117,96,0.07); border: 1.5px solid rgba(138,117,96,0.2); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+.budget-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.budget-chip { padding:7px 14px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.budget-chip::before { content:"Rs. "; font-size:11px; }
+.budget-chip:hover { border-color:var(--saffron); color:var(--saffron); }
+.budget-chip.active { background:var(--saff-light); border-color:var(--saffron); color:var(--saffron); font-weight:500; }
+.budget-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
-  /* Save / Saved */
-  .save-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; margin: 0 auto 20px; }
-  .save-btn:hover { border-color: var(--saffron); color: var(--saffron); }
-  .save-btn.saved { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
-  .saved-banner { background: var(--teal-light); border: 1.5px solid var(--teal-border); border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--teal); margin-bottom: 16px; display: none; cursor: pointer; text-align: center; }
-  .saved-banner.show { display: block; }
-  .occasion-nudge { background: var(--saffron-light); border: 1.5px solid var(--saffron-border); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; cursor: pointer; font-size: 13px; color: var(--ink); line-height: 1.6; display: none; align-items: center; gap: 12px; }
-  .nudge-text strong { display: block; font-weight: 500; margin-bottom: 2px; }
-  .nudge-text span { font-size: 12px; color: var(--muted); }
+#unknownArea { display:none; } #unknownArea.show { display:block; }
+.q-nudge { display:flex; align-items:center; justify-content:space-between; background:var(--saff-light); border:1.5px solid var(--saff-border); border-radius:12px; padding:12px 16px; margin-bottom:14px; }
+.q-nudge-text { font-size:13px; color:var(--ink); line-height:1.5; }
+.q-nudge-text span { display:block; font-size:11px; color:var(--muted); margin-top:2px; }
+.q-open-btn { padding:8px 16px; background:var(--saffron); color:white; border:none; border-radius:20px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; flex-shrink:0; margin-left:12px; }
+#questionnairePanel { display:none; background:white; border:1.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; }
+#questionnairePanel.open { display:block; }
+.q-section { margin-bottom:16px; }
+.q-label { font-size:12px; font-weight:600; color:var(--ink); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
+.q-optional { font-size:11px; color:var(--muted); font-weight:400; }
+.pills { display:flex; flex-wrap:wrap; gap:8px; }
+.pill { padding:6px 14px; border:1.5px solid var(--border); border-radius:20px; font-size:13px; color:var(--muted); background:white; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:all 0.15s; user-select:none; }
+.pill.selected { background:var(--ink); border-color:var(--ink); color:white; }
+.q-footer { display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+.q-skip { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; text-decoration:underline; }
+.q-done-btn { padding:9px 20px; background:var(--saffron); color:white; border:none; border-radius:20px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; }
+#aboutField.hidden { display:none; }
 
-  /* Results actions */
-  .results-actions { display: flex; gap: 10px; margin-top: 8px; }
-  .action-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-align: center; }
-  .action-btn-primary { background: var(--ink); color: var(--cream); border: 1.5px solid var(--ink); }
-  .action-btn-primary:hover { background: #2E1E0A; transform: translateY(-1px); }
-  .action-btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
-  .action-btn-secondary:hover { border-color: var(--muted); color: var(--ink); }
+.btn { width:100%; padding:16px; background:var(--saffron); color:white; border:none; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:600; cursor:pointer; margin-top:8px; box-shadow:0 4px 0 var(--saff-dark); transition:background 0.15s,transform 0.1s,box-shadow 0.1s; letter-spacing:0.2px; }
+.btn:hover { background:var(--saff-dark); transform:translateY(-1px); }
+.btn:active { transform:translateY(2px); box-shadow:0 2px 0 var(--saff-dark); }
+.btn:disabled { background:#C4A98A; cursor:not-allowed; transform:none; box-shadow:none; }
+.error { background:#FFF3F0; border:1.5px solid #F4C4B4; border-radius:10px; padding:12px 16px; font-size:13px; color:#C0402A; margin-top:14px; display:none; }
 
-  footer { text-align: center; padding: 32px 0 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); margin-top: 16px; }
-  @media (max-width: 480px) { .card { padding: 22px 18px; } .budget-row { grid-template-columns: 1fr; } .edit-grid { grid-template-columns: 1fr; } .results-actions { flex-direction: column; } }
+#loading { display:none; text-align:center; padding:52px 0; }
+.gift-loader { display:flex; justify-content:center; margin-bottom:28px; }
+.gift-box { position:relative; width:52px; height:48px; animation:giftFloat 1.8s ease-in-out infinite; }
+.gift-lid { position:absolute; top:0; left:-3px; right:-3px; height:16px; background:var(--saffron); border-radius:4px 4px 0 0; animation:lidBounce 1.8s ease-in-out infinite; }
+.gift-body { position:absolute; top:14px; left:0; right:0; bottom:0; background:#F4A435; border-radius:0 0 4px 4px; }
+.gift-ribbon-h { position:absolute; top:14px; left:0; right:0; height:8px; background:white; opacity:0.25; }
+.gift-ribbon-v { position:absolute; top:0; left:50%; transform:translateX(-50%); width:8px; bottom:0; background:white; opacity:0.25; }
+.gift-bow { position:absolute; top:-5px; left:50%; transform:translateX(-50%); width:14px; height:9px; border:2.5px solid white; border-radius:50%; opacity:0.5; }
+@keyframes giftFloat { 0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);} }
+@keyframes lidBounce { 0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-7px) rotate(-5deg);} }
+.loading-text { font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; font-weight:300; color:var(--muted); }
+.loading-tip { font-size:12px; color:var(--muted); margin:12px auto 0; max-width:300px; line-height:1.7; background:var(--saff-light); border-radius:10px; padding:10px 14px; transition:opacity 0.3s; }
 
-  /* Age range pills */
-  .age-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-  .age-pill { padding: 9px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; }
-  .age-pill:hover { border-color: var(--saffron); color: var(--saffron); }
-  .age-pill.active { background: var(--saffron); border-color: var(--saffron); color: white; }
+#results { display:none; }
+.results-header { text-align:center; margin-bottom:16px; }
+.results-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:28px; font-weight:600; font-style:italic; margin-bottom:6px; color:var(--ink); }
+.results-sub { font-size:13px; color:var(--muted); }
+.results-legend { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
 
-  /* Budget chips */
-  .budget-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
-  .budget-chip { padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 20px; background: white; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
-  .budget-chip:hover { border-color: var(--saffron); color: var(--saffron); }
-  .budget-chip.active { background: var(--saffron-light); border-color: var(--saffron); color: var(--saffron); font-weight: 500; }
-  .budget-chip::before { content: "Rs. "; font-size: 11px; }
+.edit-bar { display:none; align-items:center; justify-content:space-between; background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:10px 16px; margin-bottom:12px; cursor:pointer; transition:border-color 0.15s; }
+.edit-bar:hover { border-color:var(--saffron); }
+.edit-summary { font-size:12px; color:var(--muted); line-height:1.5; }
+.edit-btn { font-size:12px; font-weight:600; color:var(--saffron); white-space:nowrap; margin-left:12px; flex-shrink:0; }
+.edit-panel { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; }
+.edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.edit-field label { display:block; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); margin-bottom:5px; }
+.edit-field select, .edit-field input { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; background:var(--bg); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--ink); outline:none; appearance:none; -webkit-appearance:none; }
+#editQuestionnaireLink { margin-top:12px; padding:10px 14px; background:var(--saff-light); border:1.5px solid var(--saff-border); border-radius:10px; font-size:13px; color:var(--ink); cursor:pointer; display:none; }
 
-  /* Gift box loader */
-  .gift-loader { display: flex; justify-content: center; margin-bottom: 24px; }
-  .gift-box { position: relative; width: 52px; height: 48px; animation: giftFloat 1.8s ease-in-out infinite; }
-  .gift-lid { position: absolute; top: 0; left: -3px; right: -3px; height: 16px; background: var(--saffron); border-radius: 4px 4px 0 0; animation: lidBounce 1.8s ease-in-out infinite; }
-  .gift-body { position: absolute; top: 14px; left: 0; right: 0; bottom: 0; background: #F4A435; border-radius: 0 0 4px 4px; }
-  .gift-ribbon-h { position: absolute; top: 14px; left: 0; right: 0; height: 8px; background: white; opacity: 0.3; }
-  .gift-ribbon-v { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 8px; bottom: 0; background: white; opacity: 0.3; }
-  .gift-bow { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 16px; height: 10px; border: 3px solid white; border-radius: 50%; opacity: 0.6; }
-  @keyframes giftFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  @keyframes lidBounce { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(-4deg); } }
+.gift-card { border-radius:18px; padding:22px 20px; margin-bottom:14px; cursor:pointer; animation:fadeUp 0.4s ease forwards; opacity:0; transition:transform 0.15s ease,box-shadow 0.15s ease; }
+.gift-card:hover { transform:translateY(-2px); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);} }
+.gift-card.top-pick { background:var(--ink); border:none; padding:28px 24px; box-shadow:0 8px 32px rgba(26,18,9,0.18); }
+.gift-card.top-pick:hover { box-shadow:0 12px 40px rgba(26,18,9,0.24); }
+.gift-card.buy { background:var(--card); border:1.5px solid var(--border); box-shadow:0 2px 0 var(--border); }
+.gift-card.make { background:var(--rose-light); border:1.5px solid var(--rose-border); }
+.gift-card.experience { background:var(--forest-light); border:1.5px solid var(--forest-border); }
+.card-type-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.card-type-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; }
+.card-type-label.buy { color:var(--muted); } .card-type-label.make { color:var(--rose); } .card-type-label.experience { color:var(--forest); }
+.top-pick-label { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.top-pick-badge { background:var(--saffron); color:white; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; padding:4px 12px; border-radius:20px; }
+.hero-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:28px; font-weight:600; font-style:italic; color:#F5EDD8; line-height:1.2; margin-bottom:8px; }
+.hero-price { font-size:20px; font-weight:600; color:var(--saffron); margin-bottom:14px; }
+.hero-why { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:300; color:#C8B49A; line-height:1.7; margin-bottom:20px; }
+.hero-cta { display:inline-block; padding:13px 24px; background:var(--saffron); color:white; border-radius:12px; font-size:14px; font-weight:600; box-shadow:0 3px 0 var(--saff-dark); }
+.gift-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:20px; font-weight:600; font-style:italic; color:var(--ink); line-height:1.3; flex:1; }
+.gift-main { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.gift-price { font-size:14px; font-weight:600; white-space:nowrap; margin-top:4px; flex-shrink:0; }
+.gift-price.buy { color:var(--saffron); } .gift-price.make { color:var(--rose); } .gift-price.experience { color:var(--forest); }
+.gift-why { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:300; color:#5A4A3A; line-height:1.7; margin-bottom:12px; }
+.gift-tap-hint { font-size:12px; color:var(--muted); }
+.make-meta { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.speed-label { font-size:11px; color:var(--rose); font-weight:600; }
+.speed-sub { font-size:10px; color:var(--muted); margin-top:1px; }
+.time-tag { font-size:11px; padding:3px 9px; border-radius:20px; background:white; border:1px solid var(--rose-border); color:var(--rose); font-weight:500; }
 
-  /* Top pick hero card */
-  .gift-card.top-pick { padding: 28px; }
-  .gift-card.top-pick.buy { background: linear-gradient(160deg, #FFF8F2 0%, var(--card) 100%); border-color: var(--saffron); border-width: 2px; }
-  .gift-card.top-pick.make { background: linear-gradient(160deg, #F0FAF6 0%, #F4FBF8 100%); border-color: var(--teal); border-width: 2px; }
-  .gift-card.top-pick.experience { background: linear-gradient(160deg, #EFEFFB 0%, #F0F0FE 100%); border-color: var(--indigo); border-width: 2px; }
-  .top-pick-label { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .top-pick-badge { padding: 4px 12px; background: var(--saffron); color: white; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-  .card-type-label.inline { font-size: 12px; }
-  .hero-name { font-family: 'Playfair Display', serif; font-size: 26px; line-height: 1.25; margin-bottom: 8px; color: var(--ink); }
-  .hero-price { font-size: 22px; font-weight: 600; margin-bottom: 14px; }
-  .hero-price.buy { color: var(--saffron); }
-  .hero-price.make { color: var(--teal); }
-  .hero-price.experience { color: var(--indigo); }
-  .hero-why { font-size: 15px; color: #4A3C2A; line-height: 1.7; margin-bottom: 18px; }
-  .hero-cta { display: inline-block; padding: 13px 22px; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .hero-cta.buy { background: var(--saffron); color: white; box-shadow: 3px 3px 0 rgba(232,98,26,0.2); }
-  .hero-cta.make { background: var(--teal); color: white; box-shadow: 3px 3px 0 rgba(13,138,106,0.2); }
-  .hero-cta.experience { background: var(--indigo); color: white; box-shadow: 3px 3px 0 rgba(79,70,229,0.2); }
+.modal-overlay { position:fixed; inset:0; background:rgba(26,18,9,0.55); z-index:1000; display:flex; align-items:flex-end; justify-content:center; animation:fadeIn 0.2s ease; }
+@keyframes fadeIn { from{opacity:0;}to{opacity:1;} }
+.modal-sheet { background:var(--card); border-radius:24px 24px 0 0; padding:24px 20px 44px; width:100%; max-width:660px; animation:slideUp 0.3s ease; }
+@keyframes slideUp { from{transform:translateY(100%);}to{transform:translateY(0);} }
+.modal-handle { width:40px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 20px; }
+.modal-gift-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-style:italic; font-weight:600; color:var(--ink); margin-bottom:4px; }
+.modal-gift-price { font-size:13px; color:var(--muted); margin-bottom:20px; }
+.modal-section-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:12px; }
+.modal-links { display:flex; flex-direction:column; gap:10px; }
+.modal-link { display:flex; align-items:center; justify-content:space-between; padding:15px 18px; background:var(--bg); border:1.5px solid var(--border); border-radius:14px; text-decoration:none; color:var(--ink); font-size:15px; font-weight:500; transition:all 0.15s; }
+.modal-link:hover { border-color:var(--saffron); color:var(--saffron); }
+.modal-link.make:hover { border-color:var(--rose); color:var(--rose); }
+.modal-link.experience:hover { border-color:var(--forest); color:var(--forest); }
+.modal-link-arrow { font-size:16px; opacity:0.35; }
+.modal-close { width:100%; padding:14px; background:transparent; border:1.5px solid var(--border); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--muted); cursor:pointer; margin-top:16px; }
 
-  /* Also gifted revamp */
-  .also-gifted { padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 8px; }
-  .also-gifted-eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 4px; }
-  .also-gifted-title { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 16px; color: var(--ink); }
-  .also-gifted-items { display: flex; gap: 10px; flex-wrap: wrap; }
-  .also-gifted-item { padding: 10px 18px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--ink); background: var(--card); text-decoration: none; transition: all 0.15s; font-weight: 500; }
-  .also-gifted-item:hover { border-color: var(--saffron); color: var(--saffron); transform: translateY(-1px); }
+.also-gifted { padding:24px 0 8px; border-top:1px solid var(--border); margin-top:8px; }
+.also-gifted-eyebrow { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:4px; }
+.also-gifted-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:20px; font-style:italic; font-weight:600; margin-bottom:16px; color:var(--ink); }
+.also-gifted-items { display:flex; gap:10px; flex-wrap:wrap; }
+.also-gifted-item { padding:10px 18px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; color:var(--ink); background:var(--card); text-decoration:none; transition:all 0.15s; font-weight:500; }
+.also-gifted-item:hover { border-color:var(--saffron); color:var(--saffron); transform:translateY(-1px); }
 
-  /* Start over — distinct */
-  .action-btn-reset { flex: 0 0 auto; padding: 13px 20px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; cursor: pointer; background: transparent; border: 1.5px solid var(--border); color: var(--muted); transition: all 0.15s; letter-spacing: 0.3px; }
-  .action-btn-reset:hover { border-color: #C0402A; color: #C0402A; }
+.etiquette-note { background:rgba(138,122,106,0.07); border:1.5px solid rgba(138,122,106,0.18); border-radius:12px; padding:12px 16px; font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; display:flex; gap:10px; align-items:flex-start; }
 
-  /* Card transition */
-  .gift-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.save-btn { display:flex; align-items:center; gap:6px; padding:8px 16px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; transition:all 0.15s; margin:0 auto 20px; }
+.save-btn:hover { border-color:var(--saffron); color:var(--saffron); }
+.save-btn.saved { border-color:var(--forest); color:var(--forest); background:var(--forest-light); }
+.results-actions { display:flex; gap:10px; margin-top:8px; }
+.action-btn-primary { flex:1; padding:14px; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; background:var(--ink); color:var(--bg); border:1.5px solid var(--ink); transition:all 0.15s; text-align:center; }
+.action-btn-primary:hover { background:#2E1E0A; transform:translateY(-1px); }
+.action-btn-reset { flex:0 0 auto; padding:14px 20px; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:400; cursor:pointer; background:transparent; border:1.5px solid var(--border); color:var(--muted); transition:all 0.15s; }
+.action-btn-reset:hover { border-color:#C0402A; color:#C0402A; }
+
+footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted); border-top:1px solid var(--border); margin-top:16px; }
+@media(max-width:480px){ .card{padding:22px 18px;} .budget-row{grid-template-columns:1fr;} .edit-grid{grid-template-columns:1fr;} .results-actions{flex-direction:column;} }
 </style>
 </head>
 <body>
+
+<div id="splashScreen" onclick="dismissSplash()">
+  <div class="splash-ring sr1"></div><div class="splash-ring sr2"></div><div class="splash-ring sr3"></div>
+  <div class="splash-grid"></div>
+  <div class="splash-inner">
+    <div class="splash-wordmark"><span class="sw-g">G</span><span class="sw-r">iftho</span></div>
+    <div class="splash-tagline">Gifting, done right</div>
+    <div class="splash-steps">
+      <div class="splash-step off ss1">
+        <div class="splash-num">01</div>
+        <div><div class="splash-kicker">Someone special</div><div class="splash-body">There's an occasion. Someone you care about. And you want to get it right.</div></div>
+      </div>
+      <div class="splash-step on ss2">
+        <div class="splash-num">02</div>
+        <div><div class="splash-kicker">Tell us about them</div><div class="splash-body">The occasion, who it's for, your budget. We take it from there — <em>thoughtfully.</em></div></div>
+      </div>
+      <div class="splash-step off ss3">
+        <div class="splash-num">03</div>
+        <div><div class="splash-kicker">Your perfect gift</div><div class="splash-body">Something to buy, make with your hands, or an experience to share together.</div></div>
+      </div>
+    </div>
+    <div class="splash-bottom">
+      <button class="splash-cta" onclick="event.stopPropagation();dismissSplash()">Find the perfect gift</button>
+      <div><div class="splash-timer-label">continues in 12s</div><div class="splash-timer-track"><div class="splash-timer-fill"></div></div></div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <header>
-    <div class="logo"><div class="logo-icon">&#127873;</div><span class="logo-text">Giftho</span></div>
+    <div class="logo"><div class="logo-mark">G</div><span class="logo-text">Giftho</span></div>
     <p class="tagline">Stop stressing. Just gift right.</p>
   </header>
   <div class="divider"></div>
 
   <div class="why-strip">
-    <div class="why-icon">&#9889;</div>
-    <div class="why-text">
-      <strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.
-      <span style="display:block;margin-top:6px;font-size:12px;color:var(--muted);">&#10003; Already helped 500+ people gift right across India</span>
-    </div>
+    <div class="why-icon">✦</div>
+    <div class="why-text"><strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.</div>
   </div>
 
-  <div id="savedBanner" class="saved-banner" onclick="loadSaved()">&#127915; You have a saved gift list — tap to view it</div>
+  <div id="savedBanner" class="saved-banner" onclick="loadSaved()">You have a saved gift list — tap to view</div>
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
   <div id="formCard" class="card">
     <h2 class="card-title">What's the occasion?</h2>
     <p class="card-sub">Fill in what you know. We'll handle the rest.</p>
-
-    <div class="field">
-      <label>Occasion</label>
-      <select id="occasion">
-        <option value="">Select occasion</option>
-        <option>Birthday</option><option>Engagement</option><option>Wedding</option>
-        <option>Diwali</option><option>Housewarming</option><option>Baby Shower</option>
-        <option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option>
-        <option>Graduation</option><option>Just Because</option>
-      </select>
+    <div class="field"><label>Occasion</label>
+      <select id="occasion"><option value="">Select occasion</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select>
     </div>
-
-    <div class="field">
-      <label>Relationship</label>
-      <select id="relationship">
-        <option value="">Who are you gifting?</option>
-        <option>Close Friend</option><option>Flatmate</option><option>Partner</option>
-        <option>Parent</option><option>Sibling</option><option>Colleague</option>
-        <option>Boss</option><option>Cousin</option><option>Partner's Parent</option>
-        <option>Acquaintance</option><option>Someone I just met</option>
-      </select>
+    <div class="field"><label>Relationship</label>
+      <select id="relationship"><option value="">Who are you gifting?</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partner's Parent</option><option>Acquaintance</option><option>Someone I just met</option></select>
     </div>
-
-    <div class="field">
-      <label>Their Gender</label>
-      <div class="toggle-row" id="genderToggle">
-        <button class="toggle-btn" id="genderHer" onclick="setGender('Her')">Her</button>
-        <button class="toggle-btn" id="genderHim" onclick="setGender('Him')">Him</button>
-        <button class="toggle-btn" id="genderThem" onclick="setGender('Them')">Them</button>
-      </div>
+    <div class="field"><label>Their Gender</label>
+      <div class="toggle-row"><button class="toggle-btn" id="genderHer" onclick="setGender('Her')">Her</button><button class="toggle-btn" id="genderHim" onclick="setGender('Him')">Him</button><button class="toggle-btn" id="genderThem" onclick="setGender('Them')">Them</button></div>
     </div>
-
-    <div class="field">
-      <label>Their Age Range</label>
+    <div class="field"><label>Their Age Range</label>
       <input type="hidden" id="ageRange" value="">
-      <div class="age-pills" id="agePills">
-        <button class="age-pill" onclick="setAge('Under 10')">Under 10</button>
-        <button class="age-pill" onclick="setAge('10 to 17')">10–17</button>
-        <button class="age-pill" onclick="setAge('18 to 25')">18–25</button>
-        <button class="age-pill" onclick="setAge('26 to 35')">26–35</button>
-        <button class="age-pill" onclick="setAge('36 to 50')">36–50</button>
-        <button class="age-pill" onclick="setAge('50 plus')">50+</button>
+      <div class="age-pills">
+        <button class="age-pill" data-val="Under 10" onclick="setAge('Under 10')">Under 10</button>
+        <button class="age-pill" data-val="10 to 17" onclick="setAge('10 to 17')">10–17</button>
+        <button class="age-pill" data-val="18 to 25" onclick="setAge('18 to 25')">18–25</button>
+        <button class="age-pill" data-val="26 to 35" onclick="setAge('26 to 35')">26–35</button>
+        <button class="age-pill" data-val="36 to 50" onclick="setAge('36 to 50')">36–50</button>
+        <button class="age-pill" data-val="50 plus" onclick="setAge('50 plus')">50+</button>
       </div>
     </div>
-
-    <div class="field">
-      <label>Budget (Rs.)</label>
+    <div class="field"><label>Budget (Rs.)</label>
       <div class="budget-chips">
-        <button class="budget-chip" onclick="setBudget(500)">500</button>
-        <button class="budget-chip" onclick="setBudget(1000)">1,000</button>
-        <button class="budget-chip" onclick="setBudget(2000)">2,000</button>
-        <button class="budget-chip" onclick="setBudget(5000)">5,000</button>
-        <button class="budget-chip" onclick="setBudget(10000)">10,000</button>
+        <button class="budget-chip" data-val="500" onclick="setBudget(500)">500</button>
+        <button class="budget-chip" data-val="1000" onclick="setBudget(1000)">1,000</button>
+        <button class="budget-chip" data-val="2000" onclick="setBudget(2000)">2,000</button>
+        <button class="budget-chip" data-val="5000" onclick="setBudget(5000)">5,000</button>
+        <button class="budget-chip" data-val="10000" onclick="setBudget(10000)">10,000</button>
       </div>
-      <div class="budget-row" style="margin-top:10px;">
-        <input type="number" id="budgetMin" placeholder="Min (optional)" min="0">
+      <div class="budget-row">
+        <input type="number" id="budgetMin" placeholder="Min (optional)" min="0" oninput="clearBudgetChips()">
         <input type="number" id="budgetMax" placeholder="Max" min="0" oninput="clearBudgetChips()">
       </div>
     </div>
-
-    <div class="field">
-      <label>How well do you know them?</label>
-      <div class="toggle-row">
-        <button class="toggle-btn active" id="btnKnowYes" onclick="setKnowMode(true)">I know them well &#128578;</button>
-        <button class="toggle-btn" id="btnKnowNo" onclick="setKnowMode(false)">Not that well &#128533;</button>
-      </div>
+    <div class="field"><label>How well do you know them?</label>
+      <div class="toggle-row"><button class="toggle-btn active" id="btnKnowYes" onclick="setKnowMode(true)">I know them well</button><button class="toggle-btn" id="btnKnowNo" onclick="setKnowMode(false)">Not that well</button></div>
     </div>
-
     <div class="field" id="aboutField">
-      <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400">(optional but powerful)</span></label>
-      <textarea id="about" placeholder="e.g. loves yoga and coffee, hates clutter"></textarea>
+      <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;">(optional but powerful)</span></label>
+      <textarea id="about" placeholder="e.g. loves yoga and coffee, recently got promoted, planning a Goa trip"></textarea>
     </div>
-
     <div id="unknownArea">
       <div class="q-nudge" id="qNudge">
         <div class="q-nudge-text">Want better suggestions?<span>Answer 3 quick questions — no typing needed</span></div>
         <button class="q-open-btn" onclick="openQuestionnaire()">Help me &#8594;</button>
       </div>
       <div id="questionnairePanel">
-        <div class="q-section">
-          <div class="q-label">What are they into? <span class="q-optional">pick any</span></div>
-          <div class="pills" id="pillsInterests">
-            <div class="pill" onclick="togglePill(this,'interests')">Books</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Cooking</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Music</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Fitness</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Art &amp; Craft</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Gaming</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Travel</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Fashion</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Plants</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Tech</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Food &amp; Drinks</div>
-            <div class="pill" onclick="togglePill(this,'interests')">Home Decor</div>
-          </div>
+        <div class="q-section"><div class="q-label">What are they into? <span class="q-optional">pick any</span></div>
+          <div class="pills" id="pillsInterests"><div class="pill" onclick="togglePill(this,'interests')">Books</div><div class="pill" onclick="togglePill(this,'interests')">Cooking</div><div class="pill" onclick="togglePill(this,'interests')">Music</div><div class="pill" onclick="togglePill(this,'interests')">Fitness</div><div class="pill" onclick="togglePill(this,'interests')">Art &amp; Craft</div><div class="pill" onclick="togglePill(this,'interests')">Gaming</div><div class="pill" onclick="togglePill(this,'interests')">Travel</div><div class="pill" onclick="togglePill(this,'interests')">Fashion</div><div class="pill" onclick="togglePill(this,'interests')">Plants</div><div class="pill" onclick="togglePill(this,'interests')">Tech</div><div class="pill" onclick="togglePill(this,'interests')">Food &amp; Drinks</div><div class="pill" onclick="togglePill(this,'interests')">Home Decor</div></div>
         </div>
-        <div class="q-section">
-          <div class="q-label">What's their vibe? <span class="q-optional">pick up to 2</span></div>
-          <div class="pills" id="pillsVibe">
-            <div class="pill" onclick="togglePill(this,'vibe')">Practical</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Trendy</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Homebody</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Into sports</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Traveller</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Foodie</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Gamer</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Gym person</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Movie buff</div>
-            <div class="pill" onclick="togglePill(this,'vibe')">Music lover</div>
-          </div>
+        <div class="q-section"><div class="q-label">What's their vibe? <span class="q-optional">pick up to 2</span></div>
+          <div class="pills" id="pillsVibe"><div class="pill" onclick="togglePill(this,'vibe')">Practical</div><div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div><div class="pill" onclick="togglePill(this,'vibe')">Trendy</div><div class="pill" onclick="togglePill(this,'vibe')">Homebody</div><div class="pill" onclick="togglePill(this,'vibe')">Into sports</div><div class="pill" onclick="togglePill(this,'vibe')">Traveller</div><div class="pill" onclick="togglePill(this,'vibe')">Foodie</div><div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div><div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div><div class="pill" onclick="togglePill(this,'vibe')">Gamer</div><div class="pill" onclick="togglePill(this,'vibe')">Gym person</div><div class="pill" onclick="togglePill(this,'vibe')">Movie buff</div><div class="pill" onclick="togglePill(this,'vibe')">Music lover</div></div>
         </div>
-        <div class="q-section">
-          <div class="q-label">Anything else useful? <span class="q-optional">pick any</span></div>
-          <div class="pills" id="pillsContext">
-            <div class="pill" onclick="togglePill(this,'context')">Cat parent</div>
-            <div class="pill" onclick="togglePill(this,'context')">Dog parent</div>
-            <div class="pill" onclick="togglePill(this,'context')">New home</div>
-            <div class="pill" onclick="togglePill(this,'context')">New baby</div>
-            <div class="pill" onclick="togglePill(this,'context')">Into wellness</div>
-            <div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div>
-            <div class="pill" onclick="togglePill(this,'context')">Open to anything</div>
-          </div>
+        <div class="q-section"><div class="q-label">Anything else useful? <span class="q-optional">pick any</span></div>
+          <div class="pills" id="pillsContext"><div class="pill" onclick="togglePill(this,'context')">Cat parent</div><div class="pill" onclick="togglePill(this,'context')">Dog parent</div><div class="pill" onclick="togglePill(this,'context')">New home</div><div class="pill" onclick="togglePill(this,'context')">New baby</div><div class="pill" onclick="togglePill(this,'context')">Into wellness</div><div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div><div class="pill" onclick="togglePill(this,'context')">Open to anything</div></div>
         </div>
-        <div class="q-section">
-          <div class="q-label">The juicy details <span class="q-optional">anything the pills missed</span></div>
-          <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas, planning a Goa trip — the more specific the better" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;background:white;resize:none;height:72px;line-height:1.5;"></textarea>
+        <div class="q-section"><div class="q-label">The juicy details <span class="q-optional">anything the pills missed</span></div>
+          <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas — the more specific the better" style="height:72px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;width:100%;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;line-height:1.5;"></textarea>
         </div>
-        <div class="q-footer">
-          <button class="q-skip" onclick="closeQuestionnaire()">Skip</button>
-          <button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button>
-        </div>
+        <div class="q-footer"><button class="q-skip" onclick="closeQuestionnaire()">Skip</button><button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button></div>
       </div>
     </div>
-
     <button class="btn" id="submitBtn" onclick="getGifts()">Find the perfect gift</button>
     <div class="error" id="errorBox"></div>
   </div>
 
-  <div id="loading" style="display:none;text-align:center;padding:48px 0;">
-    <div class="gift-loader">
-      <div class="gift-box">
-        <div class="gift-lid"></div>
-        <div class="gift-body"></div>
-        <div class="gift-ribbon-h"></div>
-        <div class="gift-ribbon-v"></div>
-        <div class="gift-bow"></div>
-      </div>
-    </div>
-    <p class="loading-text" id="loadingText">Thinking like a gifting expert who actually knows India...</p>
+  <div id="loading" style="display:none;text-align:center;padding:52px 0;">
+    <div class="gift-loader"><div class="gift-box"><div class="gift-lid"></div><div class="gift-body"></div><div class="gift-ribbon-h"></div><div class="gift-ribbon-v"></div><div class="gift-bow"></div></div></div>
+    <p class="loading-text" id="loadingText">Thinking about what they'd actually love...</p>
     <p class="loading-tip" id="loadingTip"></p>
   </div>
 
   <div id="results" style="display:none;">
-    <div class="results-header">
-      <h2 class="results-title">Here's what to get</h2>
-      <p class="results-sub" id="resultsSub"></p>
-    </div>
+    <div class="results-header"><h2 class="results-title">Here's what to get</h2><p class="results-sub" id="resultsSub"></p></div>
     <div id="resultsLegend" class="results-legend"></div>
-    <div id="editBar" class="edit-bar" onclick="toggleEditPanel()">
-      <span id="editSummary" class="edit-summary"></span>
-      <span class="edit-btn">&#9998; Edit</span>
-    </div>
+    <div id="editBar" class="edit-bar" onclick="toggleEditPanel()"><span id="editSummary" class="edit-summary"></span><span class="edit-btn">&#9998; Edit</span></div>
     <div id="editPanel" class="edit-panel" style="display:none;">
       <div class="edit-grid">
-        <div class="edit-field"><label>Occasion</label>
-          <select id="editOccasion"><option value="">Select</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select>
-        </div>
-        <div class="edit-field"><label>Relationship</label>
-          <select id="editRelationship"><option value="">Select</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partner's Parent</option><option>Acquaintance</option><option>Someone I just met</option></select>
-        </div>
+        <div class="edit-field"><label>Occasion</label><select id="editOccasion"><option value="">Select</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select></div>
+        <div class="edit-field"><label>Relationship</label><select id="editRelationship"><option value="">Select</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partner's Parent</option><option>Acquaintance</option><option>Someone I just met</option></select></div>
         <div class="edit-field"><label>Min Budget</label><input type="number" id="editBudgetMin" placeholder="Min" min="0"></div>
         <div class="edit-field"><label>Max Budget</label><input type="number" id="editBudgetMax" placeholder="Max" min="0"></div>
-        <div class="edit-field"><label>Age Range</label>
-          <select id="editAgeRange"><option value="">Select</option><option>Under 10</option><option>10 to 17</option><option>18 to 25</option><option>26 to 35</option><option>36 to 50</option><option>50 plus</option></select>
-        </div>
-        <div class="edit-field"><label>Gender</label>
-          <select id="editGender"><option value="">Select</option><option>Her</option><option>Him</option><option>Them</option></select>
-        </div>
+        <div class="edit-field"><label>Age Range</label><select id="editAgeRange"><option value="">Select</option><option value="Under 10">Under 10</option><option value="10 to 17">10&#8211;17</option><option value="18 to 25">18&#8211;25</option><option value="26 to 35">26&#8211;35</option><option value="36 to 50">36&#8211;50</option><option value="50 plus">50+</option></select></div>
+        <div class="edit-field"><label>Gender</label><select id="editGender"><option value="">Select</option><option value="Her">Her</option><option value="Him">Him</option><option value="Them">Them</option></select></div>
       </div>
       <div id="editQuestionnaireLink" onclick="openQuestionnaireFromEdit()">&#9998; Update what you know about them</div>
       <div class="error" id="editErrorBox" style="display:none;margin-top:8px;"></div>
       <button class="btn" onclick="regenerateFromEdit()" style="margin-top:12px;">&#8635; Regenerate with these inputs</button>
     </div>
-    <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127915; Save this list</button>
+    <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127873; Save this list</button>
     <div id="etiquetteNote"></div>
     <div id="giftList"></div>
     <div id="alsoGifted"></div>
     <div class="results-actions">
-      <button class="action-btn action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
-      <button class="action-btn action-btn-reset" onclick="confirmReset()">Start over</button>
+      <button class="action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
+      <button class="action-btn-reset" onclick="confirmReset()">Start over</button>
     </div>
   </div>
 
   <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.27</footer>
 </div>
 
-<!-- Platform modal -->
 <div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div id="modalGiftName" class="modal-gift-name"></div>
     <div id="modalGiftPrice" class="modal-gift-price"></div>
-    <div class="modal-title" id="modalTitle">Where do you want to go?</div>
+    <div class="modal-section-title" id="modalTitle">Where do you want to go?</div>
     <div id="modalLinks" class="modal-links"></div>
     <button class="modal-close" onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <script>
+
+
+var splashTimer = null;
+
+function dismissSplash() {
+  var splash = document.getElementById('splashScreen');
+  if (!splash || splash.style.display === 'none') return;
+  clearTimeout(splashTimer);
+  splash.classList.add('fade-out');
+  setTimeout(function() {
+    splash.style.display = 'none';
+  }, 500);
+}
+
+function initSplash() {
+  splashTimer = setTimeout(dismissSplash, 12000);
+}
+
 var knowThemWell = true;
 var selectedGender = '';
 var selectedPills = { interests: [], vibe: [], context: [] };
@@ -520,7 +443,16 @@ var OCCASIONS_UPCOMING = [
   { month: 1, day: 26, name: "Republic Day", msg: "Republic Day is near", sub: "A great occasion to gift something meaningful" }
 ];
 
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    if (document.getElementById('modalOverlay').style.display === 'none') {
+      document.body.style.overflow = '';
+    }
+  }
+});
+
 window.onload = function() {
+  initSplash();
   if (localStorage.getItem("giftho_saved")) {
     document.getElementById("savedBanner").className = "saved-banner show";
   }
@@ -645,8 +577,10 @@ function startLoadingTips() {
 }
 
 var slowNetworkTimer = null;
+var ltTimer = null;
 function startSlowNetworkTimer() {
   slowNetworkTimer = setTimeout(function() {
+    if (ltTimer) { clearInterval(ltTimer); ltTimer = null; }
     var lt = document.getElementById("loadingText");
     if (lt) lt.textContent = "Still thinking... Indian gifting is complex. Almost there.";
   }, 8000);
@@ -657,6 +591,7 @@ function clearSlowNetworkTimer() {
 
 function stopLoadingTips() {
   clearSlowNetworkTimer();
+  if (ltTimer) { clearInterval(ltTimer); ltTimer = null; }
   if (tipInterval) { clearInterval(tipInterval); tipInterval = null; }
   var el = document.getElementById("loadingTip");
   if (el) { el.textContent = ""; el.style.opacity = "1"; }
@@ -814,11 +749,11 @@ async function getGifts() {
   ];
   var ltIdx = 0;
   document.getElementById("loadingText").textContent = loadingTexts[ltIdx];
-  var ltTimer = setInterval(function() {
+  if (ltTimer) clearInterval(ltTimer);
+  ltTimer = setInterval(function() {
     ltIdx = (ltIdx + 1) % loadingTexts.length;
     document.getElementById("loadingText").textContent = loadingTexts[ltIdx];
   }, 3000);
-  setTimeout(function() { clearInterval(ltTimer); }, 12000);
   stopLoadingTips(); startLoadingTips();
 
   var budgetStr = budgetMin ? "Rs." + budgetMin + " to Rs." + budgetMax : "up to Rs." + budgetMax;
@@ -973,14 +908,14 @@ function showResults(gifts, occasion, relationship, fromSave) {
       card.addEventListener('touchend', function(e) {
         if (Math.abs(e.changedTouches[0].clientY - startY) < 10) {
           tapped = true;
-          card.style.transform = "scale(0.97)";
-          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 120);
+          card.style.transform = "scale(0.98)";
+          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 100);
         }
       });
       card.addEventListener('click', function() {
         if (!tapped) {
-          card.style.transform = "scale(0.97)";
-          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 120);
+          card.style.transform = "scale(0.98)";
+          setTimeout(function() { card.style.transform = ""; openModal(idx); }, 100);
         }
         tapped = false;
       });
@@ -1007,11 +942,16 @@ function showResults(gifts, occasion, relationship, fromSave) {
 
   var alsoItems = ALSO_GIFTED[occasion];
   document.getElementById("alsoGifted").innerHTML = alsoItems
-    ? '<div class="also-gifted"><div class="also-gifted-eyebrow">What others loved gifting</div><div class="also-gifted-title">Popular for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<a class="also-gifted-item" href="https://www.google.com/search?tbm=shop&q=' + encodeURIComponent(item + ' india') + '" target="_blank" rel="noopener">' + sanitise(item) + '</a>'; }).join('') + '</div></div>'
+    ? '<div class="also-gifted"><div class="also-gifted-eyebrow">What others loved gifting</div><div class="also-gifted-title">Popular for ' + occasion + '</div><div class="also-gifted-items">' + alsoItems.map(function(item) { return '<a class="also-gifted-item" href="https://www.google.com/search?q=' + encodeURIComponent(item + ' buy india') + '" target="_blank" rel="noopener">' + sanitise(item) + '</a>'; }).join('') + '</div></div>'
     : "";
 
-  updateEditBar(lastParams ? lastParams.occasion : occasion, lastParams ? lastParams.relationship : relationship, lastParams ? lastParams.ageRange : "", lastParams ? lastParams.budgetMin : "", lastParams ? lastParams.budgetMax : "", selectedGender);
-  document.getElementById("editBar").style.display = "flex";
+  if (lastParams && lastParams.occasion) {
+    updateEditBar(lastParams.occasion, lastParams.relationship, lastParams.ageRange, lastParams.budgetMin, lastParams.budgetMax, selectedGender);
+    document.getElementById("editBar").style.display = "flex";
+  } else if (occasion && relationship) {
+    updateEditBar(occasion, relationship, "", "", "", selectedGender);
+    document.getElementById("editBar").style.display = "flex";
+  }
   document.getElementById("results").style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -1116,6 +1056,7 @@ function regenerateFromEdit() {
   if (lastParams && lastParams.knowThemWell !== undefined) knowThemWell = lastParams.knowThemWell;
   if (!p.occasion || !p.relationship) { showEditError("Please select an occasion and relationship."); return; }
   if (!p.budgetMax) { showEditError("Please enter a maximum budget."); return; }
+  document.getElementById("ageRange").value = p.ageRange || "";
   lastParams = p;
   currentContext = { occasion: p.occasion, relationship: p.relationship };
   allSeenGiftNames = [];
@@ -1195,6 +1136,7 @@ function reset() {
   document.getElementById("submitBtn").disabled = false;
   lastParams = null; lastGiftNames = []; allSeenGiftNames = []; currentGifts = [];
   selectedGender = '';
+  setKnowMode(true);
   ['Her','Him','Them'].forEach(function(x) { document.getElementById('gender' + x).className = 'toggle-btn'; });
   selectedPills = { interests: [], vibe: [], context: [] };
   document.querySelectorAll('.pill.selected').forEach(function(p) { p.classList.remove('selected'); });
@@ -1203,6 +1145,7 @@ function reset() {
   document.getElementById('relationship').selectedIndex = 0;
   document.getElementById('ageRange').value = '';
   document.querySelectorAll('.age-pill').forEach(function(p) { p.className = 'age-pill'; });
+  document.querySelectorAll('.budget-chip').forEach(function(c) { c.className = 'budget-chip'; });
   document.getElementById('budgetMin').value = '';
   document.getElementById('budgetMax').value = '';
   document.querySelectorAll('.budget-chip').forEach(function(c) { c.className = 'budget-chip'; });
@@ -1227,15 +1170,15 @@ function hideEditError() { var b = document.getElementById("editErrorBox"); if (
 function setAge(val) {
   document.getElementById("ageRange").value = val;
   document.querySelectorAll(".age-pill").forEach(function(p) {
-    p.className = "age-pill" + (p.textContent.trim().replace("–","-") === val.replace(" to ", "-").replace(" plus", "+") || p.textContent.trim() === val ? " active" : "");
+    p.className = "age-pill" + (p.getAttribute("data-val") === val ? " active" : "");
   });
 }
 
 function setBudget(val) {
   document.getElementById("budgetMax").value = val;
+  document.getElementById("budgetMin").value = "";
   document.querySelectorAll(".budget-chip").forEach(function(c) {
-    var chipVal = parseInt(c.textContent.replace(/[^0-9]/g,""));
-    c.className = "budget-chip" + (chipVal === val ? " active" : "");
+    c.className = "budget-chip" + (parseInt(c.getAttribute("data-val")) === val ? " active" : "");
   });
 }
 
@@ -1263,6 +1206,7 @@ function confirmReset() {
   btn.removeAttribute("data-confirming");
   reset();
 }
+
 </script>
 </body>
 </html>
