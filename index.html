@@ -334,7 +334,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   </header>
   <div class="divider"></div>
 
-  <div class="why-strip">
+  <div class="why-strip" id="whyStrip">
     <div class="why-icon">✦</div>
     <div class="why-text"><strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.</div>
   </div>
@@ -575,7 +575,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
       <textarea id="modalRefineText" placeholder="e.g. something more personal, or under Rs.1000, or better for someone who travels..." style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;height:80px;line-height:1.5;margin-bottom:10px;"></textarea>
       <button onclick="refineGift()" style="width:100%;padding:13px;background:var(--ink);color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">↺ Refine this gift</button>
     </div>
-    <button id="modalRefineToggle" onclick="toggleModalRefine()" style="width:100%;padding:12px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;margin-top:10px;">✎ Refine this gift</button>
+    <button id="modalRefineToggle" onclick="toggleModalRefine()" style="width:100%;padding:12px;background:var(--saff-light);border:1.5px solid var(--saff-border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--saffron);font-weight:600;cursor:pointer;margin-top:10px;">✦ Refine this gift</button>
     <button class="modal-close" onclick="closeModal()">Close</button>
   </div>
 </div>
@@ -1116,7 +1116,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
 
   gifts.forEach(function(gift, i) {
     var type = gift.type === "make" ? "make" : gift.type === "experience" ? "experience" : "buy";
-    var typeLabel = type === "buy" ? "&#128722; Buy it" : type === "make" ? "&#127912; Make it" : "&#127775; Experience it";
+    var typeLabel = type === "buy" ? "Buy it" : type === "make" ? "Make it" : "Experience it";
     var topPickBadge = i === 0 ? '<span class="top-pick-badge">&#11088; Top pick</span>' : '';
     var metaHTML = "";
     if (type === "make") {
@@ -1180,6 +1180,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
     document.getElementById("editBar").style.display = "flex";
   }
   document.getElementById("results").style.display = "block";
+  var ws = document.getElementById("whyStrip"); if(ws) ws.style.display = "none";
   if (!fromSave) showSavePersonPrompt();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -1304,6 +1305,7 @@ function regenerateFromEdit() {
     stopLoadingTips();
     document.getElementById("loading").style.display = "none";
     document.getElementById("results").style.display = "block";
+  var ws = document.getElementById("whyStrip"); if(ws) ws.style.display = "none";
     showEditError("Something went wrong. Please try again.");
   });
 }
