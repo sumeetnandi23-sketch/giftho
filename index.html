@@ -1844,14 +1844,45 @@ function refineGift() {
   if (currentRefineGiftIdx === null || !lastParams) return;
   var gift = currentGifts[currentRefineGiftIdx];
   if (!gift) return;
+
+  // Detect budget change request
+  var isBudgetRequest = /budget|expensive|price|cheaper|costly|afford|spend|more money|higher|increase|upgrade/i.test(refineText);
+  if (isBudgetRequest) {
+    // Show budget input in the refine section instead of immediately calling API
+    var section = document.getElementById('modalRefineSection');
+    var existingBudgetRow = document.getElementById('refineBudgetRow');
+    if (!existingBudgetRow) {
+      var budgetRow = document.createElement('div');
+      budgetRow.id = 'refineBudgetRow';
+      budgetRow.style.cssText = 'display:flex;gap:10px;align-items:center;margin-bottom:10px;';
+      budgetRow.innerHTML = '<input type="number" id="refineBudgetInput" placeholder="New max budget (Rs.)" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-size:14px;color:var(--ink);outline:none;">' +
+        '<span style="font-size:13px;color:var(--muted);white-space:nowrap;">Rs. max</span>';
+      section.insertBefore(budgetRow, section.querySelector('button'));
+      document.getElementById('refineBudgetInput').focus();
+      // Update button text
+      document.querySelector('#modalRefineSection button:last-of-type').textContent = 'Apply new budget';
+      return;
+    }
+  }
+
+  // Read updated budget if set
+  var refineBudgetInput = document.getElementById('refineBudgetInput');
+  if (refineBudgetInput && refineBudgetInput.value) {
+    lastParams.budgetMax = refineBudgetInput.value;
+  }
+
   closeModal();
+  allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
 
   var p = lastParams;
   var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
-  var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
+
+  // Build focused refine prompt
   var isBalanceRequest = /too many|overpowering|only|just|more variety|other|not just|all cat|all about/i.test(refineText);
-  var balanceInstruction = isBalanceRequest ? ' IMPORTANT: The user feels one aspect of their description is dominating. Redistribute suggestions equally across ALL details in their about-them description — no single detail should influence more than 1 gift.' : '';
-  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user has feedback about the suggestions: "' + refineText + '". Address this directly.' + balanceInstruction + ' Return a full refreshed set of ' + currentGifts.length + ' gifts.';
+  var balanceInstruction = isBalanceRequest ? ' IMPORTANT: redistribute suggestions equally across ALL details in their description — no single detail should influence more than 1 gift.' : '';
+
+  var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
+  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user is refining the gift "' + gift.name + '" (originally ' + gift.price + '). Their feedback: "' + refineText + '".' + balanceInstruction + ' Return ' + currentGifts.length + ' gifts. Include a refined version of the "' + gift.name + '" category that addresses the feedback. Keep other gifts similar unless the feedback suggests otherwise.';
 
   document.getElementById('results').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
