@@ -4,6 +4,212 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Giftho — Gift someone right</title>
+<meta property="og:title" content="Giftho — Gift someone right">
+<meta property="og:description" content="Find the perfect gift for any Indian occasion. Specific gifts to buy, make, or experience. Takes 30 seconds.">
+<meta property="og:image" content="https://giftho.vercel.app/og.png">
+<meta property="og:url" content="https://giftho.vercel.app">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Giftho — Gift someone right">
+<meta name="twitter:description" content="Find the perfect gift for any Indian occasion. Takes 30 seconds.">
+<script defer src="/_vercel/insights/script.js">
+// ── SAVED PEOPLE ──────────────────────────────────────────────────────
+function getSavedPeople() {
+  try { return JSON.parse(localStorage.getItem('giftho_people') || '[]'); } catch(e) { return []; }
+}
+
+function savePerson() {
+  var name = document.getElementById('savePersonName').value.trim();
+  if (!name) { document.getElementById('savePersonName').focus(); return; }
+  if (!lastParams) return;
+  var people = getSavedPeople();
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: lastParams.relationship,
+    ageRange: lastParams.ageRange,
+    gender: selectedGender,
+    budgetMax: lastParams.budgetMax,
+    selectedPills: JSON.parse(JSON.stringify(selectedPills)),
+    about: lastParams.about,
+    savedAt: new Date().toISOString()
+  };
+  // Replace if same name+relationship exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase() === name.toLowerCase() && p.relationship === lastParams.relationship; });
+  if (idx >= 0) people[idx] = person; else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  document.getElementById('savePersonDone').style.display = 'block';
+  document.getElementById('savePersonName').style.display = 'none';
+  document.querySelector('.save-person-btn').style.display = 'none';
+  // Show calendar prompt
+  if (lastParams.occasion) {
+    document.getElementById('calendarPromptTitle').textContent = "When is their " + lastParams.occasion.toLowerCase() + "?";
+  }
+  document.getElementById('calendarPrompt').style.display = 'block';
+  renderSavedPeople();
+}
+
+function renderSavedPeople() {
+  var people = getSavedPeople();
+  if (people.length === 0) return;
+  var bar = document.getElementById('savedPeopleBar');
+  var list = document.getElementById('savedPeopleList');
+  if (!bar || !list) return;
+  bar.style.display = 'block';
+  list.innerHTML = people.map(function(p) {
+    return '<div class="saved-person-chip" onclick="prefillFromPerson('' + p.id + '')">' +
+      '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
+      '<div class="saved-person-rel">' + sanitise(p.relationship) + '</div></div>' +
+      '</div>';
+  }).join('');
+}
+
+function prefillFromPerson(id) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === id; });
+  if (!person) return;
+  // Set all form state
+  selectedRelationship = person.relationship;
+  selectedOccasion = '';
+  selectedGender = person.gender || '';
+  selectedPills = person.selectedPills || { interests:[], vibe:[], context:[] };
+  var el = document.getElementById('relationship'); if(el) el.value = person.relationship;
+  document.querySelectorAll('.rel-pill').forEach(function(p) {
+    p.className = 'rel-pill' + (p.getAttribute('data-val') === person.relationship ? ' active' : '');
+  });
+  if (person.ageRange) setAge(person.ageRange);
+  if (person.gender) setGender(person.gender);
+  if (person.budgetMax) setBudget(parseInt(person.budgetMax));
+  if (person.about) { var ab = document.getElementById('about'); if(ab) ab.value = person.about; }
+  // Restore pills visually
+  document.querySelectorAll('.pill').forEach(function(pill) {
+    var match = pill.getAttribute('onclick') ? pill.getAttribute('onclick').match(/togglePill\(this,'(\w+)'\)/) : null;
+    if (match) {
+      var g = match[1], val = pill.textContent.trim();
+      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) pill.classList.add('selected');
+      else pill.classList.remove('selected');
+    }
+  });
+  // Go to step 1, pre-select their relationship, skip to step 2
+  goStep(1);
+  document.getElementById('savedPeopleBar').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── CALENDAR / REMINDERS ───────────────────────────────────────────────
+function getCalendar() {
+  try { return JSON.parse(localStorage.getItem('giftho_calendar') || '[]'); } catch(e) { return []; }
+}
+
+function saveCalendarDate() {
+  var dateVal = document.getElementById('calendarDate').value;
+  if (!dateVal || !lastParams) return;
+  var calendar = getCalendar();
+  var personName = document.getElementById('savePersonName') ?
+    document.getElementById('savePersonDone').style.display === 'block' ?
+    document.getElementById('savePersonName').placeholder : '' : '';
+  // Get name from saved person
+  var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
+  var entry = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: lastParams.relationship,
+    occasion: lastParams.occasion || 'Occasion',
+    date: dateVal,
+    createdAt: new Date().toISOString()
+  };
+  calendar.push(entry);
+  localStorage.setItem('giftho_calendar', JSON.stringify(calendar));
+  document.getElementById('calendarSaved').style.display = 'block';
+  document.getElementById('calendarDate').disabled = true;
+  document.querySelector('.calendar-btn').disabled = true;
+}
+
+function checkReturnNudges() {
+  var calendar = getCalendar();
+  if (calendar.length === 0) return;
+  var now = new Date();
+  var nudge = null;
+  calendar.forEach(function(entry) {
+    var eventDate = new Date(entry.date);
+    // Set to this year's occurrence
+    eventDate.setFullYear(now.getFullYear());
+    if (eventDate < now) eventDate.setFullYear(now.getFullYear() + 1);
+    var daysUntil = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
+    if (daysUntil >= 0 && daysUntil <= 21 && !nudge) {
+      nudge = { entry: entry, days: daysUntil };
+    }
+  });
+  if (!nudge) return;
+  var el = document.getElementById('returnNudge');
+  var titleEl = document.getElementById('returnNudgeTitle');
+  var subEl = document.getElementById('returnNudgeSub');
+  if (!el) return;
+  var daysText = nudge.days === 0 ? 'today' : nudge.days === 1 ? 'tomorrow' : 'in ' + nudge.days + ' days';
+  titleEl.textContent = nudge.entry.occasion + ' for ' + nudge.entry.name + ' is ' + daysText;
+  subEl.textContent = 'Tap to find the perfect gift →';
+  el.style.display = 'block';
+  el.setAttribute('data-person-rel', nudge.entry.relationship);
+  el.setAttribute('data-occasion', nudge.entry.occasion);
+}
+
+function handleReturnNudge() {
+  var rel = document.getElementById('returnNudge').getAttribute('data-person-rel');
+  var occ = document.getElementById('returnNudge').getAttribute('data-occasion');
+  document.getElementById('returnNudge').style.display = 'none';
+  if (rel) { selectedRelationship = rel; setRel(rel); }
+  if (occ) { selectedOccasion = occ; setOcc(occ); }
+  goStep(2);
+}
+
+// Show save person prompt in results
+function showSavePersonPrompt() {
+  var prompt = document.getElementById('savePersonPrompt');
+  if (!prompt) return;
+  // Reset state
+  document.getElementById('savePersonName').style.display = '';
+  document.querySelector('.save-person-btn').style.display = '';
+  document.getElementById('savePersonDone').style.display = 'none';
+  document.getElementById('calendarPrompt').style.display = 'none';
+  document.getElementById('calendarSaved').style.display = 'none';
+  document.getElementById('calendarDate').disabled = false;
+  document.getElementById('savePersonName').value = '';
+  prompt.style.display = 'block';
+}
+
+var currentRefineGiftIdx = null;
+
+function toggleModalRefine() {
+  var section = document.getElementById('modalRefineSection');
+  var btn = document.getElementById('modalRefineToggle');
+  var isOpen = section.style.display !== 'none';
+  section.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '✎ Refine this gift' : '✕ Cancel';
+  if (!isOpen) setTimeout(function() { document.getElementById('modalRefineText').focus(); }, 100);
+}
+
+function refineGift() {
+  var refineText = document.getElementById('modalRefineText').value.trim();
+  if (!refineText) { document.getElementById('modalRefineText').focus(); return; }
+  if (currentRefineGiftIdx === null || !lastParams) return;
+  var gift = currentGifts[currentRefineGiftIdx];
+  if (!gift) return;
+  closeModal();
+
+  var p = lastParams;
+  var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
+  var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
+  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user liked the gift "' + gift.name + '" but wants to refine it. Keep the same category and spirit but adjust based on this feedback: "' + refineText + '". Replace only this one gift — return a full set of ' + currentGifts.length + ' gifts where one is a refined version of "' + gift.name + '" based on the feedback. Keep the other gifts the same or similar.';
+
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('loadingText').textContent = 'Refining that gift for you...';
+  startLoadingTips();
+  callAPI(refinePrompt, p.occasion, p.relationship);
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -248,6 +454,45 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   .occ-pill { padding:9px 16px; border:1.5px solid #D8D4CE; border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#4A3C2A; cursor:pointer; transition:all 0.15s; }
   .occ-pill:hover { border-color:var(--saffron); color:var(--saffron); }
   .occ-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
+
+  .intervention-btn { width:100%; padding:14px 18px; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--ink); cursor:pointer; text-align:left; transition:all 0.15s; font-weight:500; }
+  .intervention-btn:hover { border-color:var(--saffron); color:var(--saffron); background:var(--saff-light); }
+
+  @keyframes toastDrop { from { opacity:0; transform:translateY(-100%); } to { opacity:1; transform:translateY(0); } }
+  @keyframes toastFade { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-100%); } }
+  #aboutToast.hiding { animation:toastFade 0.3s ease forwards; }
+
+  /* Saved people */
+  .saved-people-bar { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px; }
+  .saved-people-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:12px; }
+  .saved-people-list { display:flex; gap:10px; flex-wrap:wrap; }
+  .saved-person-chip { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; cursor:pointer; transition:all 0.15s; }
+  .saved-person-chip:hover { border-color:var(--saffron); }
+  .saved-person-name { font-size:13px; font-weight:500; color:var(--ink); }
+  .saved-person-rel { font-size:11px; color:var(--muted); }
+
+  /* Save person prompt in results */
+  .save-person-prompt { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+  .save-person-prompt-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; font-weight:600; color:var(--ink); margin-bottom:4px; }
+  .save-person-prompt-sub { font-size:13px; color:var(--muted); margin-bottom:14px; }
+  .save-person-row { display:flex; gap:10px; }
+  .save-person-input { flex:1; padding:11px 14px; border:1.5px solid var(--border); border-radius:10px; background:var(--bg); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; }
+  .save-person-input:focus { border-color:var(--saffron); }
+  .save-person-btn { padding:11px 18px; background:var(--ink); color:white; border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+
+  /* Calendar prompt */
+  .calendar-prompt { background:var(--saff-light); border:1.5px solid var(--saff-border); border-radius:14px; padding:16px 18px; margin-top:16px; }
+  .calendar-prompt-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+  .calendar-prompt-sub { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .calendar-row { display:flex; gap:10px; align-items:center; }
+  .calendar-input { flex:1; padding:10px 14px; border:1.5px solid var(--saff-border); border-radius:10px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:var(--ink); outline:none; }
+  .calendar-btn { padding:10px 16px; background:var(--saffron); color:white; border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .calendar-saved { font-size:12px; color:var(--forest); font-weight:500; display:none; margin-top:8px; }
+
+  /* Return nudge */
+  .return-nudge { background:var(--ink); color:#F5EDD8; border-radius:14px; padding:16px 18px; margin-bottom:16px; cursor:pointer; }
+  .return-nudge-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; font-weight:600; margin-bottom:4px; }
+  .return-nudge-sub { font-size:12px; color:#C8B49A; }
 </style>
 </head>
 <body style="background:#FAFAF8;">
@@ -281,7 +526,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
 
 <div class="container">
   <header>
-    <div class="logo"><div class="logo-mark">G</div><span class="logo-text">Giftho</span></div>
+    <div class="logo" onclick="openAboutDialog()" style="cursor:pointer;"><div class="logo-mark">G</div><span class="logo-text">Giftho</span></div>
     <p class="tagline">Stop stressing. Just gift right.</p>
   </header>
   <div class="divider"></div>
@@ -293,6 +538,16 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
 
   <div id="savedBanner" class="saved-banner" onclick="loadSaved()">You have a saved gift list — tap to view</div>
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
+
+  <div id="savedPeopleBar" style="display:none;" class="saved-people-bar">
+    <div class="saved-people-title">Gift again for someone saved</div>
+    <div class="saved-people-list" id="savedPeopleList"></div>
+  </div>
+
+  <div id="returnNudge" style="display:none;" class="return-nudge" onclick="handleReturnNudge()">
+    <div class="return-nudge-title" id="returnNudgeTitle"></div>
+    <div class="return-nudge-sub" id="returnNudgeSub"></div>
+  </div>
 
   <div id="formCard">
 
@@ -463,13 +718,37 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
         <div class="edit-field"><label>Age Range</label><select id="editAgeRange"><option value="">Select</option><option value="Under 10">Under 10</option><option value="10 to 17">10&#8211;17</option><option value="18 to 25">18&#8211;25</option><option value="26 to 35">26&#8211;35</option><option value="36 to 50">36&#8211;50</option><option value="50 plus">50+</option></select></div>
         <div class="edit-field"><label>Gender</label><select id="editGender"><option value="">Select</option><option value="Her">Her</option><option value="Him">Him</option><option value="Them">Them</option></select></div>
       </div>
-      <div id="editQuestionnaireLink" onclick="openQuestionnaireFromEdit()">&#9998; Update what you know about them</div>
+      <div class="edit-field" style="grid-column:1/-1;">
+        <label>About them</label>
+        <textarea id="editAbout" placeholder="e.g. loves yoga and coffee, recently got promoted..." style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;resize:none;height:72px;line-height:1.5;"></textarea>
+      </div>
+      <div id="editQuestionnaireLink" onclick="openQuestionnaireFromEdit()">&#9998; Update interests &amp; vibe pills</div>
       <div class="error" id="editErrorBox" style="display:none;margin-top:8px;"></div>
       <button class="btn" onclick="regenerateFromEdit()" style="margin-top:12px;">&#8635; Regenerate with these inputs</button>
     </div>
     <button class="save-btn" id="saveBtn" onclick="saveResults()">&#127873; Save this list</button>
     <div id="etiquetteNote"></div>
     <div id="giftList"></div>
+    <div id="savePersonPrompt" class="save-person-prompt" style="display:none;">
+      <div class="save-person-prompt-title">Save them for next time</div>
+      <div class="save-person-prompt-sub">We'll remember their interests and pre-fill the form.</div>
+      <div class="save-person-row">
+        <input type="text" class="save-person-input" id="savePersonName" placeholder="Their first name..." maxlength="30">
+        <button class="save-person-btn" onclick="savePerson()">Save</button>
+      </div>
+      <div id="savePersonDone" style="display:none;font-size:12px;color:var(--forest);font-weight:500;margin-top:8px;">✓ Saved! We'll remember them.</div>
+
+      <div class="calendar-prompt" id="calendarPrompt" style="display:none;">
+        <div class="calendar-prompt-title" id="calendarPromptTitle">When is their next occasion?</div>
+        <div class="calendar-prompt-sub">We'll remind you before it arrives.</div>
+        <div class="calendar-row">
+          <input type="date" class="calendar-input" id="calendarDate">
+          <button class="calendar-btn" onclick="saveCalendarDate()">Remind me</button>
+        </div>
+        <div class="calendar-saved" id="calendarSaved">✓ Reminder saved</div>
+      </div>
+    </div>
+
     <div id="alsoGifted"></div>
     <div class="results-actions">
       <button class="action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
@@ -477,7 +756,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.27</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.30</footer>
 </div>
 
 <div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
@@ -487,6 +766,12 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     <div id="modalGiftPrice" class="modal-gift-price"></div>
     <div class="modal-section-title" id="modalTitle">Where do you want to go?</div>
     <div id="modalLinks" class="modal-links"></div>
+    <div id="modalRefineSection" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:none;">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">Refine this gift</div>
+      <textarea id="modalRefineText" placeholder="e.g. something more personal, or under Rs.1000, or better for someone who travels..." style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;height:80px;line-height:1.5;margin-bottom:10px;"></textarea>
+      <button onclick="refineGift()" style="width:100%;padding:13px;background:var(--ink);color:white;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">↺ Refine this gift</button>
+    </div>
+    <button id="modalRefineToggle" onclick="toggleModalRefine()" style="width:100%;padding:12px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;margin-top:10px;">✎ Refine this gift</button>
     <button class="modal-close" onclick="closeModal()">Close</button>
   </div>
 </div>
@@ -854,7 +1139,7 @@ async function getGifts() {
 
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
-  lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship };
+  lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship }; regenerateCount = 0;
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
@@ -882,6 +1167,12 @@ async function getGifts() {
 
 async function regenerate() {
   if (!lastParams) return;
+  regenerateCount = (regenerateCount || 0) + 1;
+  if (regenerateCount >= 2) {
+    document.getElementById('interventionOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    return;
+  }
   currentContext = { occasion: lastParams.occasion, relationship: lastParams.relationship };
   document.getElementById("results").style.display = "none";
   document.getElementById("loading").style.display = "block";
@@ -1088,6 +1379,11 @@ function showResults(gifts, occasion, relationship, fromSave) {
 function openModal(idx) {
   var gift = currentGifts[idx];
   if (!gift) return;
+  currentRefineGiftIdx = idx;
+  // Reset refine section
+  var rs = document.getElementById('modalRefineSection'); if(rs) rs.style.display='none';
+  var rt = document.getElementById('modalRefineToggle'); if(rt) rt.textContent='✎ Refine this gift';
+  var rText = document.getElementById('modalRefineText'); if(rText) rText.value='';
   var type = gift.type === "make" ? "make" : gift.type === "experience" ? "experience" : "buy";
   document.getElementById("modalGiftName").textContent = gift.name;
   document.getElementById("modalGiftPrice").textContent = gift.price;
@@ -1177,7 +1473,7 @@ function regenerateFromEdit() {
     ageRange: document.getElementById("editAgeRange").value,
     budgetMin: document.getElementById("editBudgetMin").value,
     budgetMax: document.getElementById("editBudgetMax").value,
-    about: lastParams ? lastParams.about : "",
+    about: (document.getElementById('editAbout') && document.getElementById('editAbout').value.trim()) ? document.getElementById('editAbout').value.trim() : (lastParams ? lastParams.about : ''),
     knowThemWell: knowThemWell
   };
   var newGender = document.getElementById("editGender").value;
@@ -1452,6 +1748,281 @@ function setOccOther(val) {
   var el = document.getElementById('occasion'); if(el) el.value = val.trim();
   if (val.trim()) document.querySelectorAll('.occ-pill').forEach(function(p) { p.classList.remove('active'); });
 }
+
+var regenerateCount = 0;
+
+var aboutToastTimer = null;
+function openAboutDialog() {
+  var t = document.getElementById('aboutToast');
+  t.style.display = 'block';
+  t.classList.remove('hiding');
+  if (aboutToastTimer) clearTimeout(aboutToastTimer);
+  aboutToastTimer = setTimeout(closeAboutToast, 5000);
+}
+function closeAboutToast() {
+  var t = document.getElementById('aboutToast');
+  t.classList.add('hiding');
+  if (aboutToastTimer) clearTimeout(aboutToastTimer);
+  setTimeout(function() { t.style.display = 'none'; t.classList.remove('hiding'); }, 300);
+}
+function closeAboutDialog(e) { closeAboutToast(); }
+
+function closeIntervention(e) {
+  if (e && e.target && e.target.id !== 'interventionOverlay') return;
+  document.getElementById('interventionOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function handleIntervention(type) {
+  document.getElementById('interventionOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+  regenerateCount = 0;
+
+  if (type === 'budget') {
+    // Take them to edit bar
+    document.getElementById('editPanel').style.display = 'block';
+    document.getElementById('editBar').scrollIntoView({ behavior:'smooth', block:'center' });
+  } else if (type === 'context' || type === 'personal') {
+    // Take them back to step 3 to add more details
+    openQuestionnaireFromEdit();
+  } else if (type === 'creative') {
+    // Regenerate with extra creativity flag
+    if (lastParams) {
+      allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
+      var p = lastParams;
+      var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('loadingText').textContent = 'Thinking more creatively this time...';
+      startLoadingTips();
+      callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, true), p.occasion, p.relationship);
+    }
+  } else {
+    // type or just regenerate
+    regenerate();
+  }
+}
+
+// ── SAVED PEOPLE ──────────────────────────────────────────────────────
+function getSavedPeople() {
+  try { return JSON.parse(localStorage.getItem('giftho_people') || '[]'); } catch(e) { return []; }
+}
+
+function savePerson() {
+  var name = document.getElementById('savePersonName').value.trim();
+  if (!name) { document.getElementById('savePersonName').focus(); return; }
+  if (!lastParams) return;
+  var people = getSavedPeople();
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: lastParams.relationship,
+    ageRange: lastParams.ageRange,
+    gender: selectedGender,
+    budgetMax: lastParams.budgetMax,
+    selectedPills: JSON.parse(JSON.stringify(selectedPills)),
+    about: lastParams.about,
+    savedAt: new Date().toISOString()
+  };
+  // Replace if same name+relationship exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase() === name.toLowerCase() && p.relationship === lastParams.relationship; });
+  if (idx >= 0) people[idx] = person; else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  document.getElementById('savePersonDone').style.display = 'block';
+  document.getElementById('savePersonName').style.display = 'none';
+  document.querySelector('.save-person-btn').style.display = 'none';
+  // Show calendar prompt
+  if (lastParams.occasion) {
+    document.getElementById('calendarPromptTitle').textContent = "When is their " + lastParams.occasion.toLowerCase() + "?";
+  }
+  document.getElementById('calendarPrompt').style.display = 'block';
+  renderSavedPeople();
+}
+
+function renderSavedPeople() {
+  var people = getSavedPeople();
+  if (people.length === 0) return;
+  var bar = document.getElementById('savedPeopleBar');
+  var list = document.getElementById('savedPeopleList');
+  if (!bar || !list) return;
+  bar.style.display = 'block';
+  list.innerHTML = people.map(function(p) {
+    return '<div class="saved-person-chip" onclick="prefillFromPerson('' + p.id + '')">' +
+      '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
+      '<div class="saved-person-rel">' + sanitise(p.relationship) + '</div></div>' +
+      '</div>';
+  }).join('');
+}
+
+function prefillFromPerson(id) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === id; });
+  if (!person) return;
+  // Set all form state
+  selectedRelationship = person.relationship;
+  selectedOccasion = '';
+  selectedGender = person.gender || '';
+  selectedPills = person.selectedPills || { interests:[], vibe:[], context:[] };
+  var el = document.getElementById('relationship'); if(el) el.value = person.relationship;
+  document.querySelectorAll('.rel-pill').forEach(function(p) {
+    p.className = 'rel-pill' + (p.getAttribute('data-val') === person.relationship ? ' active' : '');
+  });
+  if (person.ageRange) setAge(person.ageRange);
+  if (person.gender) setGender(person.gender);
+  if (person.budgetMax) setBudget(parseInt(person.budgetMax));
+  if (person.about) { var ab = document.getElementById('about'); if(ab) ab.value = person.about; }
+  // Restore pills visually
+  document.querySelectorAll('.pill').forEach(function(pill) {
+    var match = pill.getAttribute('onclick') ? pill.getAttribute('onclick').match(/togglePill\(this,'(\w+)'\)/) : null;
+    if (match) {
+      var g = match[1], val = pill.textContent.trim();
+      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) pill.classList.add('selected');
+      else pill.classList.remove('selected');
+    }
+  });
+  // Go to step 1, pre-select their relationship, skip to step 2
+  goStep(1);
+  document.getElementById('savedPeopleBar').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── CALENDAR / REMINDERS ───────────────────────────────────────────────
+function getCalendar() {
+  try { return JSON.parse(localStorage.getItem('giftho_calendar') || '[]'); } catch(e) { return []; }
+}
+
+function saveCalendarDate() {
+  var dateVal = document.getElementById('calendarDate').value;
+  if (!dateVal || !lastParams) return;
+  var calendar = getCalendar();
+  var personName = document.getElementById('savePersonName') ?
+    document.getElementById('savePersonDone').style.display === 'block' ?
+    document.getElementById('savePersonName').placeholder : '' : '';
+  // Get name from saved person
+  var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
+  var entry = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: lastParams.relationship,
+    occasion: lastParams.occasion || 'Occasion',
+    date: dateVal,
+    createdAt: new Date().toISOString()
+  };
+  calendar.push(entry);
+  localStorage.setItem('giftho_calendar', JSON.stringify(calendar));
+  document.getElementById('calendarSaved').style.display = 'block';
+  document.getElementById('calendarDate').disabled = true;
+  document.querySelector('.calendar-btn').disabled = true;
+}
+
+function checkReturnNudges() {
+  var calendar = getCalendar();
+  if (calendar.length === 0) return;
+  var now = new Date();
+  var nudge = null;
+  calendar.forEach(function(entry) {
+    var eventDate = new Date(entry.date);
+    // Set to this year's occurrence
+    eventDate.setFullYear(now.getFullYear());
+    if (eventDate < now) eventDate.setFullYear(now.getFullYear() + 1);
+    var daysUntil = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
+    if (daysUntil >= 0 && daysUntil <= 21 && !nudge) {
+      nudge = { entry: entry, days: daysUntil };
+    }
+  });
+  if (!nudge) return;
+  var el = document.getElementById('returnNudge');
+  var titleEl = document.getElementById('returnNudgeTitle');
+  var subEl = document.getElementById('returnNudgeSub');
+  if (!el) return;
+  var daysText = nudge.days === 0 ? 'today' : nudge.days === 1 ? 'tomorrow' : 'in ' + nudge.days + ' days';
+  titleEl.textContent = nudge.entry.occasion + ' for ' + nudge.entry.name + ' is ' + daysText;
+  subEl.textContent = 'Tap to find the perfect gift →';
+  el.style.display = 'block';
+  el.setAttribute('data-person-rel', nudge.entry.relationship);
+  el.setAttribute('data-occasion', nudge.entry.occasion);
+}
+
+function handleReturnNudge() {
+  var rel = document.getElementById('returnNudge').getAttribute('data-person-rel');
+  var occ = document.getElementById('returnNudge').getAttribute('data-occasion');
+  document.getElementById('returnNudge').style.display = 'none';
+  if (rel) { selectedRelationship = rel; setRel(rel); }
+  if (occ) { selectedOccasion = occ; setOcc(occ); }
+  goStep(2);
+}
+
+// Show save person prompt in results
+function showSavePersonPrompt() {
+  var prompt = document.getElementById('savePersonPrompt');
+  if (!prompt) return;
+  // Reset state
+  document.getElementById('savePersonName').style.display = '';
+  document.querySelector('.save-person-btn').style.display = '';
+  document.getElementById('savePersonDone').style.display = 'none';
+  document.getElementById('calendarPrompt').style.display = 'none';
+  document.getElementById('calendarSaved').style.display = 'none';
+  document.getElementById('calendarDate').disabled = false;
+  document.getElementById('savePersonName').value = '';
+  prompt.style.display = 'block';
+}
+
+var currentRefineGiftIdx = null;
+
+function toggleModalRefine() {
+  var section = document.getElementById('modalRefineSection');
+  var btn = document.getElementById('modalRefineToggle');
+  var isOpen = section.style.display !== 'none';
+  section.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '✎ Refine this gift' : '✕ Cancel';
+  if (!isOpen) setTimeout(function() { document.getElementById('modalRefineText').focus(); }, 100);
+}
+
+function refineGift() {
+  var refineText = document.getElementById('modalRefineText').value.trim();
+  if (!refineText) { document.getElementById('modalRefineText').focus(); return; }
+  if (currentRefineGiftIdx === null || !lastParams) return;
+  var gift = currentGifts[currentRefineGiftIdx];
+  if (!gift) return;
+  closeModal();
+
+  var p = lastParams;
+  var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
+  var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
+  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user liked the gift "' + gift.name + '" but wants to refine it. Keep the same category and spirit but adjust based on this feedback: "' + refineText + '". Replace only this one gift — return a full set of ' + currentGifts.length + ' gifts where one is a refined version of "' + gift.name + '" based on the feedback. Keep the other gifts the same or similar.';
+
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('loadingText').textContent = 'Refining that gift for you...';
+  startLoadingTips();
+  callAPI(refinePrompt, p.occasion, p.relationship);
+}
 </script>
+
+<div id="interventionOverlay" class="modal-overlay" style="display:none;" onclick="closeIntervention(event)">
+  <div class="modal-sheet" style="padding-bottom:48px;">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;font-style:italic;color:var(--ink);margin-bottom:8px;">Still not quite right?</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px;">Help us understand — what's off about the suggestions so far?</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <button class="intervention-btn" onclick="handleIntervention('budget')">The budget feels off</button>
+      <button class="intervention-btn" onclick="handleIntervention('personal')">Not personal enough</button>
+      <button class="intervention-btn" onclick="handleIntervention('type')">Wrong type of gifts</button>
+      <button class="intervention-btn" onclick="handleIntervention('creative')">Not creative enough</button>
+      <button class="intervention-btn" onclick="handleIntervention('context')">You don't know them well enough</button>
+    </div>
+    <button onclick="closeIntervention();regenerate();" style="width:100%;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;">Just try again anyway</button>
+  </div>
+</div>
+
+<div id="aboutToast" onclick="closeAboutToast()" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9998;padding:16px 20px;cursor:pointer;">
+  <div style="max-width:660px;margin:0 auto;background:var(--ink);border-radius:0 0 16px 16px;padding:16px 18px 18px;position:relative;box-shadow:0 4px 20px rgba(26,18,9,0.18);animation:toastDrop 0.3s ease forwards;">
+    <button onclick="event.stopPropagation();closeAboutToast();" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:18px;cursor:pointer;line-height:1;padding:0;">&#215;</button>
+    <div style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:20px;font-weight:600;color:#F5EDD8;margin-bottom:6px;padding-right:24px;">Gifting in India is deeply personal.</div>
+    <div style="font-size:13px;color:#C8B49A;line-height:1.65;">The right gift says <em style="color:#F5EDD8;">I see you</em> — not just I remembered. Giftho finds specific gifts to buy, make, or experience. No endless scrolling.</div>
+  </div>
+</div>
 </body>
 </html>
