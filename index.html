@@ -836,15 +836,17 @@ function getGiftUrl(platform, giftName, giftType) {
 }
 
 async function getGifts() {
-  var occasion = document.getElementById("occasion").value;
-  var relationship = document.getElementById("relationship").value;
-  var ageRange = document.getElementById("ageRange").value;
-  var budgetMin = document.getElementById("budgetMin").value;
-  var budgetMax = document.getElementById("budgetMax").value;
-  var about = document.getElementById("about").value;
+  // Primary: JS vars set by pill taps or free text input
+  // Fallback: hidden inputs (for edit bar regenerate path)
+  var occasion = selectedOccasion || document.getElementById("occasion").value || "";
+  var relationship = selectedRelationship || document.getElementById("relationship").value || "";
+  var ageRange = document.getElementById("ageRange") ? document.getElementById("ageRange").value : "";
+  var budgetMin = document.getElementById("budgetMin") ? document.getElementById("budgetMin").value : "";
+  var budgetMax = document.getElementById("budgetMax") ? document.getElementById("budgetMax").value : "";
+  var about = document.getElementById("about") ? document.getElementById("about").value : "";
 
-  if (!occasion || !relationship) return showError("Please select an occasion and relationship.");
-  if (!budgetMax) return showError("Please enter a maximum budget.");
+  if (!occasion || !relationship) { showError("Please go back and select an occasion and relationship."); return; }
+  if (!budgetMax) { showError("Please go back and enter a maximum budget."); return; }
 
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
