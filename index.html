@@ -151,7 +151,7 @@ textarea { resize:none; height:78px; line-height:1.5; }
 .gift-card { border-radius:18px; padding:22px 20px; margin-bottom:14px; cursor:pointer; animation:fadeUp 0.4s ease forwards; opacity:0; transition:transform 0.15s ease,box-shadow 0.15s ease; }
 .gift-card:hover { transform:translateY(-2px); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);} }
-.gift-card.top-pick { background:var(--ink); border:none; padding:28px 24px; box-shadow:0 8px 32px rgba(26,18,9,0.18); }
+.gift-card.top-pick { background:var(--ink) !important; border:none !important; padding:28px 24px; box-shadow:0 8px 32px rgba(26,18,9,0.18); }
 .gift-card.top-pick:hover { box-shadow:0 12px 40px rgba(26,18,9,0.24); }
 .gift-card.buy { background:var(--card); border:1.5px solid var(--border); box-shadow:0 2px 0 var(--border); }
 .gift-card.make { background:var(--rose-light); border:1.5px solid var(--rose-border); }
@@ -162,13 +162,13 @@ textarea { resize:none; height:78px; line-height:1.5; }
 .top-pick-label { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
 .top-pick-badge { background:var(--saffron); color:white; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; padding:4px 12px; border-radius:20px; }
 .hero-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:28px; font-weight:600; font-style:italic; color:#FFFFFF; line-height:1.2; margin-bottom:8px; }
-.hero-price { font-size:20px; font-weight:600; color:var(--saffron); margin-bottom:14px; }
+.hero-price { font-size:16px; font-weight:600; color:var(--saffron); margin-bottom:12px; }
 .hero-type-tag { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); padding:5px 12px; border:1px solid rgba(255,255,255,0.15); border-radius:20px; }
 .hero-why { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:400; color:#D4C4AA; line-height:1.7; margin-bottom:20px; }
 .hero-cta { display:inline-block; padding:13px 24px; background:var(--saffron); color:white; border-radius:12px; font-size:14px; font-weight:600; box-shadow:0 3px 0 var(--saff-dark); }
 .gift-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:21px; font-weight:600; font-style:italic; color:var(--ink); line-height:1.3; flex:1; }
-.gift-main { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; }
-.gift-price { font-size:15px; font-weight:700; white-space:nowrap; margin-top:4px; flex-shrink:0; }
+.gift-main { display:flex; flex-direction:column; gap:4px; margin-bottom:10px; }
+.gift-price { font-size:14px; font-weight:700; }
 .gift-price.buy { color:var(--saffron); } .gift-price.make { color:var(--rose); } .gift-price.experience { color:var(--forest); }
 .gift-why { font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:300; color:#5A4A3A; line-height:1.7; margin-bottom:12px; }
 .gift-tap-hint { font-size:12px; color:var(--muted); padding-top:10px; border-top:1px solid rgba(0,0,0,0.05); margin-top:4px; }
@@ -213,6 +213,37 @@ textarea { resize:none; height:78px; line-height:1.5; }
 
 footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted); border-top:1px solid var(--border); margin-top:16px; }
 @media(max-width:480px){ .card{padding:22px 18px;} .budget-row{grid-template-columns:1fr;} .edit-grid{grid-template-columns:1fr;} .results-actions{flex-direction:column;} }
+
+  /* Conversational form */
+  #formCard { background:var(--card); border:1.5px solid var(--border); border-radius:20px; padding:28px 26px; margin-bottom:20px; box-shadow:0 2px 0 var(--border); }
+
+  .conv-progress { display:flex; align-items:center; gap:0; margin-bottom:28px; }
+  .conv-step-dot { width:8px; height:8px; border-radius:50%; background:var(--border); flex-shrink:0; transition:background 0.3s; }
+  .conv-step-dot.active { background:var(--saffron); }
+  .conv-step-dot.done { background:var(--ink); }
+  .conv-step-line { flex:1; height:1.5px; background:var(--border); transition:background 0.3s; }
+  .conv-step-line.done { background:var(--ink); }
+
+  .conv-step { animation:fadeUp 0.3s ease; }
+  .conv-question { font-family:'Cormorant Garamond',Georgia,serif; font-size:26px; font-weight:600; font-style:italic; color:var(--ink); margin-bottom:4px; line-height:1.2; }
+  .conv-sub { font-size:13px; color:var(--muted); margin-bottom:24px; }
+  .conv-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:10px; }
+  .conv-optional { font-size:10px; font-weight:400; color:var(--border-dark,#C8C4BE); text-transform:none; letter-spacing:0; margin-left:4px; }
+  .conv-field { margin-bottom:22px; }
+  .conv-back { background:none; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; padding:0; margin-bottom:20px; display:flex; align-items:center; gap:4px; }
+  .conv-back:hover { color:var(--ink); }
+
+  /* Relationship pills */
+  .rel-pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .rel-pill { padding:9px 16px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+  .rel-pill:hover { border-color:var(--saffron); color:var(--saffron); }
+  .rel-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
+
+  /* Occasion pills */
+  .occ-pills { display:flex; gap:8px; flex-wrap:wrap; }
+  .occ-pill { padding:9px 16px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+  .occ-pill:hover { border-color:var(--saffron); color:var(--saffron); }
+  .occ-pill.active { background:var(--saffron); border-color:var(--saffron); color:white; }
 </style>
 </head>
 <body>
@@ -239,7 +270,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     </div>
     <div class="splash-bottom">
       <button class="splash-cta" onclick="event.stopPropagation();dismissSplash()">Find the perfect gift</button>
-      <div><div class="splash-timer-label">continues in 12s</div><div class="splash-timer-track"><div class="splash-timer-fill"></div></div></div>
+      <div><div class="splash-timer-track"><div class="splash-timer-fill"></div></div></div>
     </div>
   </div>
 </div>
@@ -259,72 +290,152 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   <div id="savedBanner" class="saved-banner" onclick="loadSaved()">You have a saved gift list — tap to view</div>
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
-  <div id="formCard" class="card">
-    <h2 class="card-title">What's the occasion?</h2>
-    <p class="card-sub">Fill in what you know. We'll handle the rest.</p>
-    <div class="field"><label>Occasion</label>
-      <select id="occasion"><option value="">Select occasion</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select>
+  <div id="formCard">
+
+    <input type="hidden" id="occasion" value="">
+    <input type="hidden" id="relationship" value="">
+    <!-- Step progress -->
+    <div class="conv-progress" id="convProgress">
+      <div class="conv-step-dot active" id="pdot1"></div>
+      <div class="conv-step-line" id="pline1"></div>
+      <div class="conv-step-dot" id="pdot2"></div>
+      <div class="conv-step-line" id="pline2"></div>
+      <div class="conv-step-dot" id="pdot3"></div>
     </div>
-    <div class="field"><label>Relationship</label>
-      <select id="relationship"><option value="">Who are you gifting?</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partner's Parent</option><option>Acquaintance</option><option>Someone I just met</option></select>
-    </div>
-    <div class="field"><label>Their Gender</label>
-      <div class="toggle-row"><button class="toggle-btn" id="genderHer" onclick="setGender('Her')">Her</button><button class="toggle-btn" id="genderHim" onclick="setGender('Him')">Him</button><button class="toggle-btn" id="genderThem" onclick="setGender('Them')">Them</button></div>
-    </div>
-    <div class="field"><label>Their Age Range</label>
-      <input type="hidden" id="ageRange" value="">
-      <div class="age-pills">
-        <button class="age-pill" data-val="Under 10" onclick="setAge('Under 10')">Under 10</button>
-        <button class="age-pill" data-val="10 to 17" onclick="setAge('10 to 17')">10–17</button>
-        <button class="age-pill" data-val="18 to 25" onclick="setAge('18 to 25')">18–25</button>
-        <button class="age-pill" data-val="26 to 35" onclick="setAge('26 to 35')">26–35</button>
-        <button class="age-pill" data-val="36 to 50" onclick="setAge('36 to 50')">36–50</button>
-        <button class="age-pill" data-val="50 plus" onclick="setAge('50 plus')">50+</button>
-      </div>
-    </div>
-    <div class="field"><label>Budget (Rs.)</label>
-      <div class="budget-chips">
-        <button class="budget-chip" data-val="500" onclick="setBudget(500)">500</button>
-        <button class="budget-chip" data-val="1000" onclick="setBudget(1000)">1,000</button>
-        <button class="budget-chip" data-val="2000" onclick="setBudget(2000)">2,000</button>
-        <button class="budget-chip" data-val="5000" onclick="setBudget(5000)">5,000</button>
-        <button class="budget-chip" data-val="10000" onclick="setBudget(10000)">10,000</button>
-      </div>
-      <div class="budget-row">
-        <input type="number" id="budgetMin" placeholder="Min (optional)" min="0" oninput="clearBudgetChips()">
-        <input type="number" id="budgetMax" placeholder="Max" min="0" oninput="clearBudgetChips()">
-      </div>
-    </div>
-    <div class="field"><label>How well do you know them?</label>
-      <div class="toggle-row"><button class="toggle-btn active" id="btnKnowYes" onclick="setKnowMode(true)">I know them well</button><button class="toggle-btn" id="btnKnowNo" onclick="setKnowMode(false)">Not that well</button></div>
-    </div>
-    <div class="field" id="aboutField">
-      <label>About them <span style="font-style:italic;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;">(optional but powerful)</span></label>
-      <textarea id="about" placeholder="e.g. loves yoga and coffee, recently got promoted, planning a Goa trip"></textarea>
-    </div>
-    <div id="unknownArea">
-      <div class="q-nudge" id="qNudge">
-        <div class="q-nudge-text">Want better suggestions?<span>Answer 3 quick questions — no typing needed</span></div>
-        <button class="q-open-btn" onclick="openQuestionnaire()">Help me &#8594;</button>
-      </div>
-      <div id="questionnairePanel">
-        <div class="q-section"><div class="q-label">What are they into? <span class="q-optional">pick any</span></div>
-          <div class="pills" id="pillsInterests"><div class="pill" onclick="togglePill(this,'interests')">Books</div><div class="pill" onclick="togglePill(this,'interests')">Cooking</div><div class="pill" onclick="togglePill(this,'interests')">Music</div><div class="pill" onclick="togglePill(this,'interests')">Fitness</div><div class="pill" onclick="togglePill(this,'interests')">Art &amp; Craft</div><div class="pill" onclick="togglePill(this,'interests')">Gaming</div><div class="pill" onclick="togglePill(this,'interests')">Travel</div><div class="pill" onclick="togglePill(this,'interests')">Fashion</div><div class="pill" onclick="togglePill(this,'interests')">Plants</div><div class="pill" onclick="togglePill(this,'interests')">Tech</div><div class="pill" onclick="togglePill(this,'interests')">Food &amp; Drinks</div><div class="pill" onclick="togglePill(this,'interests')">Home Decor</div></div>
+
+    <!-- ── STEP 1: Who & What ── -->
+    <div class="conv-step" id="step1">
+      <div class="conv-question">Who are you gifting?</div>
+      <div class="conv-sub">And what's the occasion.</div>
+
+      <div class="conv-field">
+        <div class="conv-label">Relationship</div>
+        <div class="rel-pills" id="relPills">
+          <button class="rel-pill" data-val="Close Friend" onclick="setRel('Close Friend')">Close Friend</button>
+          <button class="rel-pill" data-val="Partner" onclick="setRel('Partner')">Partner</button>
+          <button class="rel-pill" data-val="Sibling" onclick="setRel('Sibling')">Sibling</button>
+          <button class="rel-pill" data-val="Parent" onclick="setRel('Parent')">Parent</button>
+          <button class="rel-pill" data-val="Flatmate" onclick="setRel('Flatmate')">Flatmate</button>
+          <button class="rel-pill" data-val="Cousin" onclick="setRel('Cousin')">Cousin</button>
+          <button class="rel-pill" data-val="Colleague" onclick="setRel('Colleague')">Colleague</button>
+          <button class="rel-pill" data-val="Boss" onclick="setRel('Boss')">Boss</button>
+          <button class="rel-pill" data-val="Partner's Parent" onclick="setRel('Partner's Parent')">Partner's Parent</button>
+          <button class="rel-pill" data-val="Acquaintance" onclick="setRel('Acquaintance')">Acquaintance</button>
+          <button class="rel-pill" data-val="Someone I just met" onclick="setRel('Someone I just met')">Someone I just met</button>
         </div>
-        <div class="q-section"><div class="q-label">What's their vibe? <span class="q-optional">pick up to 2</span></div>
-          <div class="pills" id="pillsVibe"><div class="pill" onclick="togglePill(this,'vibe')">Practical</div><div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div><div class="pill" onclick="togglePill(this,'vibe')">Trendy</div><div class="pill" onclick="togglePill(this,'vibe')">Homebody</div><div class="pill" onclick="togglePill(this,'vibe')">Into sports</div><div class="pill" onclick="togglePill(this,'vibe')">Traveller</div><div class="pill" onclick="togglePill(this,'vibe')">Foodie</div><div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div><div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div><div class="pill" onclick="togglePill(this,'vibe')">Gamer</div><div class="pill" onclick="togglePill(this,'vibe')">Gym person</div><div class="pill" onclick="togglePill(this,'vibe')">Movie buff</div><div class="pill" onclick="togglePill(this,'vibe')">Music lover</div></div>
-        </div>
-        <div class="q-section"><div class="q-label">Anything else useful? <span class="q-optional">pick any</span></div>
-          <div class="pills" id="pillsContext"><div class="pill" onclick="togglePill(this,'context')">Cat parent</div><div class="pill" onclick="togglePill(this,'context')">Dog parent</div><div class="pill" onclick="togglePill(this,'context')">New home</div><div class="pill" onclick="togglePill(this,'context')">New baby</div><div class="pill" onclick="togglePill(this,'context')">Into wellness</div><div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div><div class="pill" onclick="togglePill(this,'context')">Open to anything</div></div>
-        </div>
-        <div class="q-section"><div class="q-label">The juicy details <span class="q-optional">anything the pills missed</span></div>
-          <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas — the more specific the better" style="height:72px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;width:100%;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;line-height:1.5;"></textarea>
-        </div>
-        <div class="q-footer"><button class="q-skip" onclick="closeQuestionnaire()">Skip</button><button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button></div>
       </div>
+
+      <div class="conv-field">
+        <div class="conv-label">Occasion</div>
+        <div class="occ-pills" id="occPills">
+          <button class="occ-pill" data-val="Birthday" onclick="setOcc('Birthday')">Birthday</button>
+          <button class="occ-pill" data-val="Anniversary" onclick="setOcc('Anniversary')">Anniversary</button>
+          <button class="occ-pill" data-val="Wedding" onclick="setOcc('Wedding')">Wedding</button>
+          <button class="occ-pill" data-val="Engagement" onclick="setOcc('Engagement')">Engagement</button>
+          <button class="occ-pill" data-val="Diwali" onclick="setOcc('Diwali')">Diwali</button>
+          <button class="occ-pill" data-val="Housewarming" onclick="setOcc('Housewarming')">Housewarming</button>
+          <button class="occ-pill" data-val="Baby Shower" onclick="setOcc('Baby Shower')">Baby Shower</button>
+          <button class="occ-pill" data-val="Rakhi" onclick="setOcc('Rakhi')">Rakhi</button>
+          <button class="occ-pill" data-val="Job Promotion" onclick="setOcc('Job Promotion')">Job Promotion</button>
+          <button class="occ-pill" data-val="Graduation" onclick="setOcc('Graduation')">Graduation</button>
+          <button class="occ-pill" data-val="Just Because" onclick="setOcc('Just Because')">Just Because</button>
+        </div>
+      </div>
+
+      <div class="conv-field">
+        <div class="conv-label">Their Gender <span class="conv-optional">optional</span></div>
+        <div class="toggle-row" style="max-width:280px;">
+          <button class="toggle-btn" id="genderHer" onclick="setGender('Her')">Her</button>
+          <button class="toggle-btn" id="genderHim" onclick="setGender('Him')">Him</button>
+          <button class="toggle-btn" id="genderThem" onclick="setGender('Them')">Them</button>
+        </div>
+      </div>
+
+      <div class="error" id="errorBox1"></div>
+      <button class="btn" onclick="goStep(2)">Next &rarr;</button>
     </div>
-    <button class="btn" id="submitBtn" onclick="getGifts()">Find the perfect gift</button>
-    <div class="error" id="errorBox"></div>
+
+    <!-- ── STEP 2: Age & Budget ── -->
+    <div class="conv-step" id="step2" style="display:none;">
+      <button class="conv-back" onclick="goStep(1)">&larr; Back</button>
+      <div class="conv-question">How old are they?</div>
+      <div class="conv-sub">And what's your budget.</div>
+
+      <div class="conv-field">
+        <div class="conv-label">Age Range <span class="conv-optional">optional</span></div>
+        <div class="age-pills">
+          <button class="age-pill" data-val="Under 10" onclick="setAge('Under 10')">Under 10</button>
+          <button class="age-pill" data-val="10 to 17" onclick="setAge('10 to 17')">10–17</button>
+          <button class="age-pill" data-val="18 to 25" onclick="setAge('18 to 25')">18–25</button>
+          <button class="age-pill" data-val="26 to 35" onclick="setAge('26 to 35')">26–35</button>
+          <button class="age-pill" data-val="36 to 50" onclick="setAge('36 to 50')">36–50</button>
+          <button class="age-pill" data-val="50 plus" onclick="setAge('50 plus')">50+</button>
+        </div>
+      </div>
+
+      <div class="conv-field">
+        <div class="conv-label">Budget (Rs.)</div>
+        <div class="budget-chips">
+          <button class="budget-chip" data-val="500" onclick="setBudget(500)">500</button>
+          <button class="budget-chip" data-val="1000" onclick="setBudget(1000)">1,000</button>
+          <button class="budget-chip" data-val="2000" onclick="setBudget(2000)">2,000</button>
+          <button class="budget-chip" data-val="5000" onclick="setBudget(5000)">5,000</button>
+          <button class="budget-chip" data-val="10000" onclick="setBudget(10000)">10,000</button>
+        </div>
+        <div class="budget-row" style="margin-top:10px;">
+          <input type="number" id="budgetMin" placeholder="Min (optional)" min="0" oninput="clearBudgetChips()">
+          <input type="number" id="budgetMax" placeholder="Max" min="0" oninput="clearBudgetChips()">
+        </div>
+      </div>
+
+      <div class="error" id="errorBox2"></div>
+      <button class="btn" onclick="goStep(3)">Next &rarr;</button>
+    </div>
+
+    <!-- ── STEP 3: Know them? ── -->
+    <div class="conv-step" id="step3" style="display:none;">
+      <button class="conv-back" onclick="goStep(2)">&larr; Back</button>
+      <div class="conv-question">What do you know about them?</div>
+      <div class="conv-sub">The more you share, the better we get.</div>
+
+      <div class="conv-field">
+        <div class="toggle-row" style="margin-bottom:18px;">
+          <button class="toggle-btn active" id="btnKnowYes" onclick="setKnowMode(true)">I know them well</button>
+          <button class="toggle-btn" id="btnKnowNo" onclick="setKnowMode(false)">Not that well</button>
+        </div>
+      </div>
+
+      <div class="field" id="aboutField">
+        <textarea id="about" placeholder="e.g. loves yoga and coffee, recently got promoted, planning a Goa trip" style="height:90px;"></textarea>
+      </div>
+
+      <div id="unknownArea">
+        <div class="q-nudge" id="qNudge">
+          <div class="q-nudge-text">Want better suggestions?<span>Answer 3 quick questions — no typing needed</span></div>
+          <button class="q-open-btn" onclick="openQuestionnaire()">Help me &rarr;</button>
+        </div>
+        <div id="questionnairePanel">
+          <div class="q-section"><div class="q-label">What are they into? <span class="q-optional">pick any</span></div>
+            <div class="pills" id="pillsInterests"><div class="pill" onclick="togglePill(this,'interests')">Books</div><div class="pill" onclick="togglePill(this,'interests')">Cooking</div><div class="pill" onclick="togglePill(this,'interests')">Music</div><div class="pill" onclick="togglePill(this,'interests')">Fitness</div><div class="pill" onclick="togglePill(this,'interests')">Art &amp; Craft</div><div class="pill" onclick="togglePill(this,'interests')">Gaming</div><div class="pill" onclick="togglePill(this,'interests')">Travel</div><div class="pill" onclick="togglePill(this,'interests')">Fashion</div><div class="pill" onclick="togglePill(this,'interests')">Plants</div><div class="pill" onclick="togglePill(this,'interests')">Tech</div><div class="pill" onclick="togglePill(this,'interests')">Food &amp; Drinks</div><div class="pill" onclick="togglePill(this,'interests')">Home Decor</div></div>
+          </div>
+          <div class="q-section"><div class="q-label">What's their vibe? <span class="q-optional">pick up to 2</span></div>
+            <div class="pills" id="pillsVibe"><div class="pill" onclick="togglePill(this,'vibe')">Practical</div><div class="pill" onclick="togglePill(this,'vibe')">Sentimental</div><div class="pill" onclick="togglePill(this,'vibe')">Trendy</div><div class="pill" onclick="togglePill(this,'vibe')">Homebody</div><div class="pill" onclick="togglePill(this,'vibe')">Into sports</div><div class="pill" onclick="togglePill(this,'vibe')">Traveller</div><div class="pill" onclick="togglePill(this,'vibe')">Foodie</div><div class="pill" onclick="togglePill(this,'vibe')">Coffee snob</div><div class="pill" onclick="togglePill(this,'vibe')">Bookworm</div><div class="pill" onclick="togglePill(this,'vibe')">Gamer</div><div class="pill" onclick="togglePill(this,'vibe')">Gym person</div><div class="pill" onclick="togglePill(this,'vibe')">Movie buff</div><div class="pill" onclick="togglePill(this,'vibe')">Music lover</div></div>
+          </div>
+          <div class="q-section"><div class="q-label">Anything else useful? <span class="q-optional">pick any</span></div>
+            <div class="pills" id="pillsContext"><div class="pill" onclick="togglePill(this,'context')">Cat parent</div><div class="pill" onclick="togglePill(this,'context')">Dog parent</div><div class="pill" onclick="togglePill(this,'context')">New home</div><div class="pill" onclick="togglePill(this,'context')">New baby</div><div class="pill" onclick="togglePill(this,'context')">Into wellness</div><div class="pill" onclick="togglePill(this,'context')">Loves outdoors</div><div class="pill" onclick="togglePill(this,'context')">Open to anything</div></div>
+          </div>
+          <div class="q-section">
+            <div class="q-label">Anything else about them? <span class="q-optional">optional</span></div>
+            <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas — the more specific the better" style="height:72px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;width:100%;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;line-height:1.5;"></textarea>
+          </div>
+          <div class="q-footer"><button class="q-skip" onclick="closeQuestionnaire()">Skip</button><button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button></div>
+        </div>
+      </div>
+
+      <div class="error" id="errorBox"></div>
+      <button class="btn" id="submitBtn" onclick="getGifts()" style="margin-top:8px;">Find the perfect gift</button>
+    </div>
+
   </div>
 
   <div id="loading" style="display:none;text-align:center;padding:52px 0;">
@@ -625,7 +736,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
     ? "Mix buy, make, and experience types based on what fits best. Minimum 2 buy. Make only if you have a genuinely great DIY idea. Experience if they seem like someone who values experiences over things (trekking, spa, concerts, cooking classes, weekend getaways). Maximum 2 experience."
     : "Mostly buy gifts. You may include 1 experience if clearly relevant. No make/DIY for people the gifter doesn't know well. Minimum 3 buy.";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: Never suggest stainless steel, basic plastic, or commodity materials.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names must be clean — no social media references, no (Instagram) or (as seen on) in brackets.\n7. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: ABSOLUTE BAN — never suggest stainless steel under any circumstances, for any relationship, any occasion, any budget. Also ban basic plastic and commodity bulk materials. This rule has zero exceptions.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names and descriptions must be clean — no social media references anywhere. Never use words like Instagram, YouTube, viral, trending on social, reel-worthy, or any platform name in gift names or why descriptions.\n7. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partner's Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
 }
 
 function speedometerSVG(difficulty) {
@@ -1218,6 +1329,89 @@ function confirmReset() {
   reset();
 }
 
+
+var currentStep = 1;
+var selectedRelationship = '';
+var selectedOccasion = '';
+
+function setRel(val) {
+  selectedRelationship = val;
+  document.getElementById('relationship').value = val;
+  document.querySelectorAll('.rel-pill').forEach(function(p) {
+    p.className = 'rel-pill' + (p.getAttribute('data-val') === val ? ' active' : '');
+  });
+}
+
+function setOcc(val) {
+  selectedOccasion = val;
+  document.getElementById('occasion').value = val;
+  document.querySelectorAll('.occ-pill').forEach(function(p) {
+    p.className = 'occ-pill' + (p.getAttribute('data-val') === val ? ' active' : '');
+  });
+}
+
+function goStep(n) {
+  // Validate before advancing
+  if (n === 2) {
+    if (!selectedRelationship) { showStepError(1, 'Please select a relationship.'); return; }
+    if (!selectedOccasion) { showStepError(1, 'Please select an occasion.'); return; }
+    hideStepError(1);
+  }
+  if (n === 3) {
+    var budgetMax = document.getElementById('budgetMax').value;
+    if (!budgetMax) { showStepError(2, 'Please enter a maximum budget.'); return; }
+    hideStepError(2);
+  }
+
+  // Hide current, show next
+  document.getElementById('step' + currentStep).style.display = 'none';
+  currentStep = n;
+  document.getElementById('step' + n).style.display = 'block';
+
+  // Update progress dots
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('pdot' + i);
+    if (i < n) { dot.className = 'conv-step-dot done'; }
+    else if (i === n) { dot.className = 'conv-step-dot active'; }
+    else { dot.className = 'conv-step-dot'; }
+  }
+  for (var j = 1; j <= 2; j++) {
+    var line = document.getElementById('pline' + j);
+    line.className = 'conv-step-line' + (j < n ? ' done' : '');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showStepError(step, msg) {
+  var el = document.getElementById('errorBox' + step) || document.getElementById('errorBox');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+function hideStepError(step) {
+  var el = document.getElementById('errorBox' + step) || document.getElementById('errorBox');
+  if (el) el.style.display = 'none';
+}
+
+function resetConvForm() {
+  selectedRelationship = '';
+  selectedOccasion = '';
+  document.getElementById('occasion').value = '';
+  document.getElementById('relationship').value = '';
+  currentStep = 1;
+  document.querySelectorAll('.rel-pill').forEach(function(p) { p.className = 'rel-pill'; });
+  document.querySelectorAll('.occ-pill').forEach(function(p) { p.className = 'occ-pill'; });
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('pdot' + i);
+    if (dot) dot.className = 'conv-step-dot' + (i === 1 ? ' active' : '');
+  }
+  for (var j = 1; j <= 2; j++) {
+    var line = document.getElementById('pline' + j);
+    if (line) line.className = 'conv-step-line';
+  }
+}
 </script>
 </body>
 </html>
