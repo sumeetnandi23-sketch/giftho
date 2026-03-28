@@ -223,6 +223,8 @@ textarea { resize:none; height:78px; line-height:1.5; }
 .action-btn-primary:hover { background:#2E1E0A; transform:translateY(-1px); }
 .action-btn-reset { flex:0 0 auto; padding:14px 20px; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:400; cursor:pointer; background:transparent; border:1.5px solid var(--border); color:var(--muted); transition:all 0.15s; }
 .action-btn-reset:hover { border-color:#C0402A; color:#C0402A; }
+.action-btn-edit { flex:0 0 auto; padding:14px 20px; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; background:transparent; border:1.5px solid var(--border); color:var(--ink); transition:all 0.15s; }
+.action-btn-edit:hover { border-color:var(--saffron); color:var(--saffron); }
 
 footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted); border-top:1px solid var(--border); margin-top:16px; }
 @media(max-width:480px){ .card{padding:22px 18px;} .budget-row{grid-template-columns:1fr;} .edit-grid{grid-template-columns:1fr;} .results-actions{flex-direction:column;} }
@@ -515,7 +517,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     <div id="editBar" class="edit-bar" onclick="toggleEditPanel()"><span id="editSummary" class="edit-summary"></span><span class="edit-btn">&#9998; Edit</span></div>
     <div id="editPanel" class="edit-panel" style="display:none;">
       <div class="edit-grid">
-        <div class="edit-field"><label>Occasion</label><select id="editOccasion"><option value="">Select</option><option>Birthday</option><option>Engagement</option><option>Wedding</option><option>Diwali</option><option>Housewarming</option><option>Baby Shower</option><option>Rakhi</option><option>Anniversary</option><option>Job Promotion</option><option>Graduation</option><option>Just Because</option></select></div>
+        <div class="edit-field"><label>Occasion</label><input type="text" id="editOccasion" placeholder="e.g. Birthday, Anniversary..." style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;"></div>
         <div class="edit-field"><label>Relationship</label><select id="editRelationship"><option value="">Select</option><option>Close Friend</option><option>Flatmate</option><option>Partner</option><option>Parent</option><option>Sibling</option><option>Colleague</option><option>Boss</option><option>Cousin</option><option>Partners Parent</option><option>Acquaintance</option><option>Someone I just met</option></select></div>
         <div class="edit-field"><label>Min Budget</label><input type="number" id="editBudgetMin" placeholder="Min" min="0"></div>
         <div class="edit-field"><label>Max Budget</label><input type="number" id="editBudgetMax" placeholder="Max" min="0"></div>
@@ -556,11 +558,12 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     <div id="alsoGifted"></div>
     <div class="results-actions">
       <button class="action-btn-primary" onclick="regenerate()">&#8635; Try different ideas</button>
+      <button class="action-btn-edit" onclick="scrollToEdit()">&#9998; Edit inputs</button>
       <button class="action-btn-reset" onclick="confirmReset()">Start over</button>
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.30</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.31</footer>
 </div>
 
 <div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
@@ -1571,6 +1574,14 @@ function openAboutDialog() {
   if (aboutToastTimer) clearTimeout(aboutToastTimer);
   aboutToastTimer = setTimeout(closeAboutToast, 5000);
 }
+function scrollToEdit() {
+  var bar = document.getElementById('editBar');
+  if (bar) {
+    if (document.getElementById('editPanel').style.display === 'none') toggleEditPanel();
+    bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 function closeAboutToast() {
   var t = document.getElementById('aboutToast');
   t.classList.add('hiding');
@@ -1838,7 +1849,9 @@ function refineGift() {
   var p = lastParams;
   var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
   var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
-  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user liked the gift "' + gift.name + '" but wants to refine it. Keep the same category and spirit but adjust based on this feedback: "' + refineText + '". Replace only this one gift — return a full set of ' + currentGifts.length + ' gifts where one is a refined version of "' + gift.name + '" based on the feedback. Keep the other gifts the same or similar.';
+  var isBalanceRequest = /too many|overpowering|only|just|more variety|other|not just|all cat|all about/i.test(refineText);
+  var balanceInstruction = isBalanceRequest ? ' IMPORTANT: The user feels one aspect of their description is dominating. Redistribute suggestions equally across ALL details in their about-them description — no single detail should influence more than 1 gift.' : '';
+  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user has feedback about the suggestions: "' + refineText + '". Address this directly.' + balanceInstruction + ' Return a full refreshed set of ' + currentGifts.length + ' gifts.';
 
   document.getElementById('results').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
