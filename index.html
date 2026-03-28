@@ -12,211 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Giftho — Gift someone right">
 <meta name="twitter:description" content="Find the perfect gift for any Indian occasion. Takes 30 seconds.">
-<script defer src="/_vercel/insights/script.js">
-// ── SAVED PEOPLE ──────────────────────────────────────────────────────
-function getSavedPeople() {
-  try { return JSON.parse(localStorage.getItem('giftho_people') || '[]'); } catch(e) { return []; }
-}
 
-function savePerson() {
-  var name = document.getElementById('savePersonName').value.trim();
-  if (!name) { document.getElementById('savePersonName').focus(); return; }
-  if (!lastParams) return;
-  var people = getSavedPeople();
-  var person = {
-    id: Date.now().toString(),
-    name: name,
-    relationship: lastParams.relationship,
-    ageRange: lastParams.ageRange,
-    gender: selectedGender,
-    budgetMax: lastParams.budgetMax,
-    selectedPills: JSON.parse(JSON.stringify(selectedPills)),
-    about: lastParams.about,
-    savedAt: new Date().toISOString()
-  };
-  // Replace if same name+relationship exists
-  var idx = people.findIndex(function(p) { return p.name.toLowerCase() === name.toLowerCase() && p.relationship === lastParams.relationship; });
-  if (idx >= 0) people[idx] = person; else people.push(person);
-  localStorage.setItem('giftho_people', JSON.stringify(people));
-  document.getElementById('savePersonDone').style.display = 'block';
-  document.getElementById('savePersonName').style.display = 'none';
-  var spb = document.querySelector('.save-person-btn'); if(spb) spb.style.display = 'none';
-  // Show calendar prompt
-  if (lastParams.occasion) {
-    document.getElementById('calendarPromptTitle').textContent = "When is their " + lastParams.occasion.toLowerCase() + "?";
-  }
-  document.getElementById('calendarPrompt').style.display = 'block';
-  renderSavedPeople();
-}
-
-function renderSavedPeople() {
-  var people = getSavedPeople();
-  if (people.length === 0) return;
-  var bar = document.getElementById('savedPeopleBar');
-  var list = document.getElementById('savedPeopleList');
-  if (!bar || !list) return;
-  bar.style.display = 'block';
-  list.innerHTML = people.map(function(p) {
-    return '<div class="saved-person-chip" onclick="prefillFromPerson('' + p.id + '')">' +
-      '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
-      '<div class="saved-person-rel">' + sanitise(p.relationship) + '</div></div>' +
-      '</div>';
-  }).join('');
-}
-
-function prefillFromPerson(id) {
-  var people = getSavedPeople();
-  var person = people.find(function(p) { return p.id === id; });
-  if (!person) return;
-  // Set all form state
-  selectedRelationship = person.relationship;
-  selectedOccasion = '';
-  selectedGender = person.gender || '';
-  selectedPills = person.selectedPills || { interests:[], vibe:[], context:[] };
-  var el = document.getElementById('relationship'); if(el) el.value = person.relationship;
-  document.querySelectorAll('.rel-pill').forEach(function(p) {
-    p.className = 'rel-pill' + (p.getAttribute('data-val') === person.relationship ? ' active' : '');
-  });
-  if (person.ageRange) setAge(person.ageRange);
-  if (person.gender) setGender(person.gender);
-  if (person.budgetMax) setBudget(parseInt(person.budgetMax));
-  if (person.about) { var ab = document.getElementById('about'); if(ab) ab.value = person.about; }
-  // Restore pills visually
-  document.querySelectorAll('.pill').forEach(function(pill) {
-    var match = pill.getAttribute('onclick') ? pill.getAttribute('onclick').match(/togglePill\(this,'(\w+)'\)/) : null;
-    if (match) {
-      var g = match[1], val = pill.textContent.trim();
-      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) pill.classList.add('selected');
-      else pill.classList.remove('selected');
-    }
-  });
-  // Go to step 1, pre-select their relationship, skip to step 2
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('formCard').style.display = 'block';
-  var spb = document.getElementById('savedPeopleBar'); if(spb) spb.style.display = 'none';
-  currentStep = 1;
-  document.getElementById('step1').style.display = 'block';
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('step3').style.display = 'none';
-  goStep(2);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ── CALENDAR / REMINDERS ───────────────────────────────────────────────
-function getCalendar() {
-  try { return JSON.parse(localStorage.getItem('giftho_calendar') || '[]'); } catch(e) { return []; }
-}
-
-function saveCalendarDate() {
-  var dateVal = document.getElementById('calendarDate').value;
-  if (!dateVal || !lastParams) return;
-  var calendar = getCalendar();
-  var personName = document.getElementById('savePersonName') ?
-    document.getElementById('savePersonDone').style.display === 'block' ?
-    document.getElementById('savePersonName').placeholder : '' : '';
-  // Get name from saved person
-  var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
-  // Store as MM-DD for year-agnostic anniversary reminders
-  var mmdd = dateVal.substring(5); // Extract MM-DD from YYYY-MM-DD
-  var entry = {
-    id: Date.now().toString(),
-    name: name,
-    relationship: lastParams.relationship,
-    occasion: lastParams.occasion || 'Occasion',
-    date: mmdd,
-    createdAt: new Date().toISOString()
-  };
-  calendar.push(entry);
-  localStorage.setItem('giftho_calendar', JSON.stringify(calendar));
-  document.getElementById('calendarSaved').style.display = 'block';
-  document.getElementById('calendarDate').disabled = true;
-  document.querySelector('.calendar-btn').disabled = true;
-}
-
-function checkReturnNudges() {
-  var calendar = getCalendar();
-  if (calendar.length === 0) return;
-  var now = new Date();
-  var nudge = null;
-  calendar.forEach(function(entry) {
-    // Parse MM-DD format
-    var parts = entry.date.split('-');
-    if (parts.length < 2) return;
-    var eventDate = new Date(now.getFullYear(), parseInt(parts[0])-1, parseInt(parts[1]));
-    if (eventDate < now) eventDate = new Date(now.getFullYear()+1, parseInt(parts[0])-1, parseInt(parts[1]));
-    var daysUntil = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
-    if (daysUntil >= 0 && daysUntil <= 21 && !nudge) {
-      nudge = { entry: entry, days: daysUntil };
-    }
-  });
-  if (!nudge) return;
-  var el = document.getElementById('returnNudge');
-  var titleEl = document.getElementById('returnNudgeTitle');
-  var subEl = document.getElementById('returnNudgeSub');
-  if (!el) return;
-  var daysText = nudge.days === 0 ? 'today' : nudge.days === 1 ? 'tomorrow' : 'in ' + nudge.days + ' days';
-  titleEl.textContent = nudge.entry.occasion + ' for ' + nudge.entry.name + ' is ' + daysText;
-  subEl.textContent = 'Tap to find the perfect gift →';
-  el.style.display = 'block';
-  el.setAttribute('data-person-rel', nudge.entry.relationship);
-  el.setAttribute('data-occasion', nudge.entry.occasion);
-}
-
-function handleReturnNudge() {
-  var rel = document.getElementById('returnNudge').getAttribute('data-person-rel');
-  var occ = document.getElementById('returnNudge').getAttribute('data-occasion');
-  document.getElementById('returnNudge').style.display = 'none';
-  if (rel) { selectedRelationship = rel; setRel(rel); }
-  if (occ) { selectedOccasion = occ; setOcc(occ); }
-  goStep(2);
-}
-
-// Show save person prompt in results
-function showSavePersonPrompt() {
-  var prompt = document.getElementById('savePersonPrompt');
-  if (!prompt) return;
-  // Reset state
-  document.getElementById('savePersonName').style.display = '';
-  document.querySelector('.save-person-btn').style.display = '';
-  document.getElementById('savePersonDone').style.display = 'none';
-  document.getElementById('calendarPrompt').style.display = 'none';
-  document.getElementById('calendarSaved').style.display = 'none';
-  document.getElementById('calendarDate').disabled = false;
-  document.getElementById('savePersonName').value = '';
-  prompt.style.display = 'block';
-}
-
-var currentRefineGiftIdx = null;
-
-function toggleModalRefine() {
-  var section = document.getElementById('modalRefineSection');
-  var btn = document.getElementById('modalRefineToggle');
-  var isOpen = section.style.display !== 'none';
-  section.style.display = isOpen ? 'none' : 'block';
-  btn.textContent = isOpen ? '✎ Refine this gift' : '✕ Cancel';
-  if (!isOpen) setTimeout(function() { document.getElementById('modalRefineText').focus(); }, 100);
-}
-
-function refineGift() {
-  var refineText = document.getElementById('modalRefineText').value.trim();
-  if (!refineText) { document.getElementById('modalRefineText').focus(); return; }
-  if (currentRefineGiftIdx === null || !lastParams) return;
-  var gift = currentGifts[currentRefineGiftIdx];
-  if (!gift) return;
-  closeModal();
-
-  var p = lastParams;
-  var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
-  var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
-  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user liked the gift "' + gift.name + '" but wants to refine it. Keep the same category and spirit but adjust based on this feedback: "' + refineText + '". Replace only this one gift — return a full set of ' + currentGifts.length + ' gifts where one is a refined version of "' + gift.name + '" based on the feedback. Keep the other gifts the same or similar.';
-
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('loadingText').textContent = 'Refining that gift for you...';
-  startLoadingTips();
-  callAPI(refinePrompt, p.occasion, p.relationship);
-}
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -791,7 +587,7 @@ var splashTimer = null;
 function dismissSplash() {
   var splash = document.getElementById('splashScreen');
   if (!splash || splash.style.display === 'none') return;
-  clearTimeout(splashDismissTimer);
+  clearTimeout(splashTimer);
   splash.classList.add('fade-out');
   setTimeout(function() {
     splash.style.display = 'none';
@@ -1817,6 +1613,115 @@ function handleIntervention(type) {
 }
 
 // ── SAVED PEOPLE ──────────────────────────────────────────────────────
+
+
+
+
+
+
+function prefillFromPerson(id) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === id; });
+  if (!person) return;
+  // Set all form state
+  selectedRelationship = person.relationship;
+  selectedOccasion = '';
+  selectedGender = person.gender || '';
+  selectedPills = person.selectedPills || { interests:[], vibe:[], context:[] };
+  var el = document.getElementById('relationship'); if(el) el.value = person.relationship;
+  document.querySelectorAll('.rel-pill').forEach(function(p) {
+    p.className = 'rel-pill' + (p.getAttribute('data-val') === person.relationship ? ' active' : '');
+  });
+  if (person.ageRange) setAge(person.ageRange);
+  if (person.gender) setGender(person.gender);
+  if (person.budgetMax) setBudget(parseInt(person.budgetMax));
+  if (person.about) { var ab = document.getElementById('about'); if(ab) ab.value = person.about; }
+  // Restore pills visually
+  document.querySelectorAll('.pill').forEach(function(pill) {
+    var match = pill.getAttribute('onclick') ? pill.getAttribute('onclick').match(/togglePill\(this,'(\w+)'\)/) : null;
+    if (match) {
+      var g = match[1], val = pill.textContent.trim();
+      if (selectedPills[g] && selectedPills[g].indexOf(val) >= 0) pill.classList.add('selected');
+      else pill.classList.remove('selected');
+    }
+  });
+  // Go to step 1, pre-select their relationship, skip to step 2
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  var spb = document.getElementById('savedPeopleBar'); if(spb) spb.style.display = 'none';
+  currentStep = 1;
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  goStep(2);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── CALENDAR / REMINDERS ───────────────────────────────────────────────
+function getCalendar() {
+  try { return JSON.parse(localStorage.getItem('giftho_calendar') || '[]'); } catch(e) { return []; }
+}
+
+function saveCalendarDate() {
+  var dateVal = document.getElementById('calendarDate').value;
+  if (!dateVal || !lastParams) return;
+  var calendar = getCalendar();
+  var personName = document.getElementById('savePersonName') ?
+    document.getElementById('savePersonDone').style.display === 'block' ?
+    document.getElementById('savePersonName').placeholder : '' : '';
+  // Get name from saved person
+  var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
+  // Store as MM-DD for year-agnostic anniversary reminders
+  var mmdd = dateVal.substring(5); // Extract MM-DD from YYYY-MM-DD
+  var entry = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: lastParams.relationship,
+    occasion: lastParams.occasion || 'Occasion',
+    date: mmdd,
+    createdAt: new Date().toISOString()
+  };
+  calendar.push(entry);
+  localStorage.setItem('giftho_calendar', JSON.stringify(calendar));
+  document.getElementById('calendarSaved').style.display = 'block';
+  document.getElementById('calendarDate').disabled = true;
+  document.querySelector('.calendar-btn').disabled = true;
+}
+
+
+
+function handleReturnNudge() {
+  var rel = document.getElementById('returnNudge').getAttribute('data-person-rel');
+  var occ = document.getElementById('returnNudge').getAttribute('data-occasion');
+  document.getElementById('returnNudge').style.display = 'none';
+  if (rel) { selectedRelationship = rel; setRel(rel); }
+  if (occ) { selectedOccasion = occ; setOcc(occ); }
+  goStep(2);
+}
+
+// Show save person prompt in results
+function showSavePersonPrompt() {
+  var prompt = document.getElementById('savePersonPrompt');
+  if (!prompt) return;
+  // Reset state
+  document.getElementById('savePersonName').style.display = '';
+  document.querySelector('.save-person-btn').style.display = '';
+  document.getElementById('savePersonDone').style.display = 'none';
+  document.getElementById('calendarPrompt').style.display = 'none';
+  document.getElementById('calendarSaved').style.display = 'none';
+  document.getElementById('calendarDate').disabled = false;
+  document.getElementById('savePersonName').value = '';
+  prompt.style.display = 'block';
+}
+
+
+
+
+
+
+
+
+// ── SAVED PEOPLE ──────────────────────────────────────────────────────
 function getSavedPeople() {
   try { return JSON.parse(localStorage.getItem('giftho_people') || '[]'); } catch(e) { return []; }
 }
@@ -1989,7 +1894,7 @@ function showSavePersonPrompt() {
   prompt.style.display = 'block';
 }
 
-
+var currentRefineGiftIdx = null;
 
 function toggleModalRefine() {
   var section = document.getElementById('modalRefineSection');
@@ -2019,6 +1924,7 @@ function refineGift() {
   startLoadingTips();
   callAPI(refinePrompt, p.occasion, p.relationship);
 }
+
 </script>
 
 <div id="interventionOverlay" class="modal-overlay" style="display:none;" onclick="closeIntervention(event)">
