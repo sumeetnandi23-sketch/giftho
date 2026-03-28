@@ -385,7 +385,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
           <button class="rel-pill" data-val="Acquaintance" onclick="setRel('Acquaintance')">Acquaintance</button>
           <button class="rel-pill" data-val="Someone I just met" onclick="setRel('Someone I just met')">Someone I just met</button>
         </div>
-        <input type="text" id="relOtherInput" placeholder="Don't see yours? Type it — neighbour, gym buddy, mentor..." style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-top:10px;transition:border-color 0.2s;" oninput="setRelOther(this.value)" onfocus="clearRelPills()">
+        <input type="text" id="relOtherInput" placeholder="Don't see yours? Type it — neighbour, gym buddy, mentor..." style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-top:10px;transition:border-color 0.2s;" oninput="setRelOther(this.value)">
       </div>
 
       <div class="conv-field">
@@ -403,7 +403,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
           <button class="occ-pill" data-val="Graduation" onclick="setOcc('Graduation')">Graduation</button>
           <button class="occ-pill" data-val="Just Because" onclick="setOcc('Just Because')">Just Because</button>
         </div>
-        <input type="text" id="occOtherInput" placeholder="Don't see yours? Type it — farewell, thank you, get well soon..." style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-top:10px;transition:border-color 0.2s;" oninput="setOccOther(this.value)" onfocus="clearOccPills()">
+        <input type="text" id="occOtherInput" placeholder="Don't see yours? Type it — farewell, thank you, get well soon..." style="width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;margin-top:10px;transition:border-color 0.2s;" oninput="setOccOther(this.value)">
       </div>
 
       <div class="conv-field">
@@ -1685,7 +1685,7 @@ function renderSavedPeople() {
   if (!bar || !list) return;
   bar.style.display = 'block';
   list.innerHTML = people.map(function(p) {
-    return '<div class="saved-person-chip" onclick="prefillFromPerson('' + p.id + '')">' +
+    return '<div class="saved-person-chip" onclick="prefillFromPerson(\'' + p.id + '\')">' +
       '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
       '<div class="saved-person-rel">' + sanitise(p.relationship) + '</div></div>' +
       '</div>';
