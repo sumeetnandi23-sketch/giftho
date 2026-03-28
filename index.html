@@ -40,7 +40,7 @@ function savePerson() {
   localStorage.setItem('giftho_people', JSON.stringify(people));
   document.getElementById('savePersonDone').style.display = 'block';
   document.getElementById('savePersonName').style.display = 'none';
-  document.querySelector('.save-person-btn').style.display = 'none';
+  var spb = document.querySelector('.save-person-btn'); if(spb) spb.style.display = 'none';
   // Show calendar prompt
   if (lastParams.occasion) {
     document.getElementById('calendarPromptTitle').textContent = "When is their " + lastParams.occasion.toLowerCase() + "?";
@@ -91,10 +91,14 @@ function prefillFromPerson(id) {
     }
   });
   // Go to step 1, pre-select their relationship, skip to step 2
-  goStep(1);
-  document.getElementById('savedPeopleBar').style.display = 'none';
-  document.getElementById('formCard').style.display = 'block';
   document.getElementById('results').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  var spb = document.getElementById('savedPeopleBar'); if(spb) spb.style.display = 'none';
+  currentStep = 1;
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  goStep(2);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -112,12 +116,14 @@ function saveCalendarDate() {
     document.getElementById('savePersonName').placeholder : '' : '';
   // Get name from saved person
   var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
+  // Store as MM-DD for year-agnostic anniversary reminders
+  var mmdd = dateVal.substring(5); // Extract MM-DD from YYYY-MM-DD
   var entry = {
     id: Date.now().toString(),
     name: name,
     relationship: lastParams.relationship,
     occasion: lastParams.occasion || 'Occasion',
-    date: dateVal,
+    date: mmdd,
     createdAt: new Date().toISOString()
   };
   calendar.push(entry);
@@ -133,10 +139,11 @@ function checkReturnNudges() {
   var now = new Date();
   var nudge = null;
   calendar.forEach(function(entry) {
-    var eventDate = new Date(entry.date);
-    // Set to this year's occurrence
-    eventDate.setFullYear(now.getFullYear());
-    if (eventDate < now) eventDate.setFullYear(now.getFullYear() + 1);
+    // Parse MM-DD format
+    var parts = entry.date.split('-');
+    if (parts.length < 2) return;
+    var eventDate = new Date(now.getFullYear(), parseInt(parts[0])-1, parseInt(parts[1]));
+    if (eventDate < now) eventDate = new Date(now.getFullYear()+1, parseInt(parts[0])-1, parseInt(parts[1]));
     var daysUntil = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
     if (daysUntil >= 0 && daysUntil <= 21 && !nudge) {
       nudge = { entry: entry, days: daysUntil };
@@ -784,10 +791,11 @@ var splashTimer = null;
 function dismissSplash() {
   var splash = document.getElementById('splashScreen');
   if (!splash || splash.style.display === 'none') return;
-  clearTimeout(splashTimer);
+  clearTimeout(splashDismissTimer);
   splash.classList.add('fade-out');
   setTimeout(function() {
     splash.style.display = 'none';
+    document.body.style.background = '#FAFAF8';
   }, 500);
 }
 
@@ -860,6 +868,8 @@ window.onload = function() {
     document.getElementById("savedBanner").className = "saved-banner show";
   }
   checkOccasionNudge();
+  if (typeof renderSavedPeople === 'function') renderSavedPeople();
+  if (typeof checkReturnNudges === 'function') checkReturnNudges();
 };
 
 function sanitise(str) {
@@ -1373,6 +1383,7 @@ function showResults(gifts, occasion, relationship, fromSave) {
     document.getElementById("editBar").style.display = "flex";
   }
   document.getElementById("results").style.display = "block";
+  if (!fromSave) showSavePersonPrompt();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1657,8 +1668,10 @@ function setOcc(val) {
 function goStep(n) {
   // Validate before advancing
   if (n === 2) {
-    var rel = selectedRelationship || document.getElementById('relOtherInput').value.trim();
-    var occ = selectedOccasion || document.getElementById('occOtherInput').value.trim();
+    var relOther = document.getElementById('relOtherInput'); 
+    var occOther = document.getElementById('occOtherInput');
+    var rel = selectedRelationship || (relOther ? relOther.value.trim() : '');
+    var occ = selectedOccasion || (occOther ? occOther.value.trim() : '');
     if (!rel) { showStepError(1, 'Please select or type a relationship.'); return; }
     if (!occ) { showStepError(1, 'Please select or type an occasion.'); return; }
     if (!selectedRelationship) { selectedRelationship = rel; document.getElementById('relationship').value = rel; }
@@ -1830,7 +1843,7 @@ function savePerson() {
   localStorage.setItem('giftho_people', JSON.stringify(people));
   document.getElementById('savePersonDone').style.display = 'block';
   document.getElementById('savePersonName').style.display = 'none';
-  document.querySelector('.save-person-btn').style.display = 'none';
+  var spb = document.querySelector('.save-person-btn'); if(spb) spb.style.display = 'none';
   // Show calendar prompt
   if (lastParams.occasion) {
     document.getElementById('calendarPromptTitle').textContent = "When is their " + lastParams.occasion.toLowerCase() + "?";
@@ -1881,10 +1894,14 @@ function prefillFromPerson(id) {
     }
   });
   // Go to step 1, pre-select their relationship, skip to step 2
-  goStep(1);
-  document.getElementById('savedPeopleBar').style.display = 'none';
-  document.getElementById('formCard').style.display = 'block';
   document.getElementById('results').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  var spb = document.getElementById('savedPeopleBar'); if(spb) spb.style.display = 'none';
+  currentStep = 1;
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  goStep(2);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1902,12 +1919,14 @@ function saveCalendarDate() {
     document.getElementById('savePersonName').placeholder : '' : '';
   // Get name from saved person
   var name = document.getElementById('savePersonName').getAttribute('data-saved-name') || lastParams.relationship;
+  // Store as MM-DD for year-agnostic anniversary reminders
+  var mmdd = dateVal.substring(5); // Extract MM-DD from YYYY-MM-DD
   var entry = {
     id: Date.now().toString(),
     name: name,
     relationship: lastParams.relationship,
     occasion: lastParams.occasion || 'Occasion',
-    date: dateVal,
+    date: mmdd,
     createdAt: new Date().toISOString()
   };
   calendar.push(entry);
@@ -1923,10 +1942,11 @@ function checkReturnNudges() {
   var now = new Date();
   var nudge = null;
   calendar.forEach(function(entry) {
-    var eventDate = new Date(entry.date);
-    // Set to this year's occurrence
-    eventDate.setFullYear(now.getFullYear());
-    if (eventDate < now) eventDate.setFullYear(now.getFullYear() + 1);
+    // Parse MM-DD format
+    var parts = entry.date.split('-');
+    if (parts.length < 2) return;
+    var eventDate = new Date(now.getFullYear(), parseInt(parts[0])-1, parseInt(parts[1]));
+    if (eventDate < now) eventDate = new Date(now.getFullYear()+1, parseInt(parts[0])-1, parseInt(parts[1]));
     var daysUntil = Math.round((eventDate - now) / (1000 * 60 * 60 * 24));
     if (daysUntil >= 0 && daysUntil <= 21 && !nudge) {
       nudge = { entry: entry, days: daysUntil };
@@ -1969,7 +1989,7 @@ function showSavePersonPrompt() {
   prompt.style.display = 'block';
 }
 
-var currentRefineGiftIdx = null;
+
 
 function toggleModalRefine() {
   var section = document.getElementById('modalRefineSection');
