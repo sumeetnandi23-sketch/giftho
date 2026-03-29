@@ -1430,6 +1430,35 @@ function setAge(val) {
   filterRelationshipsByAge(val);
 }
 
+function filterAgePillsByRelationship(rel) {
+  // Adult relationships — hide child age groups
+  var adultRels = ['Boss','Colleague','Partner','Acquaintance','Someone I just met','Partners Parent','Flatmate'];
+  var teenRels  = ['Colleague','Boss','Acquaintance','Someone I just met','Partners Parent'];
+  var isAdult   = adultRels.indexOf(rel) >= 0;
+  var isTeen    = teenRels.indexOf(rel) >= 0;
+
+  document.querySelectorAll('.age-pill').forEach(function(pill) {
+    var v = pill.getAttribute('data-val');
+    var shouldDim = false;
+    if (isAdult && (v === 'Under 10' || v === '10 to 17')) shouldDim = true;
+    if (isTeen  && v === 'Under 10') shouldDim = true;
+    pill.style.opacity = shouldDim ? '0.3' : '1';
+    pill.style.pointerEvents = shouldDim ? 'none' : '';
+    // Deselect if now invalid
+    if (shouldDim && pill.classList.contains('active')) {
+      pill.classList.remove('active');
+      var ar = document.getElementById('ageRange'); if(ar) ar.value = '';
+    }
+  });
+
+  // Show nudge if relationship implies adult recipient
+  var nudge = document.getElementById('ageRelNudge');
+  if (nudge) {
+    nudge.style.display = isAdult ? 'block' : 'none';
+    if (isAdult) nudge.textContent = "Age groups under 18 are hidden — " + rel + " is typically an adult relationship.";
+  }
+}
+
 function filterRelationshipsByAge(ageVal) {
   // Relationships that don't make sense for young children
   var childOnlyRels = ['Boss','Colleague','Partner','Acquaintance','Someone I just met','Partners Parent'];
@@ -1539,6 +1568,8 @@ function goStep(n) {
   document.getElementById('step' + currentStep).style.display = 'none';
   currentStep = n;
   document.getElementById('step' + n).style.display = 'block';
+  // Filter age pills when entering step 2 based on relationship
+  if (n === 2) filterAgePillsByRelationship(selectedRelationship);
 
   // Update progress dots
   for (var i = 1; i <= 3; i++) {
