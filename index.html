@@ -438,6 +438,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
           <button class="age-pill" data-val="36 to 50" onclick="setAge('36 to 50')">36–50</button>
           <button class="age-pill" data-val="50 plus" onclick="setAge('50 plus')">50+</button>
         </div>
+        <div id="ageRelNudge" style="display:none;font-size:12px;color:var(--muted);margin-top:8px;padding:8px 12px;background:var(--saff-light);border-radius:8px;border:1px solid var(--saff-border);"></div>
       </div>
 
       <div class="conv-field">
@@ -837,7 +838,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
     ? "Mix buy, make, and experience types based on what fits best. Minimum 2 buy. Make only if you have a genuinely great DIY idea. Experience if they seem like someone who values experiences over things (trekking, spa, concerts, cooking classes, weekend getaways). Maximum 2 experience."
     : "Mostly buy gifts. You may include 1 experience if clearly relevant. No make/DIY for people the gifter doesn't know well. Minimum 3 buy.";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: ABSOLUTE BAN — never suggest stainless steel under any circumstances, for any relationship, any occasion, any budget. Also ban basic plastic and commodity bulk materials. This rule has zero exceptions.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names and descriptions must be clean — no social media references anywhere. Never use words like Instagram, YouTube, viral, trending on social, reel-worthy, or any platform name in gift names or why descriptions.\n7. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partners Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: ABSOLUTE BAN — never suggest stainless steel under any circumstances, for any relationship, any occasion, any budget. Also ban basic plastic and commodity bulk materials. This rule has zero exceptions.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names and descriptions must be clean — no social media references anywhere. Never use words like Instagram, YouTube, viral, trending on social, reel-worthy, or any platform name in gift names or why descriptions.\n7. AGE RULES: Use the recipient's age to filter appropriate gifts:\n- Under 10: ONLY buy or make gifts. NO experiences (treks, spa, concerts, cooking classes). NO coffee, alcohol, or adult themes. Gifts must be toys, books, art supplies, games, clothing, or similar child-appropriate items.\n- 10 to 17: Experiences allowed but must be age-appropriate (art class, sports, movies). NO alcohol, NO extreme adventure sports, NO nightlife.\n- 18 to 25: All types allowed.\n- 26 to 35: All types allowed.\n- 36 to 50: All types allowed, lean practical and premium.\n- 50 plus: All types allowed. Avoid gaming, extreme sports, very trendy items. Lean warm, practical, experiential.\n8. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partners Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
 }
 
 function speedometerSVG(difficulty) {
@@ -946,6 +947,21 @@ async function getGifts() {
 
   if (!occasion || !relationship) { showError("Please go back and select an occasion and relationship."); return; }
   if (!budgetMax) { showError("Please go back and enter a maximum budget."); return; }
+
+  // Nudge for very short about text
+  if (knowThemWell && about && about.trim().length > 0 && about.trim().length < 15) {
+    var nudgeShown = document.getElementById('shortAboutNudge');
+    if (!nudgeShown) {
+      var nudgeEl = document.createElement('div');
+      nudgeEl.id = 'shortAboutNudge';
+      nudgeEl.style.cssText = 'background:var(--saff-light);border:1.5px solid var(--saff-border);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink);margin-top:10px;line-height:1.6;';
+      nudgeEl.innerHTML = 'One word makes it hard to personalise — <strong>add a bit more</strong> or <span style="color:var(--saffron);cursor:pointer;font-weight:600;" onclick="setKnowMode(false);openQuestionnaire();">try the quick questions instead ↗</span>';
+      var aboutFieldEl = document.getElementById('aboutField');
+      if (aboutFieldEl) aboutFieldEl.appendChild(nudgeEl);
+      setTimeout(function() { var el = document.getElementById('shortAboutNudge'); if(el) el.parentNode.removeChild(el); }, 5000);
+    }
+    return;
+  }
 
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
@@ -1411,6 +1427,39 @@ function setAge(val) {
   document.querySelectorAll(".age-pill").forEach(function(p) {
     p.className = "age-pill" + (p.getAttribute("data-val") === val ? " active" : "");
   });
+  filterRelationshipsByAge(val);
+}
+
+function filterRelationshipsByAge(ageVal) {
+  // Relationships that don't make sense for young children
+  var childOnlyRels = ['Boss','Colleague','Partner','Acquaintance','Someone I just met','Partners Parent'];
+  // Relationships that don't make sense for very young (under 10)
+  var under10Hidden = childOnlyRels.concat(['Flatmate']);
+  var teen17Hidden = ['Boss','Partner','Acquaintance','Someone I just met','Partners Parent'];
+
+  document.querySelectorAll('.rel-pill').forEach(function(pill) {
+    var relVal = pill.getAttribute('data-val');
+    var shouldDim = false;
+    if (ageVal === 'Under 10' && under10Hidden.indexOf(relVal) >= 0) shouldDim = true;
+    if (ageVal === '10 to 17' && teen17Hidden.indexOf(relVal) >= 0) shouldDim = true;
+    pill.style.opacity = shouldDim ? '0.3' : '1';
+    pill.style.pointerEvents = shouldDim ? 'none' : '';
+    // If currently selected and now dimmed — deselect
+    if (shouldDim && pill.classList.contains('active')) {
+      pill.classList.remove('active');
+      selectedRelationship = '';
+      var el = document.getElementById('relationship'); if(el) el.value = '';
+    }
+  });
+
+  // Also show a nudge if age < 10 is selected
+  var nudge = document.getElementById('ageRelNudge');
+  if (nudge) {
+    nudge.style.display = (ageVal === 'Under 10' || ageVal === '10 to 17') ? 'block' : 'none';
+    nudge.textContent = ageVal === 'Under 10'
+      ? 'Some relationship options are hidden for children under 10.'
+      : 'Some options are hidden for teenagers.';
+  }
 }
 
 function setBudget(val) {
@@ -1845,44 +1894,40 @@ function refineGift() {
   var gift = currentGifts[currentRefineGiftIdx];
   if (!gift) return;
 
-  // Detect budget change request
-  var isBudgetRequest = /budget|expensive|price|cheaper|costly|afford|spend|more money|higher|increase|upgrade/i.test(refineText);
-  if (isBudgetRequest) {
-    // Show budget input in the refine section instead of immediately calling API
-    var section = document.getElementById('modalRefineSection');
-    var existingBudgetRow = document.getElementById('refineBudgetRow');
-    if (!existingBudgetRow) {
-      var budgetRow = document.createElement('div');
-      budgetRow.id = 'refineBudgetRow';
-      budgetRow.style.cssText = 'display:flex;gap:10px;align-items:center;margin-bottom:10px;';
-      budgetRow.innerHTML = '<input type="number" id="refineBudgetInput" placeholder="New max budget (Rs.)" style="flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-size:14px;color:var(--ink);outline:none;">' +
-        '<span style="font-size:13px;color:var(--muted);white-space:nowrap;">Rs. max</span>';
-      section.insertBefore(budgetRow, section.querySelector('button'));
-      document.getElementById('refineBudgetInput').focus();
-      // Update button text
-      document.querySelector('#modalRefineSection button:last-of-type').textContent = 'Apply new budget';
-      return;
-    }
-  }
+  // Budget increase/decrease — auto-adjust 25%, no extra input needed
+  var isBudgetIncreaseRequest = /increase budget|higher budget|more budget|raise budget|bigger budget|more expensive|spend more|higher price|pricier|upgrade/i.test(refineText);
+  var isBudgetDecreaseRequest = /cheaper|less expensive|lower budget|reduce budget|affordable|budget friendly|less money|too expensive/i.test(refineText);
 
-  // Read updated budget if set
-  var refineBudgetInput = document.getElementById('refineBudgetInput');
-  if (refineBudgetInput && refineBudgetInput.value) {
-    lastParams.budgetMax = refineBudgetInput.value;
+  if (isBudgetIncreaseRequest || isBudgetDecreaseRequest) {
+    closeModal();
+    var currentMax = parseInt(lastParams.budgetMax) || 2000;
+    var newMax = isBudgetIncreaseRequest ? Math.round(currentMax * 1.25) : Math.round(currentMax * 0.75);
+    lastParams.budgetMax = newMax;
+    lastParams.budgetMin = isBudgetIncreaseRequest ? currentMax : Math.round(newMax * 0.5);
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loadingText').textContent = isBudgetIncreaseRequest
+      ? 'Finding better options within Rs.' + newMax + '...'
+      : 'Finding more affordable options within Rs.' + newMax + '...';
+    startLoadingTips();
+    var budgetStr = 'Rs.' + lastParams.budgetMin + ' to Rs.' + newMax;
+    var p = lastParams;
+    callAPI(buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, true), p.occasion, p.relationship);
+    return;
   }
 
   closeModal();
-  allSeenGiftNames = allSeenGiftNames.concat(lastGiftNames);
 
   var p = lastParams;
-  var budgetStr = p.budgetMin ? 'Rs.'+p.budgetMin+' to Rs.'+p.budgetMax : 'up to Rs.'+p.budgetMax;
-
-  // Build focused refine prompt
-  var isBalanceRequest = /too many|overpowering|only|just|more variety|other|not just|all cat|all about/i.test(refineText);
-  var balanceInstruction = isBalanceRequest ? ' IMPORTANT: redistribute suggestions equally across ALL details in their description — no single detail should influence more than 1 gift.' : '';
-
+  var budgetStr = p.budgetMin ? 'Rs.' + p.budgetMin + ' to Rs.' + p.budgetMax : 'up to Rs.' + p.budgetMax;
   var refinePrompt = buildPrompt(p.occasion, p.relationship, p.ageRange, budgetStr, p.about || buildAboutFromPills(), allSeenGiftNames, false);
-  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user is refining the gift "' + gift.name + '" (originally ' + gift.price + '). Their feedback: "' + refineText + '".' + balanceInstruction + ' Return ' + currentGifts.length + ' gifts. Include a refined version of the "' + gift.name + '" category that addresses the feedback. Keep other gifts similar unless the feedback suggests otherwise.';
+
+  var isBalanceRequest = /too many|overpowering|only|just|more variety|other|not just|all cat|all about|repetitive|same/i.test(refineText);
+  var balanceInstruction = isBalanceRequest
+    ? ' IMPORTANT: The user feels one aspect of their description is dominating. Redistribute suggestions equally across ALL details — no single detail should influence more than 1 gift.'
+    : '';
+
+  refinePrompt += '\n\nSPECIAL INSTRUCTION: The user is looking at a gift called "' + gift.name + '" and has this feedback: "' + refineText + '". Keep this gift concept but refine it based on the feedback. Include a refined version of "' + gift.name + '" in the results — do not drop this gift entirely.' + balanceInstruction + ' Return a full set of ' + currentGifts.length + ' gifts.';
 
   document.getElementById('results').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
