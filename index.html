@@ -268,13 +268,14 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   #aboutToast.hiding { animation:toastFade 0.3s ease forwards; }
 
   /* Saved people */
-  .saved-people-bar { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:16px; }
-  .saved-people-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:12px; }
+  .saved-people-bar { background:var(--ink); border-radius:16px; padding:20px 20px; margin-bottom:20px; }
+  .saved-people-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:18px; font-style:italic; font-weight:600; color:#F5EDD8; margin-bottom:4px; }
+  .saved-people-sub { font-size:12px; color:#8A7060; margin-bottom:14px; }
   .saved-people-list { display:flex; gap:10px; flex-wrap:wrap; }
-  .saved-person-chip { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; cursor:pointer; transition:all 0.15s; }
-  .saved-person-chip:hover { border-color:var(--saffron); }
-  .saved-person-name { font-size:13px; font-weight:500; color:var(--ink); }
-  .saved-person-rel { font-size:11px; color:var(--muted); }
+  .saved-person-chip { display:flex; align-items:center; gap:8px; padding:10px 16px; background:rgba(255,255,255,0.08); border:1.5px solid rgba(255,255,255,0.12); border-radius:20px; cursor:pointer; transition:all 0.15s; }
+  .saved-person-chip:hover { background:rgba(232,98,26,0.2); border-color:var(--saffron); }
+  .saved-person-name { font-size:14px; font-weight:600; color:#F5EDD8; }
+  .saved-person-rel { font-size:11px; color:#8A7060; margin-top:1px; }
 
   /* Save person prompt in results */
   .save-person-prompt { background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
@@ -352,7 +353,8 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
   <div id="savedPeopleBar" style="display:none;" class="saved-people-bar">
-    <div class="saved-people-title">Gift again for someone saved</div>
+    <div class="saved-people-title">Gift for someone you know?</div>
+    <div class="saved-people-sub">Tap to pre-fill the form</div>
     <div class="saved-people-list" id="savedPeopleList"></div>
   </div>
 
@@ -972,7 +974,7 @@ async function getGifts() {
 
   hideError();
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
-  lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship }; regenerateCount = 0;
+  lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship }; regenerateCount = 0; savePromptShownThisSession = false;
 
   document.getElementById("formCard").style.display = "none";
   document.getElementById("loading").style.display = "block";
@@ -1784,6 +1786,7 @@ function renderSavedPeople() {
   var list = document.getElementById('savedPeopleList');
   if (!bar || !list) return;
   bar.style.display = 'block';
+  var sub = bar.querySelector('.saved-people-sub'); if(sub) sub.style.display = '';
   list.innerHTML = people.map(function(p) {
     return '<div class="saved-person-chip" onclick="prefillFromPerson(\'' + p.id + '\')">' +
       '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
@@ -1900,12 +1903,17 @@ function handleReturnNudge() {
 }
 
 // Show save person prompt in results
+var savePromptShownThisSession = false;
+
 function showSavePersonPrompt() {
   var prompt = document.getElementById('savePersonPrompt');
   if (!prompt) return;
+  // Only show once per gifting session
+  if (savePromptShownThisSession) return;
+  savePromptShownThisSession = true;
   // Reset state
   document.getElementById('savePersonName').style.display = '';
-  document.querySelector('.save-person-btn').style.display = '';
+  var spb = document.querySelector('.save-person-btn'); if(spb) spb.style.display = '';
   document.getElementById('savePersonDone').style.display = 'none';
   document.getElementById('calendarPrompt').style.display = 'none';
   document.getElementById('calendarSaved').style.display = 'none';
