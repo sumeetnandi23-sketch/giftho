@@ -353,7 +353,10 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
   <div id="savedPeopleBar" style="display:none;" class="saved-people-bar">
-    <div class="saved-people-title">Gift for someone you know?</div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+      <div class="saved-people-title">Gift for someone you know?</div>
+      <button onclick="document.getElementById('savedPeopleBar').style.display='none';" style="background:none;border:none;color:#8A7060;font-size:20px;cursor:pointer;line-height:1;padding:0;margin-left:12px;flex-shrink:0;">&#215;</button>
+    </div>
     <div class="saved-people-sub">Tap to pre-fill the form</div>
     <div class="saved-people-list" id="savedPeopleList"></div>
   </div>
@@ -840,11 +843,16 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
   var contextLine = contextStr ? "- About the person: " + contextStr + "\n" : "";
 
   var isProfessional = relationship === "Boss" || relationship === "Colleague" || relationship === "Acquaintance" || relationship === "Someone I just met";
+  var isBabyContext = occasion === "Baby Shower" || /newborn|new born|baby|infant/i.test(about);
+  if (isBabyContext) isProfessional = false;
+  var isThirdPartyContext = /their (wife|husband|partner|mother|father|mom|dad|pet|dog|cat|sister|brother)|his (wife|mother|father|mom|dad)|her (husband|father|mother|dad|mom)/i.test(about);
   var modeInstruction = (contextStr.length > 0)
     ? "Give between 5 and 7 gift recommendations personalised for this person. Use your judgment — return more only if you have genuinely great options."
     : "Give between 5 and 7 gift recommendations that are universally well-received in India for this occasion. Do NOT suggest anything tied to festivals that have already passed this year.";
 
-  var typeInstruction = isProfessional
+  var typeInstruction = isBabyContext
+    ? "ONLY suggest buy or make gifts suitable for a newborn baby or new parents. NO experiences. Minimum 5 buy gifts. Make gifts only if genuinely practical for a newborn."
+    : isProfessional
     ? "Use only buy and experience types. No make/DIY gifts for professional relationships. Minimum 2 buy, maximum 1 experience."
     : knowThemWell
     ? "Mix buy, make, and experience types based on what fits best. Minimum 2 buy. Make only if you have a genuinely great DIY idea. Experience if they seem like someone who values experiences over things (trekking, spa, concerts, cooking classes, weekend getaways). Maximum 2 experience."
@@ -1711,7 +1719,7 @@ function openAboutDialog() {
   t.style.display = 'block';
   t.classList.remove('hiding');
   if (aboutToastTimer) clearTimeout(aboutToastTimer);
-  aboutToastTimer = setTimeout(closeAboutToast, 5000);
+  aboutToastTimer = setTimeout(closeAboutToast, 30000);
 }
 function scrollToEdit() {
   var bar = document.getElementById('editBar');
