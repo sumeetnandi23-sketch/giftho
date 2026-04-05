@@ -68,7 +68,8 @@ header { text-align:center; padding:44px 0 10px; background:var(--bg); }
 .tagline { font-size:13px; color:var(--muted); font-style:italic; font-family:'Cormorant Garamond',serif; }
 .divider { width:40px; height:2px; background:var(--saffron); margin:20px auto; border-radius:2px; }
 
-.why-strip { background:#FFF0E4; border:1.5px solid rgba(232,98,26,0.25); border-radius:16px; padding:16px 20px; margin-bottom:20px; display:flex; gap:14px; align-items:flex-start; }
+.why-strip { background:#FFF0E4; border:1.5px solid rgba(232,98,26,0.25); border-radius:16px; padding:16px 20px; margin-bottom:20px; display:flex; gap:14px; align-items:flex-start; animation:whyFadeOut 0.5s ease 5s forwards; }
+  @keyframes whyFadeOut { from{opacity:1;max-height:200px;margin-bottom:20px;padding:16px 20px;} to{opacity:0;max-height:0;margin-bottom:0;padding:0;overflow:hidden;} }
 .why-icon { font-size:16px; flex-shrink:0; margin-top:3px; color:var(--saffron); }
 .why-text { font-size:13px; line-height:1.7; color:var(--ink); }
 .why-text strong { font-weight:600; font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; }
@@ -299,13 +300,565 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   .return-nudge { background:var(--ink); color:#F5EDD8; border-radius:14px; padding:16px 18px; margin-bottom:16px; cursor:pointer; }
   .return-nudge-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; font-weight:600; margin-bottom:4px; }
   .return-nudge-sub { font-size:12px; color:#C8B49A; }
+
+  /* Tab navigation */
+  .tab-nav { display:flex; background:var(--card); border-bottom:1.5px solid var(--border); position:sticky; top:0; z-index:100; }
+  .tab-btn { flex:1; padding:14px 8px; background:none; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:500; color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.2s; }
+  .tab-btn.active { color:var(--saffron); border-bottom-color:var(--saffron); font-weight:600; }
+
+  /* Tab panels */
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* My People grid */
+  .people-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; }
+  .person-card { background:var(--card); border:1.5px solid var(--border); border-radius:16px; padding:16px; cursor:pointer; transition:all 0.15s; position:relative; }
+  .person-card:hover { border-color:var(--saffron); transform:translateY(-2px); box-shadow:0 4px 0 var(--border); }
+  .person-card-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:20px; font-weight:600; font-style:italic; color:var(--ink); margin-bottom:2px; }
+  .person-card-rel { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px; }
+  .person-card-detail { font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:10px; }
+  .person-card-nudge { font-size:11px; font-weight:600; color:var(--saffron); background:var(--saff-light); border-radius:6px; padding:4px 8px; display:inline-block; margin-bottom:10px; }
+  .person-card-nudge.forest { color:var(--forest); background:var(--forest-light); }
+  .person-card-gift-btn { width:100%; padding:9px; background:var(--ink); color:white; border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:background 0.15s; }
+  .person-card-gift-btn:hover { background:#2E1E0A; }
+  .person-card-delete { position:absolute; top:10px; right:10px; background:none; border:none; color:var(--border); font-size:16px; cursor:pointer; padding:2px 6px; border-radius:4px; transition:color 0.15s; }
+  .person-card-delete:hover { color:#C0402A; }
+
+  /* Empty state */
+  .people-empty { text-align:center; padding:52px 24px; }
+  .people-empty-icon { font-size:40px; margin-bottom:16px; }
+  .people-empty-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:22px; font-style:italic; font-weight:600; color:var(--ink); margin-bottom:8px; }
+  .people-empty-sub { font-size:13px; color:var(--muted); line-height:1.7; }
+
+  /* Budget slider */
+  .budget-slider-wrap { margin-top:12px; }
+  .budget-slider-labels { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .budget-slider-value { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; font-weight:600; color:var(--ink); text-align:center; margin-bottom:8px; }
+  input[type=range].budget-range { width:100%; height:4px; -webkit-appearance:none; appearance:none; background:var(--border); border-radius:2px; outline:none; }
+  input[type=range].budget-range::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--ink); cursor:pointer; border:3px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.15); }
+  input[type=range].budget-range::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:var(--ink); cursor:pointer; border:3px solid white; }
+
+  /* Flexibility slider */
+  .flex-slider-wrap { margin-top:4px; }
+  .flex-slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:8px; }
+  .flex-slider-label-active { color:var(--saffron); font-weight:600; }
+  input[type=range].flex-range { width:100%; height:4px; -webkit-appearance:none; appearance:none; background:linear-gradient(to right, var(--saffron) 0%, var(--saffron) 50%, var(--border) 50%, var(--border) 100%); border-radius:2px; outline:none; }
+  input[type=range].flex-range::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--saffron); cursor:pointer; border:3px solid white; box-shadow:0 2px 6px rgba(232,98,26,0.3); }
+  input[type=range].flex-range::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:var(--saffron); cursor:pointer; border:3px solid white; }
+
+  /* 2-column gift grid for non-hero cards */
+  .gift-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:0; }
+  .gift-grid .gift-card { margin-bottom:0; border-radius:14px; padding:16px 14px; }
+  .gift-grid .gift-name { font-size:16px; }
+  .gift-grid .gift-price { font-size:13px; }
+  .gift-grid .gift-why { font-size:13px; line-height:1.6; margin-bottom:8px;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .gift-grid .gift-tap-hint { font-size:11px; }
+  .gift-grid .card-type-header { margin-bottom:10px; padding-bottom:10px; }
+  @media(max-width:360px) { .gift-grid { grid-template-columns:1fr; } }
 </style>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE7D7QRQ7L"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE7D7QRQ7L">
+function switchTab(tab) {
+  var isFind = tab === 'find';
+  document.getElementById('tabFind').className = 'tab-btn' + (isFind ? ' active' : '');
+  document.getElementById('tabPeople').className = 'tab-btn' + (!isFind ? ' active' : '');
+  document.getElementById('panelFind').className = 'tab-panel' + (isFind ? ' active' : '');
+  document.getElementById('panelPeople').className = 'tab-panel' + (!isFind ? ' active' : '');
+  if (!isFind) renderPeopleTab();
+  trackEvent('tab_switch', { tab: tab });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPeopleTab() {
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  var empty = document.getElementById('peopleEmpty');
+  if (!grid) return;
+
+  if (people.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  var calendar = getCalendar();
+  var now = new Date();
+
+  
+}
+
+function giftForPerson(id) {
+  switchTab('find');
+  setTimeout(function() { prefillFromPerson(id); }, 100);
+}
+
+function deletePerson(id) {
+  var people = getSavedPeople().filter(function(p) { return p.id !== id; });
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('delete_person');
+}
+
+// ── BUDGET SLIDER ──────────────────────────────────────────────────────
+var flexLevel = 1; // 0=strict, 1=balanced, 2=explore
+
+function onBudgetSlider(val) {
+  val = parseInt(val);
+  var formatted = val >= 1000 ? 'Rs. ' + (val/1000).toFixed(val%1000===0?0:1) + ',000' : 'Rs. ' + val;
+  var display = val >= 1000 ? 'Rs. ' + val.toLocaleString('en-IN') : 'Rs. ' + val;
+  var el = document.getElementById('budgetSliderValue');
+  if (el) el.textContent = display;
+  // Sync to budgetMax input
+  var bmax = document.getElementById('budgetMax');
+  if (bmax) bmax.value = val;
+  var bmin = document.getElementById('budgetMin');
+  if (bmin) bmin.value = '';
+  clearBudgetChips();
+  // Highlight closest chip
+  var closest = [500,1000,2000,5000,10000].reduce(function(a,b) { return Math.abs(b-val) < Math.abs(a-val) ? b : a; });
+  if (Math.abs(closest-val) < 200) {
+    document.querySelectorAll('.budget-chip').forEach(function(c) {
+      c.className = 'budget-chip' + (parseInt(c.getAttribute('data-val'))===closest ? ' active' : '');
+    });
+  }
+}
+
+// Sync chips/inputs to slider
+var origSetBudget = setBudget;
+setBudget = function(val) {
+  origSetBudget(val);
+  var slider = document.getElementById('budgetSlider');
+  if (slider) { slider.value = val; onBudgetSlider(val); }
+};
+
+// ── FLEXIBILITY SLIDER ────────────────────────────────────────────────
+function onFlexSlider(val) {
+  flexLevel = parseInt(val);
+  var labels = ['flexLabel0','flexLabel1','flexLabel2'];
+  labels.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.className = i === flexLevel ? 'flex-slider-label-active' : '';
+  });
+  // Update gradient
+  var slider = document.getElementById('flexSlider');
+  if (slider) {
+    var pct = (flexLevel / 2) * 100;
+    slider.style.background = 'linear-gradient(to right, var(--saffron) 0%, var(--saffron) ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
+  }
+}
+
+// Add flexibility instruction to prompt based on flexLevel
+var origBuildPrompt = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (flexLevel === 0) {
+    prompt += '\n\nFLEXIBILITY: Stick strictly to the inputs. Only suggest gifts that directly match the described interests and occasion. No creative liberties.';
+  } else if (flexLevel === 2) {
+    prompt += '\n\nFLEXIBILITY: Feel free to explore and be creative. Go beyond the literal inputs — suggest unexpected, delightful gifts that fit the spirit of what was described, not just the letter.';
+  }
+  return prompt;
+};
+
+// Reset flex slider on reset
+var origReset = reset;
+reset = function() {
+  origReset();
+  flexLevel = 1;
+  var slider = document.getElementById('flexSlider');
+  if (slider) { slider.value = 1; onFlexSlider(1); }
+};
+
+// ── ADD PERSON MANUALLY ───────────────────────────────────────────────
+function openAddPersonSheet() {
+  document.getElementById('addPersonOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('addPersonName').value = '';
+  document.getElementById('addPersonRel').value = '';
+  document.getElementById('addPersonGender').value = '';
+  document.getElementById('addPersonAge').value = '';
+  document.getElementById('addPersonBudget').value = '';
+  document.getElementById('addPersonError').style.display = 'none';
+  setTimeout(function() { document.getElementById('addPersonName').focus(); }, 300);
+}
+
+function closeAddPersonSheet(e) {
+  if (e && e.target && e.target.id !== 'addPersonOverlay') return;
+  document.getElementById('addPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveNewPerson() {
+  var name = document.getElementById('addPersonName').value.trim();
+  var rel  = document.getElementById('addPersonRel').value.trim();
+  if (!name) { showAddPersonError('Please enter their name.'); return; }
+  if (!rel)  { showAddPersonError('Please enter your relationship.'); return; }
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: rel,
+    gender: document.getElementById('addPersonGender').value,
+    ageRange: document.getElementById('addPersonAge').value,
+    budgetMax: document.getElementById('addPersonBudget').value,
+    selectedPills: { interests:[], vibe:[], context:[] },
+    about: '',
+    giftLog: [],
+    savedAt: new Date().toISOString()
+  };
+  var people = getSavedPeople();
+  // Replace if exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase()===name.toLowerCase() && p.relationship===rel; });
+  if (idx >= 0) people[idx] = Object.assign(people[idx], person);
+  else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  closeAddPersonSheet();
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('add_person_manual');
+}
+
+function showAddPersonError(msg) {
+  var el = document.getElementById('addPersonError');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+// ── GIFT LOG ──────────────────────────────────────────────────────────
+function getGiftLog(personId) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === personId; });
+  return person && person.giftLog ? person.giftLog : [];
+}
+
+function logGiftForPerson(personId, giftName, occasion) {
+  var people = getSavedPeople();
+  var idx = people.findIndex(function(p) { return p.id === personId; });
+  if (idx < 0) return;
+  if (!people[idx].giftLog) people[idx].giftLog = [];
+  people[idx].giftLog.unshift({
+    gift: giftName,
+    occasion: occasion || currentContext.occasion || '',
+    date: new Date().toLocaleDateString('en-IN', { month:'short', year:'numeric' })
+  });
+  // Keep last 10
+  people[idx].giftLog = people[idx].giftLog.slice(0, 10);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  trackEvent('gift_logged', { person_id: personId });
+}
+
+function buildGiftLogHTML(person) {
+  if (!person.giftLog || person.giftLog.length === 0) return '';
+  var last3 = person.giftLog.slice(0, 3);
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">' +
+    '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">Previously gifted</div>' +
+    last3.map(function(entry) {
+      return '<div style="font-size:12px;color:var(--ink);margin-bottom:3px;">' +
+        sanitise(entry.gift) + '<span style="color:var(--muted);"> · ' + sanitise(entry.occasion) + ' ' + sanitise(entry.date) + '</span></div>';
+    }).join('') + '</div>';
+}
+
+// Inject gift log into person cards and pass history to prompt
+var origRenderPeopleTab = renderPeopleTab;
+renderPeopleTab = function() {
+  origRenderPeopleTab();
+  // After rendering, inject gift logs into cards
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  if (!grid) return;
+  var cards = grid.querySelectorAll ? grid.querySelectorAll('.person-card') : [];
+  people.forEach(function(p, i) {
+    if (p.giftLog && p.giftLog.length > 0 && cards[i]) {
+      var logDiv = document.createElement('div');
+      logDiv.innerHTML = buildGiftLogHTML(p);
+      var giftBtn = cards[i].querySelector ? cards[i].querySelector('.person-card-gift-btn') : null;
+      if (giftBtn && cards[i]) cards[i].insertBefore(logDiv.firstChild, giftBtn);
+    }
+  });
+};
+
+// Add gift history to prompt when gifting for a saved person
+var activeSavedPersonId = null;
+
+var origPrefillFromPerson = prefillFromPerson;
+prefillFromPerson = function(id) {
+  activeSavedPersonId = id;
+  origPrefillFromPerson(id);
+};
+
+var origBuildPrompt2 = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt2(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (activeSavedPersonId) {
+    var log = getGiftLog(activeSavedPersonId);
+    if (log.length > 0) {
+      var previousGifts = log.map(function(e) { return e.gift + ' (' + e.occasion + ' ' + e.date + ')'; }).join(', ');
+      prompt += '\n\nPREVIOUSLY GIFTED TO THIS PERSON: ' + previousGifts + '. Do NOT suggest these gifts or anything too similar. Give something fresh and different.';
+    }
+  }
+  return prompt;
+};
+
+// Reset activeSavedPersonId on new search
+var origGetGifts = getGifts;
+getGifts = async function() {
+  // Reset only if not coming from prefill
+  await origGetGifts.apply(this, arguments);
+};
+
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-ZE7D7QRQ7L');
+
+function switchTab(tab) {
+  var isFind = tab === 'find';
+  document.getElementById('tabFind').className = 'tab-btn' + (isFind ? ' active' : '');
+  document.getElementById('tabPeople').className = 'tab-btn' + (!isFind ? ' active' : '');
+  document.getElementById('panelFind').className = 'tab-panel' + (isFind ? ' active' : '');
+  document.getElementById('panelPeople').className = 'tab-panel' + (!isFind ? ' active' : '');
+  if (!isFind) renderPeopleTab();
+  trackEvent('tab_switch', { tab: tab });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPeopleTab() {
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  var empty = document.getElementById('peopleEmpty');
+  if (!grid) return;
+
+  if (people.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  var calendar = getCalendar();
+  var now = new Date();
+
+  
+}
+
+function giftForPerson(id) {
+  switchTab('find');
+  setTimeout(function() { prefillFromPerson(id); }, 100);
+}
+
+function deletePerson(id) {
+  var people = getSavedPeople().filter(function(p) { return p.id !== id; });
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('delete_person');
+}
+
+// ── BUDGET SLIDER ──────────────────────────────────────────────────────
+var flexLevel = 1; // 0=strict, 1=balanced, 2=explore
+
+function onBudgetSlider(val) {
+  val = parseInt(val);
+  var formatted = val >= 1000 ? 'Rs. ' + (val/1000).toFixed(val%1000===0?0:1) + ',000' : 'Rs. ' + val;
+  var display = val >= 1000 ? 'Rs. ' + val.toLocaleString('en-IN') : 'Rs. ' + val;
+  var el = document.getElementById('budgetSliderValue');
+  if (el) el.textContent = display;
+  // Sync to budgetMax input
+  var bmax = document.getElementById('budgetMax');
+  if (bmax) bmax.value = val;
+  var bmin = document.getElementById('budgetMin');
+  if (bmin) bmin.value = '';
+  clearBudgetChips();
+  // Highlight closest chip
+  var closest = [500,1000,2000,5000,10000].reduce(function(a,b) { return Math.abs(b-val) < Math.abs(a-val) ? b : a; });
+  if (Math.abs(closest-val) < 200) {
+    document.querySelectorAll('.budget-chip').forEach(function(c) {
+      c.className = 'budget-chip' + (parseInt(c.getAttribute('data-val'))===closest ? ' active' : '');
+    });
+  }
+}
+
+// Sync chips/inputs to slider
+var origSetBudget = setBudget;
+setBudget = function(val) {
+  origSetBudget(val);
+  var slider = document.getElementById('budgetSlider');
+  if (slider) { slider.value = val; onBudgetSlider(val); }
+};
+
+// ── FLEXIBILITY SLIDER ────────────────────────────────────────────────
+function onFlexSlider(val) {
+  flexLevel = parseInt(val);
+  var labels = ['flexLabel0','flexLabel1','flexLabel2'];
+  labels.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.className = i === flexLevel ? 'flex-slider-label-active' : '';
+  });
+  // Update gradient
+  var slider = document.getElementById('flexSlider');
+  if (slider) {
+    var pct = (flexLevel / 2) * 100;
+    slider.style.background = 'linear-gradient(to right, var(--saffron) 0%, var(--saffron) ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
+  }
+}
+
+// Add flexibility instruction to prompt based on flexLevel
+var origBuildPrompt = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (flexLevel === 0) {
+    prompt += '\n\nFLEXIBILITY: Stick strictly to the inputs. Only suggest gifts that directly match the described interests and occasion. No creative liberties.';
+  } else if (flexLevel === 2) {
+    prompt += '\n\nFLEXIBILITY: Feel free to explore and be creative. Go beyond the literal inputs — suggest unexpected, delightful gifts that fit the spirit of what was described, not just the letter.';
+  }
+  return prompt;
+};
+
+// Reset flex slider on reset
+var origReset = reset;
+reset = function() {
+  origReset();
+  flexLevel = 1;
+  var slider = document.getElementById('flexSlider');
+  if (slider) { slider.value = 1; onFlexSlider(1); }
+};
+
+// ── ADD PERSON MANUALLY ───────────────────────────────────────────────
+function openAddPersonSheet() {
+  document.getElementById('addPersonOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('addPersonName').value = '';
+  document.getElementById('addPersonRel').value = '';
+  document.getElementById('addPersonGender').value = '';
+  document.getElementById('addPersonAge').value = '';
+  document.getElementById('addPersonBudget').value = '';
+  document.getElementById('addPersonError').style.display = 'none';
+  setTimeout(function() { document.getElementById('addPersonName').focus(); }, 300);
+}
+
+function closeAddPersonSheet(e) {
+  if (e && e.target && e.target.id !== 'addPersonOverlay') return;
+  document.getElementById('addPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveNewPerson() {
+  var name = document.getElementById('addPersonName').value.trim();
+  var rel  = document.getElementById('addPersonRel').value.trim();
+  if (!name) { showAddPersonError('Please enter their name.'); return; }
+  if (!rel)  { showAddPersonError('Please enter your relationship.'); return; }
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: rel,
+    gender: document.getElementById('addPersonGender').value,
+    ageRange: document.getElementById('addPersonAge').value,
+    budgetMax: document.getElementById('addPersonBudget').value,
+    selectedPills: { interests:[], vibe:[], context:[] },
+    about: '',
+    giftLog: [],
+    savedAt: new Date().toISOString()
+  };
+  var people = getSavedPeople();
+  // Replace if exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase()===name.toLowerCase() && p.relationship===rel; });
+  if (idx >= 0) people[idx] = Object.assign(people[idx], person);
+  else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  closeAddPersonSheet();
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('add_person_manual');
+}
+
+function showAddPersonError(msg) {
+  var el = document.getElementById('addPersonError');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+// ── GIFT LOG ──────────────────────────────────────────────────────────
+function getGiftLog(personId) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === personId; });
+  return person && person.giftLog ? person.giftLog : [];
+}
+
+function logGiftForPerson(personId, giftName, occasion) {
+  var people = getSavedPeople();
+  var idx = people.findIndex(function(p) { return p.id === personId; });
+  if (idx < 0) return;
+  if (!people[idx].giftLog) people[idx].giftLog = [];
+  people[idx].giftLog.unshift({
+    gift: giftName,
+    occasion: occasion || currentContext.occasion || '',
+    date: new Date().toLocaleDateString('en-IN', { month:'short', year:'numeric' })
+  });
+  // Keep last 10
+  people[idx].giftLog = people[idx].giftLog.slice(0, 10);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  trackEvent('gift_logged', { person_id: personId });
+}
+
+function buildGiftLogHTML(person) {
+  if (!person.giftLog || person.giftLog.length === 0) return '';
+  var last3 = person.giftLog.slice(0, 3);
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">' +
+    '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">Previously gifted</div>' +
+    last3.map(function(entry) {
+      return '<div style="font-size:12px;color:var(--ink);margin-bottom:3px;">' +
+        sanitise(entry.gift) + '<span style="color:var(--muted);"> · ' + sanitise(entry.occasion) + ' ' + sanitise(entry.date) + '</span></div>';
+    }).join('') + '</div>';
+}
+
+// Inject gift log into person cards and pass history to prompt
+var origRenderPeopleTab = renderPeopleTab;
+renderPeopleTab = function() {
+  origRenderPeopleTab();
+  // After rendering, inject gift logs into cards
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  if (!grid) return;
+  var cards = grid.querySelectorAll ? grid.querySelectorAll('.person-card') : [];
+  people.forEach(function(p, i) {
+    if (p.giftLog && p.giftLog.length > 0 && cards[i]) {
+      var logDiv = document.createElement('div');
+      logDiv.innerHTML = buildGiftLogHTML(p);
+      var giftBtn = cards[i].querySelector ? cards[i].querySelector('.person-card-gift-btn') : null;
+      if (giftBtn && cards[i]) cards[i].insertBefore(logDiv.firstChild, giftBtn);
+    }
+  });
+};
+
+// Add gift history to prompt when gifting for a saved person
+var activeSavedPersonId = null;
+
+var origPrefillFromPerson = prefillFromPerson;
+prefillFromPerson = function(id) {
+  activeSavedPersonId = id;
+  origPrefillFromPerson(id);
+};
+
+var origBuildPrompt2 = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt2(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (activeSavedPersonId) {
+    var log = getGiftLog(activeSavedPersonId);
+    if (log.length > 0) {
+      var previousGifts = log.map(function(e) { return e.gift + ' (' + e.occasion + ' ' + e.date + ')'; }).join(', ');
+      prompt += '\n\nPREVIOUSLY GIFTED TO THIS PERSON: ' + previousGifts + '. Do NOT suggest these gifts or anything too similar. Give something fresh and different.';
+    }
+  }
+  return prompt;
+};
+
+// Reset activeSavedPersonId on new search
+var origGetGifts = getGifts;
+getGifts = async function() {
+  // Reset only if not coming from prefill
+  await origGetGifts.apply(this, arguments);
+};
+
 </script>
 </head>
 <body style="background:#FAFAF8;">
@@ -348,6 +901,15 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     <div class="why-icon">✦</div>
     <div class="why-text"><strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.</div>
   </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" id="tabFind" onclick="switchTab('find')">🎁 Find a Gift</button>
+    <button class="tab-btn" id="tabPeople" onclick="switchTab('people')">👤 My People</button>
+  </div>
+
+  <!-- Tab Panel: Find a Gift -->
+  <div class="tab-panel active" id="panelFind">
 
   <div id="savedBanner" class="saved-banner" onclick="loadSaved()">You have a saved gift list — tap to view</div>
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
@@ -466,6 +1028,10 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
           <input type="number" id="budgetMin" placeholder="Min (optional)" min="0" oninput="clearBudgetChips()">
           <input type="number" id="budgetMax" placeholder="Max" min="0" oninput="clearBudgetChips()">
         </div>
+      <div class="budget-slider-wrap">
+        <div class="budget-slider-value" id="budgetSliderValue">Rs. 2,000</div>
+        <input type="range" class="budget-range" id="budgetSlider" min="500" max="25000" step="500" value="2000" oninput="onBudgetSlider(this.value)">
+        <div class="budget-slider-labels"><span>Rs. 500</span><span>Rs. 25,000</span></div>
       </div>
 
       <div class="error" id="errorBox2"></div>
@@ -508,7 +1074,19 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
             <div class="q-label">Anything else about them? <span class="q-optional">optional</span></div>
             <textarea id="qFreeText" placeholder="e.g. recently got promoted, obsessed with K-dramas — the more specific the better" style="height:72px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;width:100%;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;resize:none;line-height:1.5;"></textarea>
           </div>
-          <div class="q-footer"><button class="q-skip" onclick="closeQuestionnaire()">Skip</button><button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button></div>
+          <div class="q-footer" style="justify-content:flex-end;"><button class="q-done-btn" onclick="closeQuestionnaire()">Done &#10003;</button></div>
+        </div>
+      </div>
+
+      <div class="conv-field">
+        <div class="conv-label">How should we interpret your inputs?</div>
+        <div class="flex-slider-wrap">
+          <input type="range" class="flex-range" id="flexSlider" min="0" max="2" step="1" value="1" oninput="onFlexSlider(this.value)">
+          <div class="flex-slider-labels">
+            <span id="flexLabel0">Stick to inputs</span>
+            <span id="flexLabel1" class="flex-slider-label-active">Balanced</span>
+            <span id="flexLabel2">Open to explore</span>
+          </div>
         </div>
       </div>
 
@@ -579,7 +1157,22 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     </div>
   </div>
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.32</footer>
+  </div><!-- end panelFind -->
+
+  <!-- Tab Panel: My People -->
+  <div class="tab-panel" id="panelPeople">
+    <div id="peopleGrid" class="people-grid"></div>
+    <div style="text-align:right;margin-bottom:12px;">
+      <button onclick="openAddPersonSheet()" style="padding:10px 18px;background:var(--ink);color:white;border:none;border-radius:20px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">+ Add person</button>
+    </div>
+    <div id="peopleEmpty" class="people-empty" style="display:none;">
+      <div class="people-empty-icon">✦</div>
+      <div class="people-empty-title">No one saved yet</div>
+      <div class="people-empty-sub">Add someone with the button above, or save them after a gift search.</div>
+    </div>
+  </div><!-- end panelPeople -->
+
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.33</footer>
 </div>
 
 <div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
@@ -609,6 +1202,7 @@ function dismissSplash() {
   if (!splash || splash.style.display === 'none') return;
   clearTimeout(splashTimer);
   splash.classList.add('fade-out');
+  trackEvent('splash_dismissed');
   setTimeout(function() {
     splash.style.display = 'none';
     document.body.style.background = '#FAFAF8';
@@ -678,6 +1272,12 @@ document.addEventListener('visibilitychange', function() {
   }
 });
 
+
+function trackEvent(name, params) {
+  try {
+    if (typeof gtag === 'function') gtag('event', name, params || {});
+  } catch(e) {}
+}
 window.onload = function() {
   initSplash();
   if (localStorage.getItem("giftho_saved")) {
@@ -858,7 +1458,7 @@ function buildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNa
     ? "Mix buy, make, and experience types based on what fits best. Minimum 2 buy. Make only if you have a genuinely great DIY idea. Experience if they seem like someone who values experiences over things (trekking, spa, concerts, cooking classes, weekend getaways). Maximum 2 experience."
     : "Mostly buy gifts. You may include 1 experience if clearly relevant. No make/DIY for people the gifter doesn't know well. Minimum 3 buy.";
 
-  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: ABSOLUTE BAN — never suggest stainless steel under any circumstances, for any relationship, any occasion, any budget. Also ban basic plastic and commodity bulk materials. This rule has zero exceptions.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. NAMING: Gift names and descriptions must be clean — no social media references anywhere. Never use words like Instagram, YouTube, viral, trending on social, reel-worthy, or any platform name in gift names or why descriptions.\n7. AGE RULES: Use the recipient's age to filter appropriate gifts:\n- Under 10: ONLY buy or make gifts. NO experiences (treks, spa, concerts, cooking classes). NO coffee, alcohol, or adult themes. Gifts must be toys, books, art supplies, games, clothing, or similar child-appropriate items.\n- 10 to 17: Experiences allowed but must be age-appropriate (art class, sports, movies). NO alcohol, NO extreme adventure sports, NO nightlife.\n- 18 to 25: All types allowed.\n- 26 to 35: All types allowed.\n- 36 to 50: All types allowed, lean practical and premium.\n- 50 plus: All types allowed. Avoid gaming, extreme sports, very trendy items. Lean warm, practical, experiential.\n8. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partners Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
+  return "You are Giftho, a gifting expert who deeply understands Indian culture and social norms.\n\nGift needed for:\n- Occasion: " + occasion + "\n- Relationship: " + relationship + ageStr + genderStr + "\n- Budget: " + budgetStr + "\n" + contextLine + "- Current date: " + monthYear + "\n\n" + modeInstruction + "\n\nGIFT TYPE INSTRUCTIONS:\n" + typeInstruction + "\n\nFor each gift, decide the type:\n- buy = a product purchasable online in India. The model must provide the actual search URL for this product on the suggested platform.\n- make = a DIY idea achievable in 1-2 hours. Include difficulty (Easy/Medium/Hard) and time estimate.\n- experience = a bookable experience (trek, spa, cooking class, concert, weekend getaway, restaurant voucher). Suggest the booking platform and provide its search URL.\n\nCRITICAL RULES:\n1. GIFT TYPE: Suggest gift categories and types, never specific named products that may not exist. Good: 'A premium leather journal'. Bad: 'The Moleskine Pro Edition 2024'.\n2. BUDGET: Every gift must be priced within the stated budget range. This is non-negotiable.\n3. MATERIAL: ABSOLUTE BAN — never suggest stainless steel under any circumstances, for any relationship, any occasion, any budget. Also ban basic plastic and commodity bulk materials. This rule has zero exceptions.\n4. VARIETY: Maximum 2 of the results may relate to the same interest/vibe. Other results must be from different categories.\n5. PLATFORM URLS: For each buy/experience platform, provide the actual working search URL for that specific gift on that platform. Format: https://www.amazon.in/s?k=gift+name or https://www.thrillophilia.com/search?q=activity. Never make up URLs — if unsure of a platform's search URL format, use Google Shopping: https://www.google.com/search?tbm=shop&q=gift+name+platform+name\n6. RECIPIENT CLARITY: The gift is ALWAYS for the person described by the Relationship field — not for anyone mentioned in the about-them text. Details like they have a newborn, their wife loves cooking, their dog is sick — these are context clues, not the gift target. Never suggest gifts for a third party.\n7. NAMING: Gift names and descriptions must be clean — no social media references anywhere. Never use words like Instagram, YouTube, viral, trending on social, reel-worthy, or any platform name in gift names or why descriptions.\n7. AGE RULES: Use the recipient's age to filter appropriate gifts:\n- Under 10: ONLY buy or make gifts. NO experiences (treks, spa, concerts, cooking classes). NO coffee, alcohol, or adult themes. Gifts must be toys, books, art supplies, games, clothing, or similar child-appropriate items.\n- 10 to 17: Experiences allowed but must be age-appropriate (art class, sports, movies). NO alcohol, NO extreme adventure sports, NO nightlife.\n- 18 to 25: All types allowed.\n- 26 to 35: All types allowed.\n- 36 to 50: All types allowed, lean practical and premium.\n- 50 plus: All types allowed. Avoid gaming, extreme sports, very trendy items. Lean warm, practical, experiential.\n8. SOCIAL RULES:\n- Boss/Senior: professional only — stationery, coffee, desk items, books, food hampers. NEVER kitchen, home, clothing, personal.\n- Colleague: friendly not intimate — snacks, plants, candles, stationery. NEVER kitchen, clothing, personal.\n- Acquaintance/Just met: universally safe — food, candles, plants, tasteful decor. NEVER clothing, kitchen, personal care.\n- Partners Parent: respectful — dry fruits, sweets, home decor, plants. NEVER casual or too personal.\n- Partner: anything goes, personal and experiences are better.\n- Parent: warm and practical. Avoid overly trendy.\n- Close Friend/Sibling: personal and specific wins.\n- Flatmate: casual and practical.\n" + avoidStr + regenStr + "\n\nRespond ONLY with a raw JSON array:\n[{\"name\":\"Gift category\",\"type\":\"buy\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Amazon India\",\"url\":\"https://www.amazon.in/s?k=gift+name\"}]},{\"name\":\"DIY idea\",\"type\":\"make\",\"price\":\"Rs.X materials\",\"difficulty\":\"Easy\",\"time\":\"45 mins\",\"why\":\"Why this works.\",\"where\":[]},{\"name\":\"Experience\",\"type\":\"experience\",\"price\":\"Rs.X\",\"why\":\"Why this works.\",\"where\":[{\"name\":\"Thrillophilia\",\"url\":\"https://www.thrillophilia.com/search?q=activity\"}]}]";
 }
 
 function speedometerSVG(difficulty) {
@@ -984,6 +1584,7 @@ async function getGifts() {
   }
 
   hideError();
+  trackEvent('form_submitted', { occasion: occasion, relationship: relationship, budget: budgetMax });
   lastParams = { occasion: occasion, relationship: relationship, ageRange: ageRange, budgetMin: budgetMin, budgetMax: budgetMax, about: about, knowThemWell: knowThemWell };
   lastGiftNames = []; allSeenGiftNames = []; currentContext = { occasion: occasion, relationship: relationship }; regenerateCount = 0; savePromptShownThisSession = false;
 
@@ -1212,6 +1813,14 @@ function showResults(gifts, occasion, relationship, fromSave) {
     card.className = "gift-card " + type + (i === 0 ? " top-pick" : "");
     card.style.animationDelay = (i * 0.08) + "s";
     card.setAttribute("data-gift-index", i);
+    // After hero card, inject scroll hint
+    if (i === 0) {
+      var peekHint = document.createElement('div');
+      peekHint.id = 'scrollHint';
+      peekHint.style.cssText = 'text-align:center;padding:8px 0 4px;font-size:12px;color:var(--muted);letter-spacing:0.5px;font-weight:500;';
+      peekHint.innerHTML = (gifts.length - 1) + ' more ideas below &darr;';
+      list.appendChild(peekHint);
+    }
     (function(idx) {
       var startY = 0, tapped = false;
       card.addEventListener('touchstart', function(e) {
@@ -1274,6 +1883,7 @@ function openModal(idx) {
   var gift = currentGifts[idx];
   if (!gift) return;
   currentRefineGiftIdx = idx;
+  trackEvent('gift_tapped', { gift_name: gift.name, gift_type: gift.type, position: idx });
   // Reset refine section
   var rs = document.getElementById('modalRefineSection'); if(rs) rs.style.display='none';
   var rt = document.getElementById('modalRefineToggle'); if(rt) rt.textContent='✎ Refine this gift';
@@ -1478,7 +2088,7 @@ function reset() {
   document.getElementById('savedBanner').className = 'saved-banner';
   var qp = document.getElementById('questionnairePanel'); if (qp) qp.className = '';
   var qn = document.getElementById('qNudge');
-  if (qn) { qn.style.display = ''; qn.querySelector('.q-nudge-text').innerHTML = 'Want better suggestions?<span>Answer 3 quick questions — no typing needed</span>'; qn.querySelector('.q-open-btn').textContent = 'Help me \u2192'; }
+  if (qn) { qn.style.display = ''; var _qnt = qn.querySelector ? qn.querySelector('.q-nudge-text') : null; if(_qnt) _qnt.innerHTML = 'Want better suggestions?<span>Answer 3 quick questions — no typing needed</span>'; var _qnb = qn.querySelector ? qn.querySelector('.q-open-btn') : null; if(_qnb) _qnb.textContent = 'Help me \u2192'; }
   closeModal();
   document.body.style.overflow = "";
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1635,6 +2245,7 @@ function goStep(n) {
   document.getElementById('step' + currentStep).style.display = 'none';
   currentStep = n;
   document.getElementById('step' + n).style.display = 'block';
+  trackEvent('form_step', { step: n });
   // Filter age pills when entering step 2 based on relationship
   if (n === 2) filterAgePillsByRelationship(selectedRelationship);
 
@@ -1715,6 +2326,7 @@ var regenerateCount = 0;
 
 var aboutToastTimer = null;
 function openAboutDialog() {
+  trackEvent('logo_tapped');
   var t = document.getElementById('aboutToast');
   t.style.display = 'block';
   t.classList.remove('hiding');
@@ -1826,6 +2438,7 @@ function savePerson() {
   var idx = people.findIndex(function(p) { return p.name.toLowerCase() === name.toLowerCase() && p.relationship === lastParams.relationship; });
   if (idx >= 0) people[idx] = person; else people.push(person);
   localStorage.setItem('giftho_people', JSON.stringify(people));
+  trackEvent('save_person', { relationship: lastParams ? lastParams.relationship : '' });
   document.getElementById('savePersonDone').style.display = 'block';
   document.getElementById('savePersonName').style.display = 'none';
   var spb = document.querySelector('.save-person-btn'); if(spb) spb.style.display = 'none';
@@ -1844,7 +2457,7 @@ function renderSavedPeople() {
   var list = document.getElementById('savedPeopleList');
   if (!bar || !list) return;
   bar.style.display = 'block';
-  var sub = bar.querySelector('.saved-people-sub'); if(sub) sub.style.display = '';
+  if (bar.querySelector) { var sub = bar.querySelector('.saved-people-sub'); if(sub) sub.style.display = ''; }
   list.innerHTML = people.map(function(p) {
     return '<div class="saved-person-chip" onclick="prefillFromPerson(\'' + p.id + '\')">' +
       '<div><div class="saved-person-name">' + sanitise(p.name) + '</div>' +
@@ -1854,6 +2467,7 @@ function renderSavedPeople() {
 }
 
 function prefillFromPerson(id) {
+  trackEvent('prefill_from_saved');
   var people = getSavedPeople();
   var person = people.find(function(p) { return p.id === id; });
   if (!person) return;
@@ -1917,6 +2531,7 @@ function saveCalendarDate() {
   };
   calendar.push(entry);
   localStorage.setItem('giftho_calendar', JSON.stringify(calendar));
+  trackEvent('calendar_reminder_saved', { occasion: lastParams ? lastParams.occasion : '' });
   document.getElementById('calendarSaved').style.display = 'block';
   document.getElementById('calendarDate').disabled = true;
   document.querySelector('.calendar-btn').disabled = true;
@@ -2040,6 +2655,254 @@ function refineGift() {
   callAPI(refinePrompt, p.occasion, p.relationship);
 }
 
+
+function switchTab(tab) {
+  var isFind = tab === 'find';
+  document.getElementById('tabFind').className = 'tab-btn' + (isFind ? ' active' : '');
+  document.getElementById('tabPeople').className = 'tab-btn' + (!isFind ? ' active' : '');
+  document.getElementById('panelFind').className = 'tab-panel' + (isFind ? ' active' : '');
+  document.getElementById('panelPeople').className = 'tab-panel' + (!isFind ? ' active' : '');
+  if (!isFind) renderPeopleTab();
+  trackEvent('tab_switch', { tab: tab });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPeopleTab() {
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  var empty = document.getElementById('peopleEmpty');
+  if (!grid) return;
+
+  if (people.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  var calendar = getCalendar();
+  var now = new Date();
+
+  
+}
+
+function giftForPerson(id) {
+  switchTab('find');
+  setTimeout(function() { prefillFromPerson(id); }, 100);
+}
+
+function deletePerson(id) {
+  var people = getSavedPeople().filter(function(p) { return p.id !== id; });
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('delete_person');
+}
+
+// ── BUDGET SLIDER ──────────────────────────────────────────────────────
+var flexLevel = 1; // 0=strict, 1=balanced, 2=explore
+
+function onBudgetSlider(val) {
+  val = parseInt(val);
+  var formatted = val >= 1000 ? 'Rs. ' + (val/1000).toFixed(val%1000===0?0:1) + ',000' : 'Rs. ' + val;
+  var display = val >= 1000 ? 'Rs. ' + val.toLocaleString('en-IN') : 'Rs. ' + val;
+  var el = document.getElementById('budgetSliderValue');
+  if (el) el.textContent = display;
+  // Sync to budgetMax input
+  var bmax = document.getElementById('budgetMax');
+  if (bmax) bmax.value = val;
+  var bmin = document.getElementById('budgetMin');
+  if (bmin) bmin.value = '';
+  clearBudgetChips();
+  // Highlight closest chip
+  var closest = [500,1000,2000,5000,10000].reduce(function(a,b) { return Math.abs(b-val) < Math.abs(a-val) ? b : a; });
+  if (Math.abs(closest-val) < 200) {
+    document.querySelectorAll('.budget-chip').forEach(function(c) {
+      c.className = 'budget-chip' + (parseInt(c.getAttribute('data-val'))===closest ? ' active' : '');
+    });
+  }
+}
+
+// Sync chips/inputs to slider
+var origSetBudget = setBudget;
+setBudget = function(val) {
+  origSetBudget(val);
+  var slider = document.getElementById('budgetSlider');
+  if (slider) { slider.value = val; onBudgetSlider(val); }
+};
+
+// ── FLEXIBILITY SLIDER ────────────────────────────────────────────────
+function onFlexSlider(val) {
+  flexLevel = parseInt(val);
+  var labels = ['flexLabel0','flexLabel1','flexLabel2'];
+  labels.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.className = i === flexLevel ? 'flex-slider-label-active' : '';
+  });
+  // Update gradient
+  var slider = document.getElementById('flexSlider');
+  if (slider) {
+    var pct = (flexLevel / 2) * 100;
+    slider.style.background = 'linear-gradient(to right, var(--saffron) 0%, var(--saffron) ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
+  }
+}
+
+// Add flexibility instruction to prompt based on flexLevel
+var origBuildPrompt = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (flexLevel === 0) {
+    prompt += '\n\nFLEXIBILITY: Stick strictly to the inputs. Only suggest gifts that directly match the described interests and occasion. No creative liberties.';
+  } else if (flexLevel === 2) {
+    prompt += '\n\nFLEXIBILITY: Feel free to explore and be creative. Go beyond the literal inputs — suggest unexpected, delightful gifts that fit the spirit of what was described, not just the letter.';
+  }
+  return prompt;
+};
+
+// Reset flex slider on reset
+var origReset = reset;
+reset = function() {
+  origReset();
+  flexLevel = 1;
+  var slider = document.getElementById('flexSlider');
+  if (slider) { slider.value = 1; onFlexSlider(1); }
+};
+
+// ── ADD PERSON MANUALLY ───────────────────────────────────────────────
+function openAddPersonSheet() {
+  document.getElementById('addPersonOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('addPersonName').value = '';
+  document.getElementById('addPersonRel').value = '';
+  document.getElementById('addPersonGender').value = '';
+  document.getElementById('addPersonAge').value = '';
+  document.getElementById('addPersonBudget').value = '';
+  document.getElementById('addPersonError').style.display = 'none';
+  setTimeout(function() { document.getElementById('addPersonName').focus(); }, 300);
+}
+
+function closeAddPersonSheet(e) {
+  if (e && e.target && e.target.id !== 'addPersonOverlay') return;
+  document.getElementById('addPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveNewPerson() {
+  var name = document.getElementById('addPersonName').value.trim();
+  var rel  = document.getElementById('addPersonRel').value.trim();
+  if (!name) { showAddPersonError('Please enter their name.'); return; }
+  if (!rel)  { showAddPersonError('Please enter your relationship.'); return; }
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: rel,
+    gender: document.getElementById('addPersonGender').value,
+    ageRange: document.getElementById('addPersonAge').value,
+    budgetMax: document.getElementById('addPersonBudget').value,
+    selectedPills: { interests:[], vibe:[], context:[] },
+    about: '',
+    giftLog: [],
+    savedAt: new Date().toISOString()
+  };
+  var people = getSavedPeople();
+  // Replace if exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase()===name.toLowerCase() && p.relationship===rel; });
+  if (idx >= 0) people[idx] = Object.assign(people[idx], person);
+  else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  closeAddPersonSheet();
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('add_person_manual');
+}
+
+function showAddPersonError(msg) {
+  var el = document.getElementById('addPersonError');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+// ── GIFT LOG ──────────────────────────────────────────────────────────
+function getGiftLog(personId) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === personId; });
+  return person && person.giftLog ? person.giftLog : [];
+}
+
+function logGiftForPerson(personId, giftName, occasion) {
+  var people = getSavedPeople();
+  var idx = people.findIndex(function(p) { return p.id === personId; });
+  if (idx < 0) return;
+  if (!people[idx].giftLog) people[idx].giftLog = [];
+  people[idx].giftLog.unshift({
+    gift: giftName,
+    occasion: occasion || currentContext.occasion || '',
+    date: new Date().toLocaleDateString('en-IN', { month:'short', year:'numeric' })
+  });
+  // Keep last 10
+  people[idx].giftLog = people[idx].giftLog.slice(0, 10);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  trackEvent('gift_logged', { person_id: personId });
+}
+
+function buildGiftLogHTML(person) {
+  if (!person.giftLog || person.giftLog.length === 0) return '';
+  var last3 = person.giftLog.slice(0, 3);
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">' +
+    '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">Previously gifted</div>' +
+    last3.map(function(entry) {
+      return '<div style="font-size:12px;color:var(--ink);margin-bottom:3px;">' +
+        sanitise(entry.gift) + '<span style="color:var(--muted);"> · ' + sanitise(entry.occasion) + ' ' + sanitise(entry.date) + '</span></div>';
+    }).join('') + '</div>';
+}
+
+// Inject gift log into person cards and pass history to prompt
+var origRenderPeopleTab = renderPeopleTab;
+renderPeopleTab = function() {
+  origRenderPeopleTab();
+  // After rendering, inject gift logs into cards
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  if (!grid) return;
+  var cards = grid.querySelectorAll ? grid.querySelectorAll('.person-card') : [];
+  people.forEach(function(p, i) {
+    if (p.giftLog && p.giftLog.length > 0 && cards[i]) {
+      var logDiv = document.createElement('div');
+      logDiv.innerHTML = buildGiftLogHTML(p);
+      var giftBtn = cards[i].querySelector ? cards[i].querySelector('.person-card-gift-btn') : null;
+      if (giftBtn && cards[i]) cards[i].insertBefore(logDiv.firstChild, giftBtn);
+    }
+  });
+};
+
+// Add gift history to prompt when gifting for a saved person
+var activeSavedPersonId = null;
+
+var origPrefillFromPerson = prefillFromPerson;
+prefillFromPerson = function(id) {
+  activeSavedPersonId = id;
+  origPrefillFromPerson(id);
+};
+
+var origBuildPrompt2 = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt2(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (activeSavedPersonId) {
+    var log = getGiftLog(activeSavedPersonId);
+    if (log.length > 0) {
+      var previousGifts = log.map(function(e) { return e.gift + ' (' + e.occasion + ' ' + e.date + ')'; }).join(', ');
+      prompt += '\n\nPREVIOUSLY GIFTED TO THIS PERSON: ' + previousGifts + '. Do NOT suggest these gifts or anything too similar. Give something fresh and different.';
+    }
+  }
+  return prompt;
+};
+
+// Reset activeSavedPersonId on new search
+var origGetGifts = getGifts;
+getGifts = async function() {
+  // Reset only if not coming from prefill
+  await origGetGifts.apply(this, arguments);
+};
+
 </script>
 
 <div id="interventionOverlay" class="modal-overlay" style="display:none;" onclick="closeIntervention(event)">
@@ -2063,6 +2926,51 @@ function refineGift() {
     <button onclick="event.stopPropagation();closeAboutToast();" style="position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:18px;cursor:pointer;line-height:1;padding:0;">&#215;</button>
     <div style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:20px;font-weight:600;color:#F5EDD8;margin-bottom:6px;padding-right:24px;">Gifting in India is deeply personal.</div>
     <div style="font-size:13px;color:#C8B49A;line-height:1.65;">The right gift says <em style="color:#F5EDD8;">I see you</em> — not just I remembered. Giftho finds specific gifts to buy, make, or experience. No endless scrolling.</div>
+  </div>
+</div>
+
+<div id="addPersonOverlay" class="modal-overlay" style="display:none;" onclick="closeAddPersonSheet(event)">
+  <div class="modal-sheet" style="padding-bottom:48px;">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-style:italic;font-weight:600;color:var(--ink);margin-bottom:20px;">Add someone</div>
+    <div class="edit-grid" style="margin-bottom:16px;">
+      <div class="edit-field" style="grid-column:1/-1;">
+        <label>Their name</label>
+        <input type="text" id="addPersonName" placeholder="e.g. Rohan, Mom, Priya..." style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+      <div class="edit-field">
+        <label>Relationship</label>
+        <input type="text" id="addPersonRel" placeholder="Close Friend, Partner..." style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+      <div class="edit-field">
+        <label>Gender</label>
+        <select id="addPersonGender" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;appearance:none;">
+          <option value="">Optional</option>
+          <option value="Her">Her</option>
+          <option value="Him">Him</option>
+          <option value="Them">Them</option>
+        </select>
+      </div>
+      <div class="edit-field">
+        <label>Age Range</label>
+        <select id="addPersonAge" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;appearance:none;">
+          <option value="">Optional</option>
+          <option value="Under 10">Under 10</option>
+          <option value="10 to 17">10-17</option>
+          <option value="18 to 25">18-25</option>
+          <option value="26 to 35">26-35</option>
+          <option value="36 to 50">36-50</option>
+          <option value="50 plus">50+</option>
+        </select>
+      </div>
+      <div class="edit-field">
+        <label>Usual Budget (Rs.)</label>
+        <input type="number" id="addPersonBudget" placeholder="e.g. 2000" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+    </div>
+    <div id="addPersonError" style="display:none;font-size:13px;color:#C0402A;margin-bottom:12px;"></div>
+    <button onclick="saveNewPerson()" style="width:100%;padding:15px;background:var(--saffron);color:white;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 0 var(--saff-dark);">Save person</button>
+    <button onclick="closeAddPersonSheet()" style="width:100%;padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--muted);cursor:pointer;margin-top:10px;">Cancel</button>
   </div>
 </div>
 </body>
