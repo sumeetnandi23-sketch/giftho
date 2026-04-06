@@ -95,12 +95,12 @@ textarea { resize:none; height:78px; line-height:1.5; }
 .toggle-btn.active { background:var(--ink); color:white; }
 
 .age-pills { display:flex; gap:8px; flex-wrap:wrap; }
-.age-pill { padding:9px 16px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.age-pill { padding:9px 16px; border:1.5px solid #C8C0B8; border-radius:10px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#3A2E1E; cursor:pointer; transition:all 0.15s; }
 .age-pill:hover { border-color:var(--saffron); color:var(--saffron); }
 .age-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
 
 .budget-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
-.budget-chip { padding:7px 14px; border:1.5px solid var(--border); border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.budget-chip { padding:9px 16px; border:1.5px solid #C8C0B8; border-radius:10px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:#3A2E1E; cursor:pointer; transition:all 0.15s; }
 .budget-chip::before { content:"Rs. "; font-size:11px; }
 .budget-chip:hover { border-color:var(--saffron); color:var(--saffron); }
 .budget-chip.active { background:var(--ink); border-color:var(--ink); color:white; font-weight:500; }
@@ -233,30 +233,30 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   #formCard { background:var(--card); border:1.5px solid var(--border); border-radius:20px; padding:28px 26px; margin-bottom:20px; box-shadow:0 2px 0 var(--border); }
 
   .conv-progress { display:flex; align-items:center; gap:0; margin-bottom:28px; }
-  .conv-step-dot { width:8px; height:8px; border-radius:50%; background:var(--border); flex-shrink:0; transition:background 0.3s; }
+  .conv-step-dot { width:10px; height:10px; border-radius:50%; background:#D8D0C8; flex-shrink:0; transition:background 0.3s; }
   .conv-step-dot.active { background:var(--saffron); }
   .conv-step-dot.done { background:var(--ink); }
-  .conv-step-line { flex:1; height:2px; background:#D8D4CE; border-radius:1px; transition:background 0.3s; }
+  .conv-step-line { flex:1; height:2px; background:#E0D8D0; border-radius:1px; transition:background 0.3s; margin:0 4px; }
   .conv-step-line.done { background:var(--saffron); }
 
   .conv-step { animation:fadeUp 0.3s ease; }
-  .conv-question { font-family:'Cormorant Garamond',Georgia,serif; font-size:26px; font-weight:600; font-style:italic; color:var(--ink); margin-bottom:4px; line-height:1.2; }
+  .conv-question { font-family:'Cormorant Garamond',Georgia,serif; font-size:24px; font-weight:600; font-style:italic; color:var(--ink); margin-bottom:4px; line-height:1.2; }
   .conv-sub { font-size:13px; color:var(--muted); margin-bottom:24px; }
-  .conv-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:10px; }
+  .conv-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#6A5A4A; margin-bottom:10px; }
   .conv-optional { font-size:10px; font-weight:400; color:var(--border-dark,#C8C4BE); text-transform:none; letter-spacing:0; margin-left:4px; }
-  .conv-field { margin-bottom:22px; }
+  .conv-field { margin-bottom:18px; }
   .conv-back { background:none; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; color:var(--muted); cursor:pointer; padding:0; margin-bottom:20px; display:flex; align-items:center; gap:4px; }
   .conv-back:hover { color:var(--ink); }
 
   /* Relationship pills */
   .rel-pills { display:flex; gap:8px; flex-wrap:wrap; }
-  .rel-pill { padding:9px 16px; border:1.5px solid #D8D4CE; border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#4A3C2A; cursor:pointer; transition:all 0.15s; }
+  .rel-pill { padding:9px 16px; border:1.5px solid #C8C0B8; border-radius:10px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#3A2E1E; cursor:pointer; transition:all 0.15s; }
   .rel-pill:hover { border-color:var(--saffron); color:var(--saffron); }
   .rel-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
 
   /* Occasion pills */
   .occ-pills { display:flex; gap:8px; flex-wrap:wrap; }
-  .occ-pill { padding:9px 16px; border:1.5px solid #D8D4CE; border-radius:20px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#4A3C2A; cursor:pointer; transition:all 0.15s; }
+  .occ-pill { padding:9px 16px; border:1.5px solid #C8C0B8; border-radius:10px; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; color:#3A2E1E; cursor:pointer; transition:all 0.15s; }
   .occ-pill:hover { border-color:var(--saffron); color:var(--saffron); }
   .occ-pill.active { background:var(--ink); border-color:var(--ink); color:white; }
 
@@ -356,255 +356,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   .gift-grid .card-type-header { margin-bottom:10px; padding-bottom:10px; }
   @media(max-width:360px) { .gift-grid { grid-template-columns:1fr; } }
 </style>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE7D7QRQ7L">
-function switchTab(tab) {
-  var isFind = tab === 'find';
-  document.getElementById('tabFind').className = 'tab-btn' + (isFind ? ' active' : '');
-  document.getElementById('tabPeople').className = 'tab-btn' + (!isFind ? ' active' : '');
-  document.getElementById('panelFind').className = 'tab-panel' + (isFind ? ' active' : '');
-  document.getElementById('panelPeople').className = 'tab-panel' + (!isFind ? ' active' : '');
-  if (!isFind) renderPeopleTab();
-  trackEvent('tab_switch', { tab: tab });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
-function renderPeopleTab() {
-  var people = getSavedPeople();
-  var grid = document.getElementById('peopleGrid');
-  var empty = document.getElementById('peopleEmpty');
-  if (!grid) return;
-
-  if (people.length === 0) {
-    grid.innerHTML = '';
-    if (empty) empty.style.display = 'block';
-    return;
-  }
-  if (empty) empty.style.display = 'none';
-
-  var calendar = getCalendar();
-  var now = new Date();
-
-  
-}
-
-function giftForPerson(id) {
-  switchTab('find');
-  setTimeout(function() { prefillFromPerson(id); }, 100);
-}
-
-function deletePerson(id) {
-  var people = getSavedPeople().filter(function(p) { return p.id !== id; });
-  localStorage.setItem('giftho_people', JSON.stringify(people));
-  renderPeopleTab();
-  renderSavedPeople();
-  trackEvent('delete_person');
-}
-
-// ── BUDGET SLIDER ──────────────────────────────────────────────────────
-var flexLevel = 1; // 0=strict, 1=balanced, 2=explore
-
-function onBudgetSlider(val) {
-  val = parseInt(val);
-  var formatted = val >= 1000 ? 'Rs. ' + (val/1000).toFixed(val%1000===0?0:1) + ',000' : 'Rs. ' + val;
-  var display = val >= 1000 ? 'Rs. ' + val.toLocaleString('en-IN') : 'Rs. ' + val;
-  var el = document.getElementById('budgetSliderValue');
-  if (el) el.textContent = display;
-  // Sync to budgetMax input
-  var bmax = document.getElementById('budgetMax');
-  if (bmax) bmax.value = val;
-  var bmin = document.getElementById('budgetMin');
-  if (bmin) bmin.value = '';
-  clearBudgetChips();
-  // Highlight closest chip
-  var closest = [500,1000,2000,5000,10000].reduce(function(a,b) { return Math.abs(b-val) < Math.abs(a-val) ? b : a; });
-  if (Math.abs(closest-val) < 200) {
-    document.querySelectorAll('.budget-chip').forEach(function(c) {
-      c.className = 'budget-chip' + (parseInt(c.getAttribute('data-val'))===closest ? ' active' : '');
-    });
-  }
-}
-
-// Sync chips/inputs to slider
-var origSetBudget = setBudget;
-setBudget = function(val) {
-  origSetBudget(val);
-  var slider = document.getElementById('budgetSlider');
-  if (slider) { slider.value = val; onBudgetSlider(val); }
-};
-
-// ── FLEXIBILITY SLIDER ────────────────────────────────────────────────
-function onFlexSlider(val) {
-  flexLevel = parseInt(val);
-  var labels = ['flexLabel0','flexLabel1','flexLabel2'];
-  labels.forEach(function(id, i) {
-    var el = document.getElementById(id);
-    if (el) el.className = i === flexLevel ? 'flex-slider-label-active' : '';
-  });
-  // Update gradient
-  var slider = document.getElementById('flexSlider');
-  if (slider) {
-    var pct = (flexLevel / 2) * 100;
-    slider.style.background = 'linear-gradient(to right, var(--saffron) 0%, var(--saffron) ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
-  }
-}
-
-// Add flexibility instruction to prompt based on flexLevel
-var origBuildPrompt = buildPrompt;
-buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
-  var prompt = origBuildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
-  if (flexLevel === 0) {
-    prompt += '\n\nFLEXIBILITY: Stick strictly to the inputs. Only suggest gifts that directly match the described interests and occasion. No creative liberties.';
-  } else if (flexLevel === 2) {
-    prompt += '\n\nFLEXIBILITY: Feel free to explore and be creative. Go beyond the literal inputs — suggest unexpected, delightful gifts that fit the spirit of what was described, not just the letter.';
-  }
-  return prompt;
-};
-
-// Reset flex slider on reset
-var origReset = reset;
-reset = function() {
-  origReset();
-  flexLevel = 1;
-  var slider = document.getElementById('flexSlider');
-  if (slider) { slider.value = 1; onFlexSlider(1); }
-};
-
-// ── ADD PERSON MANUALLY ───────────────────────────────────────────────
-function openAddPersonSheet() {
-  document.getElementById('addPersonOverlay').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  document.getElementById('addPersonName').value = '';
-  document.getElementById('addPersonRel').value = '';
-  document.getElementById('addPersonGender').value = '';
-  document.getElementById('addPersonAge').value = '';
-  document.getElementById('addPersonBudget').value = '';
-  document.getElementById('addPersonError').style.display = 'none';
-  setTimeout(function() { document.getElementById('addPersonName').focus(); }, 300);
-}
-
-function closeAddPersonSheet(e) {
-  if (e && e.target && e.target.id !== 'addPersonOverlay') return;
-  document.getElementById('addPersonOverlay').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function saveNewPerson() {
-  var name = document.getElementById('addPersonName').value.trim();
-  var rel  = document.getElementById('addPersonRel').value.trim();
-  if (!name) { showAddPersonError('Please enter their name.'); return; }
-  if (!rel)  { showAddPersonError('Please enter your relationship.'); return; }
-  var person = {
-    id: Date.now().toString(),
-    name: name,
-    relationship: rel,
-    gender: document.getElementById('addPersonGender').value,
-    ageRange: document.getElementById('addPersonAge').value,
-    budgetMax: document.getElementById('addPersonBudget').value,
-    selectedPills: { interests:[], vibe:[], context:[] },
-    about: '',
-    giftLog: [],
-    savedAt: new Date().toISOString()
-  };
-  var people = getSavedPeople();
-  // Replace if exists
-  var idx = people.findIndex(function(p) { return p.name.toLowerCase()===name.toLowerCase() && p.relationship===rel; });
-  if (idx >= 0) people[idx] = Object.assign(people[idx], person);
-  else people.push(person);
-  localStorage.setItem('giftho_people', JSON.stringify(people));
-  closeAddPersonSheet();
-  renderPeopleTab();
-  renderSavedPeople();
-  trackEvent('add_person_manual');
-}
-
-function showAddPersonError(msg) {
-  var el = document.getElementById('addPersonError');
-  if (el) { el.textContent = msg; el.style.display = 'block'; }
-}
-
-// ── GIFT LOG ──────────────────────────────────────────────────────────
-function getGiftLog(personId) {
-  var people = getSavedPeople();
-  var person = people.find(function(p) { return p.id === personId; });
-  return person && person.giftLog ? person.giftLog : [];
-}
-
-function logGiftForPerson(personId, giftName, occasion) {
-  var people = getSavedPeople();
-  var idx = people.findIndex(function(p) { return p.id === personId; });
-  if (idx < 0) return;
-  if (!people[idx].giftLog) people[idx].giftLog = [];
-  people[idx].giftLog.unshift({
-    gift: giftName,
-    occasion: occasion || currentContext.occasion || '',
-    date: new Date().toLocaleDateString('en-IN', { month:'short', year:'numeric' })
-  });
-  // Keep last 10
-  people[idx].giftLog = people[idx].giftLog.slice(0, 10);
-  localStorage.setItem('giftho_people', JSON.stringify(people));
-  trackEvent('gift_logged', { person_id: personId });
-}
-
-function buildGiftLogHTML(person) {
-  if (!person.giftLog || person.giftLog.length === 0) return '';
-  var last3 = person.giftLog.slice(0, 3);
-  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">' +
-    '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">Previously gifted</div>' +
-    last3.map(function(entry) {
-      return '<div style="font-size:12px;color:var(--ink);margin-bottom:3px;">' +
-        sanitise(entry.gift) + '<span style="color:var(--muted);"> · ' + sanitise(entry.occasion) + ' ' + sanitise(entry.date) + '</span></div>';
-    }).join('') + '</div>';
-}
-
-// Inject gift log into person cards and pass history to prompt
-var origRenderPeopleTab = renderPeopleTab;
-renderPeopleTab = function() {
-  origRenderPeopleTab();
-  // After rendering, inject gift logs into cards
-  var people = getSavedPeople();
-  var grid = document.getElementById('peopleGrid');
-  if (!grid) return;
-  var cards = grid.querySelectorAll ? grid.querySelectorAll('.person-card') : [];
-  people.forEach(function(p, i) {
-    if (p.giftLog && p.giftLog.length > 0 && cards[i]) {
-      var logDiv = document.createElement('div');
-      logDiv.innerHTML = buildGiftLogHTML(p);
-      var giftBtn = cards[i].querySelector ? cards[i].querySelector('.person-card-gift-btn') : null;
-      if (giftBtn && cards[i]) cards[i].insertBefore(logDiv.firstChild, giftBtn);
-    }
-  });
-};
-
-// Add gift history to prompt when gifting for a saved person
-var activeSavedPersonId = null;
-
-var origPrefillFromPerson = prefillFromPerson;
-prefillFromPerson = function(id) {
-  activeSavedPersonId = id;
-  origPrefillFromPerson(id);
-};
-
-var origBuildPrompt2 = buildPrompt;
-buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
-  var prompt = origBuildPrompt2(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
-  if (activeSavedPersonId) {
-    var log = getGiftLog(activeSavedPersonId);
-    if (log.length > 0) {
-      var previousGifts = log.map(function(e) { return e.gift + ' (' + e.occasion + ' ' + e.date + ')'; }).join(', ');
-      prompt += '\n\nPREVIOUSLY GIFTED TO THIS PERSON: ' + previousGifts + '. Do NOT suggest these gifts or anything too similar. Give something fresh and different.';
-    }
-  }
-  return prompt;
-};
-
-// Reset activeSavedPersonId on new search
-var origGetGifts = getGifts;
-getGifts = async function() {
-  // Reset only if not coming from prefill
-  await origGetGifts.apply(this, arguments);
-};
-
-</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -903,8 +655,8 @@ getGifts = async function() {
 
   <!-- Tab Navigation -->
   <div class="tab-nav">
-    <button class="tab-btn active" id="tabFind" onclick="switchTab('find')">🎁 Find a Gift</button>
-    <button class="tab-btn" id="tabPeople" onclick="switchTab('people')">👤 My People</button>
+    <button class="tab-btn active" id="tabFind" onclick="switchTab('find')">Find a Gift</button>
+    <button class="tab-btn" id="tabPeople" onclick="switchTab('people')">My People</button>
   </div>
 
   <!-- Tab Panel: Find a Gift -->
@@ -2904,6 +2656,256 @@ getGifts = async function() {
   // Reset only if not coming from prefill
   await origGetGifts.apply(this, arguments);
 };
+
+
+
+function switchTab(tab) {
+  var isFind = tab === 'find';
+  document.getElementById('tabFind').className = 'tab-btn' + (isFind ? ' active' : '');
+  document.getElementById('tabPeople').className = 'tab-btn' + (!isFind ? ' active' : '');
+  document.getElementById('panelFind').className = 'tab-panel' + (isFind ? ' active' : '');
+  document.getElementById('panelPeople').className = 'tab-panel' + (!isFind ? ' active' : '');
+  if (!isFind) renderPeopleTab();
+  trackEvent('tab_switch', { tab: tab });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPeopleTab() {
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  var empty = document.getElementById('peopleEmpty');
+  if (!grid) return;
+
+  if (people.length === 0) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  var calendar = getCalendar();
+  var now = new Date();
+
+  
+}
+
+function giftForPerson(id) {
+  switchTab('find');
+  setTimeout(function() { prefillFromPerson(id); }, 100);
+}
+
+function deletePerson(id) {
+  var people = getSavedPeople().filter(function(p) { return p.id !== id; });
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('delete_person');
+}
+
+// ── BUDGET SLIDER ──────────────────────────────────────────────────────
+var flexLevel = 1; // 0=strict, 1=balanced, 2=explore
+
+function onBudgetSlider(val) {
+  val = parseInt(val);
+  var formatted = val >= 1000 ? 'Rs. ' + (val/1000).toFixed(val%1000===0?0:1) + ',000' : 'Rs. ' + val;
+  var display = val >= 1000 ? 'Rs. ' + val.toLocaleString('en-IN') : 'Rs. ' + val;
+  var el = document.getElementById('budgetSliderValue');
+  if (el) el.textContent = display;
+  // Sync to budgetMax input
+  var bmax = document.getElementById('budgetMax');
+  if (bmax) bmax.value = val;
+  var bmin = document.getElementById('budgetMin');
+  if (bmin) bmin.value = '';
+  clearBudgetChips();
+  // Highlight closest chip
+  var closest = [500,1000,2000,5000,10000].reduce(function(a,b) { return Math.abs(b-val) < Math.abs(a-val) ? b : a; });
+  if (Math.abs(closest-val) < 200) {
+    document.querySelectorAll('.budget-chip').forEach(function(c) {
+      c.className = 'budget-chip' + (parseInt(c.getAttribute('data-val'))===closest ? ' active' : '');
+    });
+  }
+}
+
+// Sync chips/inputs to slider
+var origSetBudget = setBudget;
+setBudget = function(val) {
+  origSetBudget(val);
+  var slider = document.getElementById('budgetSlider');
+  if (slider) { slider.value = val; onBudgetSlider(val); }
+};
+
+// ── FLEXIBILITY SLIDER ────────────────────────────────────────────────
+function onFlexSlider(val) {
+  flexLevel = parseInt(val);
+  var labels = ['flexLabel0','flexLabel1','flexLabel2'];
+  labels.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.className = i === flexLevel ? 'flex-slider-label-active' : '';
+  });
+  // Update gradient
+  var slider = document.getElementById('flexSlider');
+  if (slider) {
+    var pct = (flexLevel / 2) * 100;
+    slider.style.background = 'linear-gradient(to right, var(--saffron) 0%, var(--saffron) ' + pct + '%, var(--border) ' + pct + '%, var(--border) 100%)';
+  }
+}
+
+// Add flexibility instruction to prompt based on flexLevel
+var origBuildPrompt = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (flexLevel === 0) {
+    prompt += '\n\nFLEXIBILITY: Stick strictly to the inputs. Only suggest gifts that directly match the described interests and occasion. No creative liberties.';
+  } else if (flexLevel === 2) {
+    prompt += '\n\nFLEXIBILITY: Feel free to explore and be creative. Go beyond the literal inputs — suggest unexpected, delightful gifts that fit the spirit of what was described, not just the letter.';
+  }
+  return prompt;
+};
+
+// Reset flex slider on reset
+var origReset = reset;
+reset = function() {
+  origReset();
+  flexLevel = 1;
+  var slider = document.getElementById('flexSlider');
+  if (slider) { slider.value = 1; onFlexSlider(1); }
+};
+
+// ── ADD PERSON MANUALLY ───────────────────────────────────────────────
+function openAddPersonSheet() {
+  document.getElementById('addPersonOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('addPersonName').value = '';
+  document.getElementById('addPersonRel').value = '';
+  document.getElementById('addPersonGender').value = '';
+  document.getElementById('addPersonAge').value = '';
+  document.getElementById('addPersonBudget').value = '';
+  document.getElementById('addPersonError').style.display = 'none';
+  setTimeout(function() { document.getElementById('addPersonName').focus(); }, 300);
+}
+
+function closeAddPersonSheet(e) {
+  if (e && e.target && e.target.id !== 'addPersonOverlay') return;
+  document.getElementById('addPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveNewPerson() {
+  var name = document.getElementById('addPersonName').value.trim();
+  var rel  = document.getElementById('addPersonRel').value.trim();
+  if (!name) { showAddPersonError('Please enter their name.'); return; }
+  if (!rel)  { showAddPersonError('Please enter your relationship.'); return; }
+  var person = {
+    id: Date.now().toString(),
+    name: name,
+    relationship: rel,
+    gender: document.getElementById('addPersonGender').value,
+    ageRange: document.getElementById('addPersonAge').value,
+    budgetMax: document.getElementById('addPersonBudget').value,
+    selectedPills: { interests:[], vibe:[], context:[] },
+    about: '',
+    giftLog: [],
+    savedAt: new Date().toISOString()
+  };
+  var people = getSavedPeople();
+  // Replace if exists
+  var idx = people.findIndex(function(p) { return p.name.toLowerCase()===name.toLowerCase() && p.relationship===rel; });
+  if (idx >= 0) people[idx] = Object.assign(people[idx], person);
+  else people.push(person);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  closeAddPersonSheet();
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('add_person_manual');
+}
+
+function showAddPersonError(msg) {
+  var el = document.getElementById('addPersonError');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+// ── GIFT LOG ──────────────────────────────────────────────────────────
+function getGiftLog(personId) {
+  var people = getSavedPeople();
+  var person = people.find(function(p) { return p.id === personId; });
+  return person && person.giftLog ? person.giftLog : [];
+}
+
+function logGiftForPerson(personId, giftName, occasion) {
+  var people = getSavedPeople();
+  var idx = people.findIndex(function(p) { return p.id === personId; });
+  if (idx < 0) return;
+  if (!people[idx].giftLog) people[idx].giftLog = [];
+  people[idx].giftLog.unshift({
+    gift: giftName,
+    occasion: occasion || currentContext.occasion || '',
+    date: new Date().toLocaleDateString('en-IN', { month:'short', year:'numeric' })
+  });
+  // Keep last 10
+  people[idx].giftLog = people[idx].giftLog.slice(0, 10);
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  trackEvent('gift_logged', { person_id: personId });
+}
+
+function buildGiftLogHTML(person) {
+  if (!person.giftLog || person.giftLog.length === 0) return '';
+  var last3 = person.giftLog.slice(0, 3);
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">' +
+    '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px;">Previously gifted</div>' +
+    last3.map(function(entry) {
+      return '<div style="font-size:12px;color:var(--ink);margin-bottom:3px;">' +
+        sanitise(entry.gift) + '<span style="color:var(--muted);"> · ' + sanitise(entry.occasion) + ' ' + sanitise(entry.date) + '</span></div>';
+    }).join('') + '</div>';
+}
+
+// Inject gift log into person cards and pass history to prompt
+var origRenderPeopleTab = renderPeopleTab;
+renderPeopleTab = function() {
+  origRenderPeopleTab();
+  // After rendering, inject gift logs into cards
+  var people = getSavedPeople();
+  var grid = document.getElementById('peopleGrid');
+  if (!grid) return;
+  var cards = grid.querySelectorAll ? grid.querySelectorAll('.person-card') : [];
+  people.forEach(function(p, i) {
+    if (p.giftLog && p.giftLog.length > 0 && cards[i]) {
+      var logDiv = document.createElement('div');
+      logDiv.innerHTML = buildGiftLogHTML(p);
+      var giftBtn = cards[i].querySelector ? cards[i].querySelector('.person-card-gift-btn') : null;
+      if (giftBtn && cards[i]) cards[i].insertBefore(logDiv.firstChild, giftBtn);
+    }
+  });
+};
+
+// Add gift history to prompt when gifting for a saved person
+var activeSavedPersonId = null;
+
+var origPrefillFromPerson = prefillFromPerson;
+prefillFromPerson = function(id) {
+  activeSavedPersonId = id;
+  origPrefillFromPerson(id);
+};
+
+var origBuildPrompt2 = buildPrompt;
+buildPrompt = function(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate) {
+  var prompt = origBuildPrompt2(occasion, relationship, ageRange, budgetStr, about, avoidNames, isRegenerate);
+  if (activeSavedPersonId) {
+    var log = getGiftLog(activeSavedPersonId);
+    if (log.length > 0) {
+      var previousGifts = log.map(function(e) { return e.gift + ' (' + e.occasion + ' ' + e.date + ')'; }).join(', ');
+      prompt += '\n\nPREVIOUSLY GIFTED TO THIS PERSON: ' + previousGifts + '. Do NOT suggest these gifts or anything too similar. Give something fresh and different.';
+    }
+  }
+  return prompt;
+};
+
+// Reset activeSavedPersonId on new search
+var origGetGifts = getGifts;
+getGifts = async function() {
+  // Reset only if not coming from prefill
+  await origGetGifts.apply(this, arguments);
+};
+
 
 </script>
 
