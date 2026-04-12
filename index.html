@@ -341,7 +341,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
 
   /* ── 2-COL GIFT GRID ── */
   .gift-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:0; }
-  .gift-grid .gift-card { margin-bottom:0; border-radius:14px; padding:16px 14px; }
+  .gift-grid .gift-card { margin-bottom:0; border-radius:14px; padding:16px 14px; background:#FDFBF8; }
   .gift-grid .gift-name { font-size:16px; }
   .gift-grid .gift-price { font-size:13px; }
   .gift-grid .gift-why { font-size:13px; line-height:1.6; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
@@ -351,6 +351,10 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
   /* ── EDIT BUTTON ── */
   .action-btn-edit { flex:0 0 auto; padding:14px 20px; border-radius:12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; background:transparent; border:1.5px solid var(--border); color:var(--ink); transition:all 0.15s; }
   .action-btn-edit:hover { border-color:var(--saffron); color:var(--saffron); }
+
+
+  .person-card-edit { position:absolute; top:10px; right:34px; background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:2px 4px; line-height:1; }
+  .person-card-edit:hover { color:var(--saffron); }
 
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZE7D7QRQ7L"></script>
@@ -405,10 +409,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
 
   <!-- Tab Panel: Find a Gift -->
   <div class="tab-panel active" id="panelFind">
-
-  <div class="why-strip" id="whyStrip">
-    <div class="why-icon">✦</div>
-    <div class="why-text"><strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.</div>
+<div class="why-text"><strong>Giftho tells you exactly what to get</strong> — specific gifts to buy, creative ideas to make, and experiences to book. Takes 30 seconds.</div>
   </div>
   <div id="occasionNudge" class="occasion-nudge" onclick="applyNudge()"></div>
 
@@ -679,7 +680,7 @@ footer { text-align:center; padding:32px 0 0; font-size:12px; color:var(--muted)
     </div>
   </div><!-- /panelPeople -->
 
-  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.33</footer>
+  <footer>Made with love for desi gifters &nbsp;&middot;&nbsp; Giftho v0.34</footer>
 </div>
 
 <div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
@@ -2207,6 +2208,14 @@ function renderPeopleTab() {
       '<div class="person-card-rel">' + sanitise(p.relationship) + '</div>' +
       (details ? '<div class="person-card-detail">' + details + '</div>' : '') +
       nudgeHTML + logHTML;
+    var editBtn = document.createElement('button');
+    editBtn.className = 'person-card-edit';
+    editBtn.innerHTML = '&#9998;';
+    editBtn.title = 'Edit';
+    (function(pid) {
+      editBtn.addEventListener('click', function(e) { e.stopPropagation(); openEditPersonSheet(pid); });
+    })(p.id);
+    card.appendChild(editBtn);
     var delBtn = document.createElement('button');
     delBtn.className = 'person-card-delete';
     delBtn.innerHTML = '&#215;';
@@ -2415,6 +2424,59 @@ window.onload = function() {
   if (typeof renderPeopleTab === 'function') renderPeopleTab();
 };
 
+
+
+// ── EDIT PERSON ───────────────────────────────────────────────────────
+function openEditPersonSheet(id) {
+  var people = getSavedPeople();
+  var person = null;
+  for (var i = 0; i < people.length; i++) { if (people[i].id === id) { person = people[i]; break; } }
+  if (!person) return;
+
+  document.getElementById('editPersonOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('editPersonId').value = id;
+  document.getElementById('editPersonName').value = person.name || '';
+  document.getElementById('editPersonRel').value = person.relationship || '';
+  document.getElementById('editPersonGender').value = person.gender || '';
+  document.getElementById('editPersonAge').value = person.ageRange || '';
+  document.getElementById('editPersonBudget').value = person.budgetMax || '';
+  var err = document.getElementById('editPersonError');
+  if (err) err.style.display = 'none';
+}
+
+function closeEditPersonSheet(e) {
+  if (e && e.target && e.target.id !== 'editPersonOverlay') return;
+  document.getElementById('editPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function saveEditedPerson() {
+  var id = document.getElementById('editPersonId').value;
+  var name = document.getElementById('editPersonName').value.trim();
+  var rel  = document.getElementById('editPersonRel').value.trim();
+  if (!name) { var e=document.getElementById('editPersonError'); if(e){e.textContent='Please enter a name.';e.style.display='block';} return; }
+  if (!rel)  { var e=document.getElementById('editPersonError'); if(e){e.textContent='Please enter a relationship.';e.style.display='block';} return; }
+
+  var people = getSavedPeople();
+  for (var i = 0; i < people.length; i++) {
+    if (people[i].id === id) {
+      people[i].name        = name;
+      people[i].relationship = rel;
+      people[i].gender      = document.getElementById('editPersonGender').value || '';
+      people[i].ageRange    = document.getElementById('editPersonAge').value || '';
+      people[i].budgetMax   = document.getElementById('editPersonBudget').value || '';
+      break;
+    }
+  }
+  localStorage.setItem('giftho_people', JSON.stringify(people));
+  document.getElementById('editPersonOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+  renderPeopleTab();
+  renderSavedPeople();
+  trackEvent('edit_person');
+}
+
 </script>
 
 <div id="interventionOverlay" class="modal-overlay" style="display:none;" onclick="closeIntervention(event)">
@@ -2474,6 +2536,43 @@ window.onload = function() {
     <div id="addPersonError" style="display:none;font-size:13px;color:#C0402A;margin-bottom:12px;"></div>
     <button onclick="saveNewPerson()" style="width:100%;padding:15px;background:var(--saffron);color:white;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 0 var(--saff-dark);">Save person</button>
     <button onclick="closeAddPersonSheet()" style="width:100%;padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--muted);cursor:pointer;margin-top:10px;">Cancel</button>
+  </div>
+</div>
+
+<div id="editPersonOverlay" class="modal-overlay" style="display:none;" onclick="closeEditPersonSheet(event)">
+  <div class="modal-sheet" style="padding-bottom:48px;">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-style:italic;font-weight:600;color:var(--ink);margin-bottom:20px;">Edit person</div>
+    <input type="hidden" id="editPersonId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px;">Their name *</label>
+        <input type="text" id="editPersonName" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px;">Relationship *</label>
+        <input type="text" id="editPersonRel" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px;">Gender</label>
+        <select id="editPersonGender" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+          <option value="">Optional</option><option value="Her">Her</option><option value="Him">Him</option><option value="Them">Them</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px;">Age Range</label>
+        <select id="editPersonAge" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+          <option value="">Optional</option><option value="Under 10">Under 10</option><option value="10 to 17">10-17</option><option value="18 to 25">18-25</option><option value="26 to 35">26-35</option><option value="36 to 50">36-50</option><option value="50 plus">50+</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1;">
+        <label style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:6px;">Usual Budget (Rs.)</label>
+        <input type="number" id="editPersonBudget" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;">
+      </div>
+    </div>
+    <div id="editPersonError" style="display:none;font-size:13px;color:#C0402A;margin-bottom:12px;"></div>
+    <button onclick="saveEditedPerson()" style="width:100%;padding:15px;background:var(--saffron);color:white;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 4px 0 var(--saff-dark);">Save changes</button>
+    <button onclick="closeEditPersonSheet()" style="width:100%;padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--muted);cursor:pointer;margin-top:10px;">Cancel</button>
   </div>
 </div>
 </body>
